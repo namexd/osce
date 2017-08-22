@@ -25,6 +25,14 @@ class Test extends Model
      'id','name','ctime','score'
     ];
 
+    /**
+     * 获取考试的试卷
+     */
+    public function question()
+    {
+        return $this->hasMany('Modules\Osce\Entities\TestContent','test_id','id');
+    }
+
     //新增答卷
     public function addTest($data)
     {

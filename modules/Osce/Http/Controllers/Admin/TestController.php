@@ -45,7 +45,78 @@ class TestController extends CommonController
     public function autoquestion(){
         $data = TestContentModule::select('type', DB::raw('count(id) as sum_count'))
             -> groupBy('type')->get();
-        return view('osce::theory.exam_authquestion')->with('data',$data);
+        return view('osce::theory.exam_autoquestion')->with('data',$data);
+    }
+    public function autoexam(Request $request){
+        $this->validate($request, [
+            'name'    => 'required',
+            'type'    => 'required',
+            'number'    => 'required',
+            'score'    => 'required',
+        ],[
+            'name.required'   => '试卷名称必传',
+            'type.required'   => '类型必传',
+            'number.required'   => '数量必传',
+            'score.required'   => '分数必传',
+        ]);
+        $name = $request->get('name');
+        $typeArr = $request->get('type');
+        $numberArr = $request->get('number');
+        $scoreArr = $request->get('score');
+        $test_id = Test::insertGetId(['name' =>  $name, 'ctime' => date('Y-m-d H:i:s')]);
+        $sum = $this->creatautoexam($test_id,$typeArr,$numberArr,$scoreArr);
+        $data =Test::find($test_id);
+        $data->update(['score'=>$sum]);
+        return view('osce::theory.exam_preview')->with('data',$data);
+    }
+    public function onceautoexam(Request $request){
+        $this->validate($request, [
+            'id'    => 'required'
+        ],[
+            'id.required'   => '试卷ID必传'
+        ]);
+        $id =$request->get('id');
+        $exam = TestContent::where('test_id',$id)->select(DB::raw('test_id,type,count(1) as number,poins'))->groupBy('type')->get();
+        $typeArr=[];$numberArr=[];$scoreArr=[];
+        foreach($exam as $key => $val){
+            $typeArr[$key]=$val->type;
+            $numberArr[$key]=$val->number;
+            $scoreArr[$key]=$val->poins;
+        }
+        //dd($typeArr,$numberArr,$scoreArr);
+        $this->creatautoexam($id,$typeArr,$numberArr,$scoreArr);
+        $data= Test::find($id);
+        return view('osce::theory.exam_preview')->with('data',$data);
+    }
+    protected function creatautoexam($test_id,$typeArr,$numberArr,$scoreArr){
+        $sum =0 ;
+        foreach($typeArr as $key =>$val){
+            $sum=$sum + $numberArr[$key]*$scoreArr[$key];
+            $data = TestContentModule::where('type',$val)->get()->shuffle()->take($numberArr[$key]);
+            foreach($data as $k=>$value ){
+                $insert = [
+                    'test_id'=>$test_id,
+                    'type'=>$value->type,
+                    'images'=>$value->images,
+                    'answer'=>$value->answer,
+                    'poins'=>$scoreArr[$key],
+                    'question'=>$value->question,
+                    'pbase'=>$value->pbase,
+                    'base'=>$value->base,
+                    'cognition'=>$value->cognition,
+                    'source'=>$value->source,
+                    'lv'=>$value->lv,
+                    'require'=>$value->require,
+                    'times'=>$value->times,
+                    'degree'=>$value->degree,
+                    'separate'=>$value->separate,
+                    'content'=>$value->content
+                ];
+                //dd($data,$insert);
+                TestContent::create($insert);
+            }
+        }
+        return $sum;
     }
     public function delquestion(Request $request){
         $this->validate($request, [
