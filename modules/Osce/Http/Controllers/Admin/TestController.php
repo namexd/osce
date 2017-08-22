@@ -63,6 +63,10 @@ class TestController extends CommonController
         $typeArr = $request->get('type');
         $numberArr = $request->get('number');
         $scoreArr = $request->get('score');
+
+        if( count($typeArr) != count($numberArr) && count($typeArr) != count($scoreArr) ){
+            return redirect()->back()->withErrors('参数有误！');
+        }
         $test_id = Test::insertGetId(['name' =>  $name, 'ctime' => date('Y-m-d H:i:s')]);
         $sum = $this->creatautoexam($test_id,$typeArr,$numberArr,$scoreArr);
         $data =Test::find($test_id);
