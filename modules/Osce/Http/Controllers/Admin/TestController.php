@@ -101,7 +101,7 @@ class TestController extends CommonController
         TestContent::where('test_id',$id)->delete();
         $this->creatautoexam($id,$typeArr,$numberArr,$scoreArr);
         $data= Test::find($id);
-        return view('osce::theory.exam_preview')->with('data',$data);
+        return $this->success_data();
     }
     protected function creatautoexam($test_id,$typeArr,$numberArr,$scoreArr){
         $sum =0 ;
