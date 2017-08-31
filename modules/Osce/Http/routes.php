@@ -410,6 +410,16 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::get('next-student',['uses'=>'DrawlotsController@nextStudent','as'=>'osce.pad.nextStudent']);  //下一个考生
 		Route::post('drawlots',['uses'=>'DrawlotsController@postDrawlots','as'=>'osce.pad.postDrawlots']);  //新抽签方法
 		Route::post('push-student', ['uses'=>'DrawlotsController@postPushStudent','as'=>'osce.pad.postPushStudent']);
+
+		//phone pad接口
+		Route::get('getstulist', ['uses'=>'PadphoneController@getStulist','as'=>'osce.padphone.getstulist']);//老师登录进系统显示学生列表
+		Route::get('getnowstu', ['uses'=>'PadphoneController@getNowstu','as'=>'osce.padphone.getnowstu']);//获得前当前考生
+		Route::get('stopnowstu', ['uses'=>'PadphoneController@stopNowstu','as'=>'osce.padphone.stopnowstu']);//设置当前考生为缺考
+		Route::get('startnowstu', ['uses'=>'PadphoneController@startNowstu','as'=>'osce.padphone.startnowstu']);//设置当前考生为开始考试
+		Route::get('finishnowstu', ['uses'=>'PadphoneController@finishNowstu','as'=>'osce.padphone.finishnowstu']);//提交评份结束当前考试
+		Route::get('getteachersubject', ['uses'=>'PadphoneController@getTeacherSubject','as'=>'osce.padphone.getteachersubject']);//老师登陆进来要考的考试项目，还有对应的病例内容
+		Route::get('getstugo', ['uses'=>'PadphoneController@getStugo','as'=>'osce.padphone.getstugo']);//学生考完显示下组去那里
+
 	});
 });
 
