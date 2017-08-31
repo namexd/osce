@@ -2,15 +2,11 @@
 /**
  * Created by PhpStorm.
  * User: fandian
- * Date: 2016/1/13 0013
- * Time: 9:36
+ * Date: 2017/8/310013
+ * Time: 13:36
  */
-
 namespace Modules\Osce\Http\Controllers\Api\Pad;
-
-
 use Illuminate\Http\Request;
-
 use Modules\Osce\Entities\Exam;
 use Modules\Osce\Entities\ExamPlan;
 use Modules\Osce\Entities\ExamDraft;
@@ -148,7 +144,7 @@ class PadphoneController extends  CommonController{
             $planid = $request->get('planid');
             ExamPlan::where('id',$planid)->update(['status' => 1]);
             return response()->json(
-                $this->success_data('设置缺考成功',1,'success')
+                $this->success_data('设置开始考试成功',1,'success')
             );
         }catch (\Exception $ex){
             return response()->json($this->fail($ex));
@@ -228,10 +224,11 @@ class PadphoneController extends  CommonController{
             ->where('station_teacher.examscreening_id',$examscreening_id)
             ->where('station_teacher.user_id',$userid)
             ->first();
-         //查一下对应的
+         //查一下对应的考试课目
         $sid = $data->subject_id;
         $subjectcase = SubjectCases::where('subject_id',$sid)->first();
         $case_id = $subjectcase->case_id;
+        //根据考试颗目获得考试内容
         $case = CaseModel::where('case_id',$case_id)->frist();
         $list['casename'] = $case->name;
         $list['casedsc'] = $case->description;
