@@ -151,30 +151,38 @@ class PadphoneController extends  CommonController{
             ]);
             $planid = $request->get('planid');
             ExamPlan::where('id',$planid)->update(['status' => 2]);
-            return response()->json(
-                $this->success_data('成功结束',1,'success')
-            );
-
             //取exam表中exam status状态为1的 得到id
             $exam = Exam::where('status',1)->first();
             $exam_id = $exam->id;
             //通过得到的exam_id查exam_screeing
             $examscreening = ExamScreening::where('exam_id',$exam_id)->get();
+            //要不要结束父考试标志
             $bz = 1;
+            //提醒考官上午或者下午的考试结束啦
+            $sbz = 1;
             foreach($examscreening as $edata){
                 $res = ExamPlan::where('exam_id',$exam_id)->where('exam_screening_id',$edata->id)->where('status','<',2)->first();
                 if(empty($res)){
                     ExamScreening::where('id',$edata->id)->update(['status' => 2]);
+                    //当前考次结束，开启下一场考试，不是本次考试不会开启成功
                     $gid = $edata->id+1;
-                    ExamScreening::where('id',$gid)->update(['status' => 1]);
-
+                    ExamScreening::where('id',$gid)->where('exam_id',$exam_id)->update(['status' => 1]);
+                    $sbz = 0;
                 }else{
                     $bz = 0;
                 }
             }
+            //所有考次都结束啦，结束父考试
             if($bz==1){
                 Exam::where('id',$exam_id)->update(['status' => 2]);
             }
+
+            $list['msg'] = "评分完成";
+            //$sbz为0提示考官本次考试结束
+            $list['sbz'] = $sbz;
+            return response()->json(
+                $this->success_data($list,1,'success')
+            );
 
         }catch (\Exception $ex){
             return response()->json($this->fail($ex));
