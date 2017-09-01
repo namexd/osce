@@ -67,7 +67,7 @@ class PadphoneController extends  CommonController{
     /**
         获得前当前考生
      */
-       public function getNowstu(Request $request){
+       public function getNowstu(){
            //取老师的id
            $userid = \Auth::user()->id;
 
