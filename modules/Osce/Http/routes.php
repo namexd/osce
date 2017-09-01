@@ -417,8 +417,8 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::get('stopnowstu', ['uses'=>'PadphoneController@stopNowstu','as'=>'osce.padphone.stopnowstu']);//设置当前考生为缺考
 		Route::get('startnowstu', ['uses'=>'PadphoneController@startNowstu','as'=>'osce.padphone.startnowstu']);//设置当前考生为开始考试
 		Route::get('finishnowstu', ['uses'=>'PadphoneController@finishNowstu','as'=>'osce.padphone.finishnowstu']);//提交评份结束当前考试
-		Route::get('getteachersubject', ['uses'=>'PadphoneController@getTeacherSubject','as'=>'osce.padphone.getteachersubject']);//老师登陆进来要考的考试项目，还有对应的病例内容
-		Route::get('getstugo', ['uses'=>'PadphoneController@getStugo','as'=>'osce.padphone.getstugo']);//学生考完显示下组去那里
+		Route::get('getteachersubject', ['uses'=>'PadphoneController@getTeacherSubject','as'=>'osce.padphone.getteachersubject']);//老师登陆进来要考的考试项目，和对应要显示的病例内容
+		Route::get('getstugo', ['uses'=>'PadphoneController@getStugo','as'=>'osce.padphone.getstugo']);//学生考完显示下组去那个房间
 
 	});
 });

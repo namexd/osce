@@ -25,7 +25,7 @@ class PadphoneController extends  CommonController{
      */
     public function getStulist(){
         //取老师的id
-        $userid=148;
+        $userid = \Auth::user()->id;
 
         //取exam表中exam status状态为1的 得到id
         $exam = Exam::where('status',1)->first();
@@ -69,7 +69,7 @@ class PadphoneController extends  CommonController{
      */
        public function getNowstu(Request $request){
            //取老师的id
-           $userid=148;
+           $userid = \Auth::user()->id;
 
            //取exam表中exam status状态为1的 得到id
            $exam = Exam::where('status',1)->first();
@@ -142,7 +142,7 @@ class PadphoneController extends  CommonController{
     }
 
     /**
-    提交评份结束当前考试
+    提交评分结束当前考试
      */
     public function finishNowstu(Request $request){
         try{
@@ -188,7 +188,7 @@ class PadphoneController extends  CommonController{
      */
     public function getTeacherSubject(){
         //取老师的id
-        $userid=148;
+        $userid = \Auth::user()->id;
 
         //取exam表中exam status状态为1的 得到id
         $exam = Exam::where('status',1)->first();
