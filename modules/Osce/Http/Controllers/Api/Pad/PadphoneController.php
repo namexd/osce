@@ -47,7 +47,7 @@ class PadphoneController extends  CommonController{
 
         $list = $connection->table('exam_plan')
             ->leftjoin('student', 'exam_plan.student_id', '=', 'student.id')
-            ->select('exam_plan.id as planid','student.user_id as stuid','exam_plan.student_id as pstuid','student.name as stuname')
+            ->select('exam_plan.id as planid','student.user_id as stuid','student.avator','exam_plan.student_id as pstuid','student.name as stuname')
                ->where('exam_plan.exam_id',$exam_id)
                ->where('exam_plan.exam_screening_id',$exam_screening_id)
                ->where('exam_plan.room_id',$room_id)
@@ -86,7 +86,7 @@ class PadphoneController extends  CommonController{
            $connection = DB::connection($this->connection);
            $list = $connection->table('exam_plan')
                ->leftjoin('student', 'exam_plan.student_id','=', 'student.id')
-               ->select('exam_plan.id as planid','student.user_id as stuid','exam_plan.student_id as pstuid','student.name as stuname')
+               ->select('exam_plan.id as planid','student.user_id as stuid','student.avator','exam_plan.student_id as pstuid','student.name as stuname')
                ->where('exam_plan.exam_id',$exam_id)
                ->where('exam_plan.exam_screening_id',$exam_screening_id)
                ->where('exam_plan.room_id',$room_id)
