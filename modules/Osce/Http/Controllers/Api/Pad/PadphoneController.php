@@ -16,6 +16,7 @@ use Modules\Osce\Entities\StationTeacher;
 use Modules\Osce\Entities\SubjectCases;
 use Modules\Osce\Http\Controllers\CommonController;
 use Modules\Osce\Repositories\Common;
+use Cache;
 use DB;
 
 //header("Access-Control-Allow-Origin: *");
@@ -31,7 +32,6 @@ class PadphoneController extends  CommonController{
             ]);
             //取老师的id
             $userid = $request->get('userid');
-
 
             //取exam表中exam status状态为1的 得到id
             $exam = Exam::where('status', 1)->first();
@@ -51,20 +51,40 @@ class PadphoneController extends  CommonController{
             //得出学生列表
             $connection = DB::connection($this->connection);
 
+            $queue = Cache::get('userid_'.$userid,0);
             $list = $connection->table('exam_plan')
                 ->leftjoin('student', 'exam_plan.student_id', '=', 'student.id')
                 ->select('exam_plan.id as planid', 'student.user_id as stuid', 'student.avator','student.idcard', 'student.code', 'student.exam_sequence','exam_plan.student_id as pstuid', 'student.name as stuname')
                 ->where('exam_plan.exam_id', $exam_id)
                 ->where('exam_plan.exam_screening_id', $exam_screening_id)
                 ->where('exam_plan.room_id', $room_id)
-                ->where('exam_plan.status', 0)
+                //->where('exam_plan.status', 0)
                 ->orderBy('exam_plan.begin_dt', 'asc')
                 ->take($shownum)
+                ->skip($queue*$shownum)
                 ->get();
-
-            if (empty($list)) {
-                $list = [];
+            if (!empty($list)) {
+	            $statusArr =collect($list)->pluck('status')->all();
+                if(!in_array(0,$statusArr) || !in_array(1,$statusArr)){
+                    $queue=$queue+1;
+                    Cache::set(['userid_'.$userid=>$queue]);
+                    $list = $connection->table('exam_plan')
+                        ->leftjoin('student', 'exam_plan.student_id', '=', 'student.id')
+                        ->select('exam_plan.id as planid', 'student.user_id as stuid', 'student.avator','student.idcard', 'student.code', 'student.exam_sequence','exam_plan.student_id as pstuid', 'student.name as stuname')
+                        ->where('exam_plan.exam_id', $exam_id)
+                        ->where('exam_plan.exam_screening_id', $exam_screening_id)
+                        ->where('exam_plan.room_id', $room_id)
+                        //->where('exam_plan.status', 0)
+                        ->orderBy('exam_plan.begin_dt', 'asc')
+                        ->take($shownum)
+                        ->skip($queue*$shownum)
+                        ->get();
+                }
             }
+            if(empty($list)){
+                $list=[];
+            }
+
             return response()->json(
                 $this->success_data($list, 1, 'success')
             );
