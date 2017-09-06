@@ -7,6 +7,11 @@ $version='1.0';
  * 后台页面
  * */
 Route::get('/',['uses'=>'IndexController@Index']);  //域名对应的路径
+Route::get('/getSpeechUrl',function() {
+    $text = request()->get('text');
+    $Speech = new App\Http\Controllers\SpeechController();
+    return $Speech->getSpeechUrl($text);
+});
 
 Route::group(['prefix' => "admin",'middleware' => []], function()
 {
