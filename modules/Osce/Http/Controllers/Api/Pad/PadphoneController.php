@@ -23,9 +23,14 @@ class PadphoneController extends  CommonController{
     /**
      *老师登录进系统显示学生列表
      */
-    public function getStulist(){
-        //取老师的id
-        $userid = \Auth::user()->id;
+    public function getStulist(Request $request){
+        try{
+            $this->validate($request,[
+                'userid'   => 'required|integer',
+            ]);
+            //取老师的id
+            $userid = $request->get('userid');
+
 
         //取exam表中exam status状态为1的 得到id
         $exam = Exam::where('status',1)->first();
@@ -67,9 +72,12 @@ class PadphoneController extends  CommonController{
     /**
         获得前当前考生
      */
-       public function getNowstu(){
-           //取老师的id
-           $userid = \Auth::user()->id;
+       public function getNowstu(Request $request){
+            $this->validate($request,[
+                'userid'   => 'required|integer',
+            ]);
+            //取老师的id
+            $userid = $request->get('userid');
 
            //取exam表中exam status状态为1的 得到id
            $exam = Exam::where('status',1)->first();
