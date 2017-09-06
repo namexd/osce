@@ -53,7 +53,7 @@ class PadphoneController extends  CommonController{
 
             $list = $connection->table('exam_plan')
                 ->leftjoin('student', 'exam_plan.student_id', '=', 'student.id')
-                ->select('exam_plan.id as planid', 'student.user_id as stuid', 'student.avator', 'exam_plan.student_id as pstuid', 'student.name as stuname')
+                ->select('exam_plan.id as planid', 'student.user_id as stuid', 'student.avator','student.idcard', 'student.code', 'student.exam_sequence','exam_plan.student_id as pstuid', 'student.name as stuname')
                 ->where('exam_plan.exam_id', $exam_id)
                 ->where('exam_plan.exam_screening_id', $exam_screening_id)
                 ->where('exam_plan.room_id', $room_id)
@@ -97,7 +97,7 @@ class PadphoneController extends  CommonController{
         $connection = DB::connection($this->connection);
         $list = $connection->table('exam_plan')
             ->leftjoin('student', 'exam_plan.student_id', '=', 'student.id')
-            ->select('exam_plan.id as planid', 'student.user_id as stuid', 'student.avator', 'exam_plan.student_id as pstuid', 'student.name as stuname')
+            ->select('exam_plan.id as planid', 'student.user_id as stuid', 'student.avator', 'student.idcard', 'student.code',  'student.exam_sequence','exam_plan.student_id as pstuid', 'student.name as stuname')
             ->where('exam_plan.exam_id', $exam_id)
             ->where('exam_plan.exam_screening_id', $exam_screening_id)
             ->where('exam_plan.room_id', $room_id)
@@ -242,6 +242,9 @@ class PadphoneController extends  CommonController{
         $case_id = $subjectcase->case_id;
         //根据考试颗目获得考试内容
         $case = CaseModel::where('id',$case_id)->first();
+        $list['name'] = $data->name;
+        $list['mins'] = $data->mins;
+        $list['subject_title'] = $data->subject_title;
         $list['casename'] = $case->name;
         $list['casedsc'] = $case->description;
         $list['subject_id'] = $sid;
