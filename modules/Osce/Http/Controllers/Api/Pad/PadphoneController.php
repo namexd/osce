@@ -18,6 +18,7 @@ use Modules\Osce\Http\Controllers\CommonController;
 use Modules\Osce\Repositories\Common;
 use DB;
 
+header("Access-Control-Allow-Origin: *");
 class PadphoneController extends  CommonController{
     protected $connection = 'osce_mis';
     /**
