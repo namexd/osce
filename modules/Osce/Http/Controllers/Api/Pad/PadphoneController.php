@@ -23,93 +23,96 @@ class PadphoneController extends  CommonController{
     /**
      *老师登录进系统显示学生列表
      */
-    public function getStulist(Request $request){
-        try{
-            $this->validate($request,[
-                'userid'   => 'required|integer',
+    public function getStulist(Request $request)
+    {
+            $this->validate($request, [
+                'userid' => 'required|integer',
             ]);
             //取老师的id
             $userid = $request->get('userid');
 
 
-        //取exam表中exam status状态为1的 得到id
-        $exam = Exam::where('status',1)->first();
-        $exam_id = $exam->id;
-        //通过得到的exam_id查exam_screeing
-        $examscreening = ExamScreening::where('exam_id',$exam_id)->where('status',1)->first();
-        $exam_screening_id = $examscreening->id;
-        //显示多少个学生
-        $shownum = ExamPlan::where('exam_id',$exam_id)->where('exam_screening_id',$exam_screening_id)->max('serialnumber');
-        $list=[];
-        //根据老师和考试对应的信息查对应的考站
-        $stationteacher = StationTeacher::where('exam_id',$exam_id)->where('exam_screening_id',$exam_screening_id)->where('user_id',$userid)->first();
-        $station_id = $stationteacher->station_id;
-        //通过考站查对应的房间号
-        $room = RoomStation::where('station_id',$station_id)->first();
-        $room_id = $room->room_id;
-        //得出学生列表
-        $connection = DB::connection($this->connection);
+            //取exam表中exam status状态为1的 得到id
+            $exam = Exam::where('status', 1)->first();
+            $exam_id = $exam->id;
+            //通过得到的exam_id查exam_screeing
+            $examscreening = ExamScreening::where('exam_id', $exam_id)->where('status', 1)->first();
+            $exam_screening_id = $examscreening->id;
+            //显示多少个学生
+            $shownum = ExamPlan::where('exam_id', $exam_id)->where('exam_screening_id', $exam_screening_id)->max('serialnumber');
+            $list = [];
+            //根据老师和考试对应的信息查对应的考站
+            $stationteacher = StationTeacher::where('exam_id', $exam_id)->where('exam_screening_id', $exam_screening_id)->where('user_id', $userid)->first();
+            $station_id = $stationteacher->station_id;
+            //通过考站查对应的房间号
+            $room = RoomStation::where('station_id', $station_id)->first();
+            $room_id = $room->room_id;
+            //得出学生列表
+            $connection = DB::connection($this->connection);
 
-        $list = $connection->table('exam_plan')
-            ->leftjoin('student', 'exam_plan.student_id', '=', 'student.id')
-            ->select('exam_plan.id as planid','student.user_id as stuid','student.avator','exam_plan.student_id as pstuid','student.name as stuname')
-               ->where('exam_plan.exam_id',$exam_id)
-               ->where('exam_plan.exam_screening_id',$exam_screening_id)
-               ->where('exam_plan.room_id',$room_id)
-               ->where('exam_plan.status',0)
-               ->orderBy('exam_plan.begin_dt','asc')
-               ->take($shownum)
-               ->get();
+            $list = $connection->table('exam_plan')
+                ->leftjoin('student', 'exam_plan.student_id', '=', 'student.id')
+                ->select('exam_plan.id as planid', 'student.user_id as stuid', 'student.avator', 'exam_plan.student_id as pstuid', 'student.name as stuname')
+                ->where('exam_plan.exam_id', $exam_id)
+                ->where('exam_plan.exam_screening_id', $exam_screening_id)
+                ->where('exam_plan.room_id', $room_id)
+                ->where('exam_plan.status', 0)
+                ->orderBy('exam_plan.begin_dt', 'asc')
+                ->take($shownum)
+                ->get();
 
-        if(empty($list)){
-            $list =[];
-        }
+            if (empty($list)) {
+                $list = [];
+            }
             return response()->json(
-                $this->success_data($list,1,'success')
+                $this->success_data($list, 1, 'success')
             );
-       }
+        }
+
 
     /**
-        获得前当前考生
+     * 获得前当前考生
      */
-       public function getNowstu(Request $request){
-            $this->validate($request,[
-                'userid'   => 'required|integer',
-            ]);
-            //取老师的id
-            $userid = $request->get('userid');
+       public function getNowstu(Request $request)
+    {
+        $this->validate($request, [
+            'userid' => 'required|integer',
+        ]);
+        //取老师的id
+        $userid = $request->get('userid');
 
-           //取exam表中exam status状态为1的 得到id
-           $exam = Exam::where('status',1)->first();
-           $exam_id = $exam->id;
-           //通过得到的exam_id查exam_screeing
-           $examscreening = ExamScreening::where('exam_id',$exam_id)->where('status',1)->first();
-           $exam_screening_id = $examscreening->id;
-           //根据老师和考试对应的信息查对应的考站
-           $stationteacher = StationTeacher::where('exam_id',$exam_id)->where('exam_screening_id',$exam_screening_id)->where('user_id',$userid)->first();
-           $station_id = $stationteacher->station_id;
-           //通过考站查对应的房间号
-           $room = RoomStation::where('station_id',$station_id)->first();
-           $room_id = $room->room_id;
-           $connection = DB::connection($this->connection);
-           $list = $connection->table('exam_plan')
-               ->leftjoin('student', 'exam_plan.student_id','=', 'student.id')
-               ->select('exam_plan.id as planid','student.user_id as stuid','student.avator','exam_plan.student_id as pstuid','student.name as stuname')
-               ->where('exam_plan.exam_id',$exam_id)
-               ->where('exam_plan.exam_screening_id',$exam_screening_id)
-               ->where('exam_plan.room_id',$room_id)
-               ->where('exam_plan.status',0)
-               ->orderBy('exam_plan.begin_dt','asc')
-               ->take(1)
-               ->get();
-           if(empty($list)){
-               $list =[];
-           }
-           return response()->json(
-               $this->success_data($list,1,'success')
-           );
+        //取exam表中exam status状态为1的 得到id
+        $exam = Exam::where('status', 1)->first();
+        $exam_id = $exam->id;
+        //通过得到的exam_id查exam_screeing
+        $examscreening = ExamScreening::where('exam_id', $exam_id)->where('status', 1)->first();
+        $exam_screening_id = $examscreening->id;
+        //根据老师和考试对应的信息查对应的考站
+        $stationteacher = StationTeacher::where('exam_id', $exam_id)->where('exam_screening_id', $exam_screening_id)->where('user_id', $userid)->first();
+        $station_id = $stationteacher->station_id;
+        //通过考站查对应的房间号
+        $room = RoomStation::where('station_id', $station_id)->first();
+        $room_id = $room->room_id;
+        $connection = DB::connection($this->connection);
+        $list = $connection->table('exam_plan')
+            ->leftjoin('student', 'exam_plan.student_id', '=', 'student.id')
+            ->select('exam_plan.id as planid', 'student.user_id as stuid', 'student.avator', 'exam_plan.student_id as pstuid', 'student.name as stuname')
+            ->where('exam_plan.exam_id', $exam_id)
+            ->where('exam_plan.exam_screening_id', $exam_screening_id)
+            ->where('exam_plan.room_id', $room_id)
+            ->where('exam_plan.status', 0)
+            ->orderBy('exam_plan.begin_dt', 'asc')
+            ->take(1)
+            ->get();
+        if (empty($list)) {
+            $list = [];
+        }
+        return response()->json(
+            $this->success_data($list, 1, 'success')
+        );
 
-       }
+    }
+
 
     /**
       设置当前考生为缺考
@@ -202,9 +205,12 @@ class PadphoneController extends  CommonController{
     /**
      * 老师登陆进来要考的考试项目，还有对应的病例内容
      */
-    public function getTeacherSubject(){
+    public function getTeacherSubject(Request $request){
+        $this->validate($request, [
+            'userid' => 'required|integer',
+        ]);
         //取老师的id
-        $userid = \Auth::user()->id;
+        $userid = $request->get('userid');
 
         //取exam表中exam status状态为1的 得到id
         $exam = Exam::where('status',1)->first();
