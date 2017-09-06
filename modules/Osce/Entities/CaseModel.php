@@ -131,7 +131,7 @@ class CaseModel extends CommonModel
      */
     public function getCasesList($caseName){
         //查询出数据
-        $builder = $this->select(['id', 'name', 'description']);
+        $builder = $this->select(['id', 'name', 'description'])->orderBy('id','desc');
         if (!empty($caseName)){
             $builder = $builder->where('name', 'like', '%\\'.$caseName.'%');
         }
