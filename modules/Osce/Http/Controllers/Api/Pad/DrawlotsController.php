@@ -1058,7 +1058,6 @@ class DrawlotsController extends CommonController
                     ->where('exam_draft_flow.exam_id', '=', $exam->id)
                     ->where('exam_draft.station_id', '=', $station->id)
                     ->first();
-
                 if (!is_null($ExamDraft)) {
                     $subject = Subject::where('id', $ExamDraft->subject_id)->first();
                 }
@@ -1067,7 +1066,11 @@ class DrawlotsController extends CommonController
                     $station->mins = $subject->mins;
                 }
             }
-
+            //有别名使用别名没有别名使用考试名
+            if(empty($room->name)){
+                $asStation =!empty($ExamDraft->name)?$ExamDraft->name:$subject->title;
+                $station->name = $asStation . $station->name;
+            }
             $station->room_id = $room->room_id;
             //将考试的id封装进去
             $station->exam_id = $exam->id;
