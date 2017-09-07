@@ -502,16 +502,22 @@ class InvigilatePadController extends CommonController
                                         ->where('student_id', '=', $studentId)
                                         ->first();
             if (is_null($studentExamTime)) {
-                throw new \Exception('没有查询到该学生队列', -100);
+                //throw new \Exception('没有查询到该学生队列', -100);
+                $begin_dt = Input::get('begin_dt');
+                $useTime = Input::get('use_time');
+                $end_dt = strtotime($begin_dt) + $useTime;
+            }else{
+                $begin_dt=$studentExamTime->begin_dt;
+                $end_dt=$studentExamTime->end_dt;
+                $useTime = strtotime($studentExamTime->end_dt) - strtotime($studentExamTime->begin_dt);
             }
-            $useTime = strtotime($studentExamTime->end_dt) - strtotime($studentExamTime->begin_dt);
 //            getMinutes
             $data = [
                 'station_id'        => $stationId,//考站编号
                 'student_id'        => $studentId,//考生编号
                 'exam_screening_id' => $screening_id,//场次编号
-                'begin_dt'          => $studentExamTime->begin_dt,//考试开始时间
-                'end_dt'            => $studentExamTime->end_dt,//考试实际结束时间
+                'begin_dt'          => $begin_dt,//考试开始时间
+                'end_dt'            => $end_dt,//考试实际结束时间
                 'time'              => $useTime,//考试用时
                 'score_dt'          => Input::get('end_dt'),//评分时间
                 'teacher_id'        => Input::get('teacher_id'),

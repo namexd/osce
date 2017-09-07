@@ -122,7 +122,7 @@ class PadphoneController extends  CommonController{
             ->where('exam_plan.exam_id', $exam_id)
             ->where('exam_plan.exam_screening_id', $exam_screening_id)
             ->where('exam_plan.room_id', $room_id)
-            ->where('exam_plan.status', 0)
+            ->where('exam_plan.status','<',2)
             ->orderBy('exam_plan.begin_dt', 'asc')
             ->take(1)
             ->get();
@@ -165,8 +165,10 @@ class PadphoneController extends  CommonController{
             ]);
             $planid = $request->get('planid');
             ExamPlan::where('id',$planid)->update(['status' => 1]);
+            $stime = date('Y-m-d H:i:s');
+            $list = ['begin_dt'=>$stime];
             return response()->json(
-                $this->success_data('设置开始考试成功',1,'success')
+                $this->success_data($list,1,'success')
             );
         }catch (\Exception $ex){
             return response()->json($this->fail($ex));
@@ -190,25 +192,25 @@ class PadphoneController extends  CommonController{
             $exam = Exam::where('status',1)->first();
             $exam_id = $exam->id;
             //通过得到的exam_id查exam_screeing
-            $examscreening = ExamScreening::where('exam_id',$exam_id)->get();
+            $examscreening = ExamScreening::where('exam_id',$exam_id)->where('status',1)->first();
             //要不要结束父考试标志
             $bz = 1;
             //提醒考官上午或者下午的考试结束啦
             $sbz = 1;
-            foreach($examscreening as $edata){
-                $res = ExamPlan::where('exam_id',$exam_id)->where('exam_screening_id',$edata->id)->where('status','<',2)->first();
-                if(empty($res)){
-                    ExamScreening::where('id',$edata->id)->update(['status' => 2]);
-                    //清除缓存
-                    Cache::forget('userid_'.$userid.'exam_id_'.$exam_id.'exam_screening_id_'.$edata->id);
-                    //当前考次结束，开启下一场考试，不是本次考试不会开启成功
-                    $gid = $edata->id+1;
-                    ExamScreening::where('id',$gid)->where('exam_id',$exam_id)->update(['status' => 1]);
-                    $sbz = 0;
-                }else{
-                    $bz = 0;
-                }
+
+            $res = ExamPlan::where('exam_id',$exam_id)->where('exam_screening_id',$examscreening->id)->where('status','<',2)->first();
+            if(empty($res)){
+                ExamScreening::where('id',$examscreening->id)->update(['status' => 2]);
+                //清除缓存
+                Cache::forget('userid_'.$userid.'exam_id_'.$exam_id.'exam_screening_id_'.$examscreening->id);
+                //当前考次结束，开启下一场考试，不是本次考试不会开启成功
+                $gid = $examscreening->id+1;
+                ExamScreening::where('id',$gid)->where('exam_id',$exam_id)->update(['status' => 1]);
+                $sbz = 0;
+            }else{
+                $bz = 0;
             }
+
             //所有考次都结束啦，结束父考试
             if($bz==1){
                 Exam::where('id',$exam_id)->update(['status' => 2]);
