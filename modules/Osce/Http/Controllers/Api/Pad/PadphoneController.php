@@ -16,7 +16,7 @@ use Modules\Osce\Entities\StationTeacher;
 use Modules\Osce\Entities\SubjectCases;
 use Modules\Osce\Http\Controllers\CommonController;
 use Modules\Osce\Repositories\Common;
-use Cache;
+use Illuminate\Support\Facades\Cache;
 use DB;
 
 //header("Access-Control-Allow-Origin: *");
@@ -51,10 +51,10 @@ class PadphoneController extends  CommonController{
             //得出学生列表
             $connection = DB::connection($this->connection);
 
-            $queue = Cache::get('userid_'.$userid,0);
+            $queue = Cache::get('userid_'.$userid.'exam_id_'.$exam_id.'exam_screening_id_'.$exam_screening_id,0);
             $list = $connection->table('exam_plan')
                 ->leftjoin('student', 'exam_plan.student_id', '=', 'student.id')
-                ->select('exam_plan.id as planid', 'student.user_id as stuid', 'student.avator','student.idcard', 'student.code', 'student.exam_sequence','exam_plan.student_id as pstuid', 'student.name as stuname')
+                ->select('exam_plan.status','exam_plan.id as planid', 'student.user_id as stuid', 'student.avator','student.idcard', 'student.code', 'student.exam_sequence','exam_plan.student_id as pstuid', 'student.name as stuname')
                 ->where('exam_plan.exam_id', $exam_id)
                 ->where('exam_plan.exam_screening_id', $exam_screening_id)
                 ->where('exam_plan.room_id', $room_id)
@@ -63,14 +63,15 @@ class PadphoneController extends  CommonController{
                 ->take($shownum)
                 ->skip($queue*$shownum)
                 ->get();
+            //dd($list,$statusArr =collect($list)->pluck('status')->all(),!in_array(0,$statusArr) && !in_array(1,$statusArr));
             if (!empty($list)) {
 	            $statusArr =collect($list)->pluck('status')->all();
-                if(!in_array(0,$statusArr) || !in_array(1,$statusArr)){
+                if(!in_array(0,$statusArr) && !in_array(1,$statusArr)){
                     $queue=$queue+1;
-                    Cache::set(['userid_'.$userid=>$queue]);
+                    Cache::put('userid_'.$userid.'exam_id_'.$exam_id.'exam_screening_id_'.$exam_screening_id,$queue,36000);
                     $list = $connection->table('exam_plan')
                         ->leftjoin('student', 'exam_plan.student_id', '=', 'student.id')
-                        ->select('exam_plan.id as planid', 'student.user_id as stuid', 'student.avator','student.idcard', 'student.code', 'student.exam_sequence','exam_plan.student_id as pstuid', 'student.name as stuname')
+                        ->select('exam_plan.status','exam_plan.id as planid', 'student.user_id as stuid', 'student.avator','student.idcard', 'student.code', 'student.exam_sequence','exam_plan.student_id as pstuid', 'student.name as stuname')
                         ->where('exam_plan.exam_id', $exam_id)
                         ->where('exam_plan.exam_screening_id', $exam_screening_id)
                         ->where('exam_plan.room_id', $room_id)
@@ -180,8 +181,10 @@ class PadphoneController extends  CommonController{
         try{
             $this->validate($request,[
                 'planid'   => 'required|integer',
+                'userid'   => 'required|integer'
             ]);
             $planid = $request->get('planid');
+            $userid = $request->get('userid');
             ExamPlan::where('id',$planid)->update(['status' => 2]);
             //取exam表中exam status状态为1的 得到id
             $exam = Exam::where('status',1)->first();
@@ -196,6 +199,8 @@ class PadphoneController extends  CommonController{
                 $res = ExamPlan::where('exam_id',$exam_id)->where('exam_screening_id',$edata->id)->where('status','<',2)->first();
                 if(empty($res)){
                     ExamScreening::where('id',$edata->id)->update(['status' => 2]);
+                    //清除缓存
+                    Cache::forget('userid_'.$userid.'exam_id_'.$exam_id.'exam_screening_id_'.$edata->id);
                     //当前考次结束，开启下一场考试，不是本次考试不会开启成功
                     $gid = $edata->id+1;
                     ExamScreening::where('id',$gid)->where('exam_id',$exam_id)->update(['status' => 1]);
