@@ -511,7 +511,6 @@ class InvigilatePadController extends CommonController
                 $end_dt=$studentExamTime->end_dt;
                 $useTime = strtotime($studentExamTime->end_dt) - strtotime($studentExamTime->begin_dt);
             }
-            $end_dt = date('Y-m-d H:i:s');
 //            getMinutes
             $data = [
                 'station_id'        => $stationId,//考站编号
@@ -520,8 +519,7 @@ class InvigilatePadController extends CommonController
                 'begin_dt'          => $begin_dt,//考试开始时间
                 'end_dt'            => $end_dt,//考试实际结束时间
                 'time'              => $useTime,//考试用时
-                //'score_dt'          => Input::get('end_dt'),//评分时间
-                'score_dt'          => $end_dt,//评分时间
+                'score_dt'          => Input::get('end_dt'),//评分时间
                 'teacher_id'        => Input::get('teacher_id'),
                 'evaluate'          => Input::get('evaluate'),//评价内容
                 'operation'         => Input::get('operation'),//操作的连贯性
