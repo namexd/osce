@@ -10,8 +10,9 @@ namespace Modules\Osce\Entities;
 
 use DB;
 use Illuminate\Support\Facades\Log;
+use Modules\Osce\Entities\CommonModel;
 
-class TestResult extends CommModel
+class TestResult extends CommonModel
 {
     protected $connection = 'osce_mis';
     protected $table = 'exam_result';
