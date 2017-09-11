@@ -31,6 +31,9 @@ class CexamController extends CommonController
                 ->where('end', '>', $dataArray['end']);
         })->first();
         if(empty($isHas)){
+            if($dataArray['convert'] < 1 || $dataArray['convert'] > 100){
+                return redirect()->back()->withErrors('参数有误！');
+            }
             $addArray = [
                 'exam_id'=>$dataArray['exam_id'],
                 'tid' =>$dataArray['tid'],
