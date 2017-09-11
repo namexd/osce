@@ -45,9 +45,35 @@
 			laydate(start);
 			laydate(end);
 			
+			$('#rate_choose').change(function () {
+				if ($(this).val()=='1') {
+					$('.convert').addClass('hide');
+					$('#convert').val(0);
+				} else {
+					$('#convert').val('');
+					$('.convert').removeClass('hide');
+				}
+			});
+		    $("#times,#convert").keyup(function () {
+		        this.value = this.value.replace(/[^\d]/g, '');
+		    });				
+			
 			$('.btn-primary').click(function () {
+				
 				if(noempty('.form-horizontal')){
 					return false;
+				}
+				if ($('#rate_choose').val()=='0') {
+					if ($.trim($('#convert').val())=='') {
+						uselayer(3,'请填写统一折算率');
+						$('#convert').focus();
+						return false;						
+					}
+					if ($.trim($('#convert').val())<1||$.trim($('#convert').val())>100) {
+						uselayer(3,'折算率范围为1-100');
+						$('#convert').focus();
+						return false;						
+					}
 				}
 				uselayer(2,'确定要新增考试吗？',function () {
 					$('.form-horizontal').submit();
@@ -98,9 +124,25 @@
 	                </div>
 	                <div class="hr-line-dashed"></div>	
 	                <div class="form-group">
-	                    <label for="end" class="col-sm-2 control-label">考试时长：<i></i></label>
+	                    <label for="rate_choose" class="col-sm-2 control-label">折算方式：<i></i></label>
+						<div class="col-sm-5">
+							<select id="rate_choose" class="form-control">
+								<option value="1">不需要折算</option>
+								<option value="0">统一折算率</option>
+							</select>
+						</div>
+	                </div>
+	                <div class="form-group convert hide">
+	                    <label for="convert" class="col-sm-2 control-label">统一折算率：<i></i></label>
 	                    <div class="col-sm-5">
-							<input type="text" placeholder="请填写考试时长(分钟)" class="form-control" name="times" />
+							<input type="text" name="convert" id="convert" placeholder="请填写折算率(%)" class="form-control"  />
+	                    </div>
+	                </div>
+	                <div class="hr-line-dashed"></div>	
+	                <div class="form-group">
+	                    <label for="times" class="col-sm-2 control-label">考试时长：<i></i></label>
+	                    <div class="col-sm-5">
+							<input type="text" name="times" id="times"  placeholder="请填写考试时长(分钟)" class="form-control" />
 	                    </div>
 	                </div>
 	                <div class="hr-line-dashed"></div>	
