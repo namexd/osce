@@ -486,6 +486,7 @@ class InvigilatePadController extends CommonController
 
             //根据考生id获取到考试id（考生ID唯一）
             $studentInfo = Student::find($studentId);
+
             if(is_null($studentInfo)){
                 throw new \Exception('未找到该考生的学生信息', -221);
             }
@@ -506,6 +507,8 @@ class InvigilatePadController extends CommonController
                 $begin_dt = Input::get('begin_dt');
                 $useTime = Input::get('use_time');
                 $end_dt = strtotime($begin_dt) + $useTime;
+
+
             }else{
                 $begin_dt=$studentExamTime->begin_dt;
                 $end_dt=$studentExamTime->end_dt;

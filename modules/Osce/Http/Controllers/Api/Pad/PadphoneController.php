@@ -28,7 +28,7 @@ class PadphoneController extends  CommonController{
     public function getStulist(Request $request)
     {
             $this->validate($request, [
-                'userid' => 'required|integer',
+                'userid' => 'required|integer'
             ]);
             //取老师的id
             $userid = $request->get('userid');
@@ -98,7 +98,7 @@ class PadphoneController extends  CommonController{
        public function getNowstu(Request $request)
     {
         $this->validate($request, [
-            'userid' => 'required|integer',
+            'userid' => 'required|integer'
         ]);
         //取老师的id
         $userid = $request->get('userid');
@@ -143,11 +143,44 @@ class PadphoneController extends  CommonController{
         try{
             $this->validate($request,[
                 'planid'   => 'required|integer',
+                'userid'   => 'required|integer'
+
             ]);
             $planid = $request->get('planid');
+            $userid = $request->get('userid');
             ExamPlan::where('id',$planid)->update(['status' => 3]);
+            //取exam表中exam status状态为1的 得到id
+            $exam = Exam::where('status',1)->first();
+            $exam_id = $exam->id;
+            //通过得到的exam_id查exam_screeing
+            $examscreening = ExamScreening::where('exam_id',$exam_id)->where('status',1)->first();
+            //要不要结束父考试标志
+            $bz = 1;
+            //提醒考官上午或者下午的考试结束啦
+            $sbz = 1;
+
+            $res = ExamPlan::where('exam_id',$exam_id)->where('exam_screening_id',$examscreening->id)->where('status','<',2)->first();
+            if(empty($res)){
+                ExamScreening::where('id',$examscreening->id)->update(['status' => 2]);
+                //清除缓存
+                Cache::forget('userid_'.$userid.'exam_id_'.$exam_id.'exam_screening_id_'.$examscreening->id);
+                //当前考次结束，开启下一场考试，不是本次考试不会开启成功
+                $gid = $examscreening->id+1;
+                ExamScreening::where('id',$gid)->where('exam_id',$exam_id)->update(['status' => 1]);
+                $sbz = 0;
+            }else{
+                $bz = 0;
+            }
+
+            //所有考次都结束啦，结束父考试
+            if($bz==1){
+                Exam::where('id',$exam_id)->update(['status' => 2]);
+            }
+            $list = [];
+            $list['msg'] = '设置缺考成功';
+            $list['sbz'] = $sbz;
             return response()->json(
-                $this->success_data('设置缺考成功',1,'success')
+                $this->success_data($list,1,'success')
             );
         }catch (\Exception $ex){
             return response()->json($this->fail($ex));
@@ -161,7 +194,7 @@ class PadphoneController extends  CommonController{
     public function startNowstu(Request $request){
         try{
             $this->validate($request,[
-                'planid'   => 'required|integer',
+                'planid'   => 'required|integer'
             ]);
             $planid = $request->get('planid');
             ExamPlan::where('id',$planid)->update(['status' => 1]);
