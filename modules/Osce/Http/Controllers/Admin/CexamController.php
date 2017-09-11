@@ -38,7 +38,7 @@ class CexamController extends CommonController
                 'end' =>$dataArray['end'],
                 'teacher' =>$dataArray['teacher'],
                 'times' =>$dataArray['times'],
-                'convert' =>$dataArray['convert']==0?0:round($dataArray['convert']/100,2),
+                'convert' =>$dataArray['convert']==1?1:round($dataArray['convert']/100,2),
                 'status' =>0
             ];
             TestLog::create($addArray);
