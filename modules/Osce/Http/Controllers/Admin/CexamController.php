@@ -24,7 +24,7 @@ class CexamController extends CommonController
 
     public function addaExame(Request $request)
     {
-        $dataArray=$request->only('exam_id','tid','start','end','teacher','times');
+        $dataArray=$request->only('exam_id','tid','start','end','teacher','times','convert');
 
         $isHas = TestLog::where('start','<',$dataArray['start'])->where('end','>',$dataArray['start'])->orWhere(function ($query)use ( $dataArray )  {
             $query->where('start', '<', $dataArray['end'])
@@ -38,6 +38,7 @@ class CexamController extends CommonController
                 'end' =>$dataArray['end'],
                 'teacher' =>$dataArray['teacher'],
                 'times' =>$dataArray['times'],
+                'convert' =>$dataArray['convert']==0?0:round($dataArray['convert']/100,2),
                 'status' =>0
             ];
             TestLog::create($addArray);
