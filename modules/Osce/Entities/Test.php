@@ -68,7 +68,8 @@ class Test extends Model
     public function getChooseExam()
     {
         $connection = DB::connection($this->connection);
-        $info = $connection->table('exam')->where('status',0)->get();
+        $oldMonth = date('Y-m-d H:i:s',strtotime('-1 month'));
+        $info = $connection->table('exam')->where('begin_dt','>',$oldMonth)->get();
 
         return $info;
 

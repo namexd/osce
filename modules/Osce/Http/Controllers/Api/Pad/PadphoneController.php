@@ -21,75 +21,79 @@ use DB;
 
 //header("Access-Control-Allow-Origin: *");
 class PadphoneController extends  CommonController{
-    protected $connection = 'osce_mis';
     /**
      *老师登录进系统显示学生列表
      */
     public function getStulist(Request $request)
     {
-            $this->validate($request, [
-                'userid' => 'required|integer'
-            ]);
-            //取老师的id
-            $userid = $request->get('userid');
+        $this->validate($request, [
+            'userid' => 'required|integer'
+        ]);
+        //取老师的id
+        $userid = $request->get('userid');
 
-            //取exam表中exam status状态为1的 得到id
-            $exam = Exam::where('status', 1)->first();
-            $exam_id = $exam->id;
-            //通过得到的exam_id查exam_screeing
-            $examscreening = ExamScreening::where('exam_id', $exam_id)->where('status', 1)->first();
-            $exam_screening_id = $examscreening->id;
-            //显示多少个学生
-            $shownum = ExamPlan::where('exam_id', $exam_id)->where('exam_screening_id', $exam_screening_id)->max('serialnumber');
-            $list = [];
-            //根据老师和考试对应的信息查对应的考站
-            $stationteacher = StationTeacher::where('exam_id', $exam_id)->where('exam_screening_id', $exam_screening_id)->where('user_id', $userid)->first();
-            $station_id = $stationteacher->station_id;
-            //通过考站查对应的房间号
-            $room = RoomStation::where('station_id', $station_id)->first();
-            $room_id = $room->room_id;
-            //得出学生列表
-            $connection = DB::connection($this->connection);
+        //取exam表中exam status状态为1的 得到id
+        $exam = Exam::where('status', 1)->first();
+        $exam_id = $exam->id;
+        //通过得到的exam_id查exam_screeing
+        $examscreening = ExamScreening::where('exam_id', $exam_id)->where('status', 1)->first();
+        $exam_screening_id = $examscreening->id;
+        //显示多少个学生
+        $shownum = ExamPlan::where('exam_id', $exam_id)->where('exam_screening_id', $exam_screening_id)->max('serialnumber');
+        $list = [];
+        //根据老师和考试对应的信息查对应的考站
+        $stationteacher = StationTeacher::where('exam_id', $exam_id)->where('exam_screening_id', $exam_screening_id)->where('user_id', $userid)->first();
+        $station_id = $stationteacher->station_id;
+        //通过考站查对应的房间号
+        $room = RoomStation::where('station_id', $station_id)->first();
+        $room_id = $room->room_id;
+        //得出学生列表
 
-            $queue = Cache::get('userid_'.$userid.'exam_id_'.$exam_id.'exam_screening_id_'.$exam_screening_id,0);
-            $list = $connection->table('exam_plan')
-                ->leftjoin('student', 'exam_plan.student_id', '=', 'student.id')
-                ->select('exam_plan.status','exam_plan.id as planid', 'student.user_id as stuid', 'student.avator','student.idcard', 'student.code', 'student.exam_sequence','exam_plan.student_id as pstuid', 'student.name as stuname')
-                ->where('exam_plan.exam_id', $exam_id)
-                ->where('exam_plan.exam_screening_id', $exam_screening_id)
-                ->where('exam_plan.room_id', $room_id)
-                //->where('exam_plan.status', 0)
-                ->orderBy('exam_plan.begin_dt', 'asc')
-                ->take($shownum)
-                ->skip($queue*$shownum)
-                ->get();
-            //dd($list,$statusArr =collect($list)->pluck('status')->all(),!in_array(0,$statusArr) && !in_array(1,$statusArr));
-            if (!empty($list)) {
-	            $statusArr =collect($list)->pluck('status')->all();
-                if(!in_array(0,$statusArr) && !in_array(1,$statusArr)){
-                    $queue=$queue+1;
-                    Cache::put('userid_'.$userid.'exam_id_'.$exam_id.'exam_screening_id_'.$exam_screening_id,$queue,36000);
-                    $list = $connection->table('exam_plan')
-                        ->leftjoin('student', 'exam_plan.student_id', '=', 'student.id')
-                        ->select('exam_plan.status','exam_plan.id as planid', 'student.user_id as stuid', 'student.avator','student.idcard', 'student.code', 'student.exam_sequence','exam_plan.student_id as pstuid', 'student.name as stuname')
-                        ->where('exam_plan.exam_id', $exam_id)
-                        ->where('exam_plan.exam_screening_id', $exam_screening_id)
-                        ->where('exam_plan.room_id', $room_id)
-                        //->where('exam_plan.status', 0)
-                        ->orderBy('exam_plan.begin_dt', 'asc')
-                        ->take($shownum)
-                        ->skip($queue*$shownum)
-                        ->get();
-                }
+        $queue = Cache::get('userid_'.$userid.'exam_id_'.$exam_id.'exam_screening_id_'.$exam_screening_id,0);
+        $list = ExamPlan::leftjoin('student', 'exam_plan.student_id', '=', 'student.id')
+            ->select('exam_plan.status','exam_plan.id as planid', 'student.id as stuid', 'student.avator','student.idcard', 'student.code', 'student.exam_sequence','exam_plan.student_id as pstuid', 'student.name as stuname')
+            ->where('exam_plan.exam_id', $exam_id)
+            ->where('exam_plan.exam_screening_id', $exam_screening_id)
+            ->where('exam_plan.room_id', $room_id)
+            //->where('exam_plan.status', 0)
+            ->orderBy('exam_plan.begin_dt', 'asc')
+            ->take($shownum)
+            ->skip($queue*$shownum)
+            ->get();
+        //dd($list,$statusArr =collect($list)->pluck('status')->all(),!in_array(0,$statusArr) && !in_array(1,$statusArr));
+        if (!empty($list)) {
+            $statusArr =collect($list)->pluck('status')->all();
+            if(!in_array(0,$statusArr) && !in_array(1,$statusArr)){
+                $queue=$queue+1;
+                Cache::put('userid_'.$userid.'exam_id_'.$exam_id.'exam_screening_id_'.$exam_screening_id,$queue,36000);
+                $list = ExamPlan::leftjoin('student', 'exam_plan.student_id', '=', 'student.id')
+                    ->select('exam_plan.status','exam_plan.id as planid', 'student.id as stuid', 'student.avator','student.idcard', 'student.code', 'student.exam_sequence','exam_plan.student_id as pstuid', 'student.name as stuname')
+                    ->where('exam_plan.exam_id', $exam_id)
+                    ->where('exam_plan.exam_screening_id', $exam_screening_id)
+                    ->where('exam_plan.room_id', $room_id)
+                    //->where('exam_plan.status', 0)
+                    ->orderBy('exam_plan.begin_dt', 'asc')
+                    ->take($shownum)
+                    ->skip($queue*$shownum)
+                    ->get();
             }
-            if(empty($list)){
-                $list=[];
-            }
+        }
+        $list2 = ExamPlan::leftjoin('student', 'exam_plan.student_id', '=', 'student.id')
+            ->select('exam_plan.id as planid', 'student.id as stuid', 'student.avator', 'student.idcard', 'student.code',  'student.exam_sequence','exam_plan.student_id as pstuid', 'student.name as stuname')
+            ->where('exam_plan.exam_id', $exam_id)
+            ->where('exam_plan.exam_screening_id', $exam_screening_id)
+            ->where('exam_plan.room_id', $room_id)
+            ->where('exam_plan.status','<',2)
+            ->orderBy('exam_plan.begin_dt', 'asc')
+            ->first();
+
+            $data["list"] = $list;
+            $data["nowstu"] = $list2;
 
             return response()->json(
-                $this->success_data($list, 1, 'success')
+                $this->success_data($data, 1, 'success')
             );
-        }
+    }
 
 
     /**
@@ -115,9 +119,7 @@ class PadphoneController extends  CommonController{
         //通过考站查对应的房间号
         $room = RoomStation::where('station_id', $station_id)->first();
         $room_id = $room->room_id;
-        $connection = DB::connection($this->connection);
-        $list = $connection->table('exam_plan')
-            ->leftjoin('student', 'exam_plan.student_id', '=', 'student.id')
+        $list = ExamPlan::leftjoin('student', 'exam_plan.student_id', '=', 'student.id')
             ->select('exam_plan.id as planid', 'student.id as stuid', 'student.avator', 'student.idcard', 'student.code',  'student.exam_sequence','exam_plan.student_id as pstuid', 'student.name as stuname')
             ->where('exam_plan.exam_id', $exam_id)
             ->where('exam_plan.exam_screening_id', $exam_screening_id)
@@ -286,9 +288,7 @@ class PadphoneController extends  CommonController{
         $room = RoomStation::where('station_id',$station_id)->first();
         $room_id = $room->room_id;
 
-        $connection = DB::connection($this->connection);
-        $data = $connection->table('station_teacher')
-            ->leftjoin('station', 'station_teacher.station_id', '=', 'station.id')
+        $data = StationTeacher::leftjoin('station', 'station_teacher.station_id', '=', 'station.id')
             ->leftjoin('subject', 'station.subject_id', '=', 'subject.id')
             ->leftjoin('teacher', 'station_teacher.user_id', '=', 'teacher.id')
             ->select('station_teacher.station_id','station.name','subject.title as subject_title','subject.mins','subject.id as subject_id','teacher.name as teacher_name')
@@ -335,9 +335,7 @@ class PadphoneController extends  CommonController{
         $examscreening = ExamScreening::where('exam_id',$exam_id)->where('status',1)->first();
         $exam_screening_id = $examscreening->id;
 
-        $connection = DB::connection($this->connection);
-        $list = $connection->table('exam_plan')
-            ->leftjoin('student', 'exam_plan.student_id', '=', 'student.id')
+        $list = ExamPlan::leftjoin('student', 'exam_plan.student_id', '=', 'student.id')
             ->leftjoin('room','exam_plan.room_id','=','room.id')
             ->select('exam_plan.id as planid','room.name as room_name','student.user_id as stuid','student.name as stuname')
             ->where('exam_plan.exam_id',$exam_id)
