@@ -147,9 +147,9 @@ class CexamController extends CommonController
 
         //增加折合率
         $testarrs = TestLog::where('id',$dataArray['logid'])->first();
-        $convent = $testarrs->convent;
-        if(!empty($convent)){
-            $score = round($convent*$score,2);
+        $convert = $testarrs->convert;
+        if(!empty($convert)){
+            $score = round($convert*$score,2);
         }
 
         $dataArray['objective']=$score;
@@ -250,9 +250,9 @@ class CexamController extends CommonController
 
         //增加折合率
         $testarrs = TestLog::where('id',$dataArray['logid'])->first();
-        $convent = $testarrs->convent;
-        if(!empty($convent)){
-            $score = round($convent*$score,2);
+        $convert = $testarrs->convert;
+        if(!empty($convert)){
+            $score = round($convert*$score,2);
         }
 
         $sysarray['subjective']=$score;
