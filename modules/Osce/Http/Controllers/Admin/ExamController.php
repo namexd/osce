@@ -1339,7 +1339,6 @@ class ExamController extends CommonController
         $ExamPlanModel  =   new ExamPlan();
         try {
             $plan   =   $ExamPlanModel  ->showSpeechPlans($exam);
-            dd($plan);
         } catch (\Exception $ex) {
             if ($ex->getCode() == 9999) {
                 //$user   =   Auth::user();
