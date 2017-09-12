@@ -124,7 +124,7 @@
 	                </div>
 	                <div class="hr-line-dashed"></div>	
 	                <div class="form-group">
-	                    <label for="rate_choose" class="col-sm-2 control-label">折算方式：<i></i></label>
+	                    <label for="rate_choose" class="col-sm-2 control-label">折算方式：</label>
 						<div class="col-sm-5">
 							<select id="rate_choose" class="form-control">
 								<option value="1">不需要折算</option>
@@ -133,7 +133,7 @@
 						</div>
 	                </div>
 	                <div class="form-group convert hide">
-	                    <label for="convert" class="col-sm-2 control-label">统一折算率：<i></i></label>
+	                    <label for="convert" class="col-sm-2 control-label">统一折算率：</label>
 	                    <div class="col-sm-5">
 							<input type="text" name="convert" id="convert" placeholder="请填写折算率(%)" class="form-control"  />
 	                    </div>

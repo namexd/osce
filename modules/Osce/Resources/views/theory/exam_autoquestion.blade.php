@@ -57,7 +57,7 @@
 					return false;
 				}
 
-				uselayer(2,'确定要新增考试吗？',function () {
+				uselayer(2,'确定要生成试卷吗？',function () {
 					Api.ajax({
 						type:'post',
 						url:"{{route('osce.theory.autoexam')}}",
