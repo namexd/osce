@@ -177,7 +177,7 @@
             <div class="col-xs-6 col-md-2" style="float: right;">
 
             </div>
-        </div>
+        </div>{{dd($plan)}}
         <form class="container-fluid ibox-content" id="list_form" action="{{route('osce.admin.arrangement.postStore')}}" method="post">
             <input type="hidden" name="exam_id" value="{{$_GET['id']}}">
             <div class="panel blank-panel">
