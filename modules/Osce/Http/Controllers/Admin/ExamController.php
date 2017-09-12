@@ -1313,6 +1313,59 @@ class ExamController extends CommonController
             );
         }
     }
+    /**
+     * 智能排考着陆页
+     * @url GET /osce/admin/exam/intelligence
+     * @access public
+     *
+     * @param Request $request
+     * <b>get请求字段：</b>
+     * * string        id        考试ID(必须的)
+     *
+     * @return View {'id':$exam->id}
+     */
+    public function getSpeechEaxmPlan(Request $request){
+        $this->validate($request,[
+            'id'    =>  'required|integer'
+        ]);
+
+        $id         =   $request    ->  get('id');
+
+        $exam       =   Exam::find($id);
+        if(is_null($exam))
+        {
+            throw new \Exception('没有找到该考试');
+        }
+        $ExamPlanModel  =   new ExamPlan();
+        try {
+            $plan   =   $ExamPlanModel  ->  showPlans($exam);
+        } catch (\Exception $ex) {
+            if ($ex->getCode() == 9999) {
+                $user   =   Auth::user();
+                $plan = [];
+                return view('osce::admin.examManage.speech_examplan',['exam'=>$exam,'plan'=>$plan])->withErrors($ex->getMessage());
+            }
+        }
+//        $plan   =   $this           ->  getEmptyTime($plan);
+        $user   =   Auth::user();
+        //如果$plan为空，就判断该考试在临时表中是否有数据
+
+        try {
+            if (count($plan) == 0) {
+                if (ExamPlanRecord::where('exam_id', $id)->first()) {
+                    $app = new App();
+                    $smartArrangeRepository = new SmartArrangeRepository($app);
+                    $plan = $smartArrangeRepository->output($exam);
+                    return view('osce::admin.examManage.speech_examplan', ['exam' => $exam, 'plan' => $plan])->withErrors('当前排考计划没有保存！');
+                } else {
+                    $plan = [];
+                }
+            }
+        } catch (\Exception $ex) {
+            return view('osce::admin.examManage.speech_examplan',['exam'=>$exam,'plan'=>$plan])->withErrors($ex->getMessage());
+        }
+        return view('osce::admin.examManage.speech_examplan',['exam'=>$exam,'plan'=>$plan]);
+    }
 
     /**
      * 智能排考着陆页
