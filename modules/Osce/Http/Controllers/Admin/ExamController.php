@@ -1341,13 +1341,13 @@ class ExamController extends CommonController
             $plan   =   $ExamPlanModel  ->  showPlans($exam);
         } catch (\Exception $ex) {
             if ($ex->getCode() == 9999) {
-                $user   =   Auth::user();
+                //$user   =   Auth::user();
                 $plan = [];
                 return view('osce::admin.examManage.speech_examplan',['exam'=>$exam,'plan'=>$plan])->withErrors($ex->getMessage());
             }
         }
 //        $plan   =   $this           ->  getEmptyTime($plan);
-        $user   =   Auth::user();
+        //$user   =   Auth::user();
         //如果$plan为空，就判断该考试在临时表中是否有数据
 
         try {
