@@ -11,15 +11,25 @@
         background:#16beb0;
         line-height: 1rem;
         font-size: 0.4rem;
+        position: relative;
     }
+    .top button { position: absolute; top: 0; right: 0.2rem; border: none; outline: none; width: 1rem; font-size: 0.25rem; background: none;}
+    .top .play { right: 1.4rem; font-size: 0.35rem;}
+    
     .no-data { text-align: center;  font-size: 0.25rem; border-top: 1px solid #ccc; line-height: 3rem;}
 	p,h3,h4,ul,li { margin: 0; padding: 0;}
     .white{color: white;}
-    .list,.list-title { display: flex; border-bottom: 1px solid #ccc; }
-    .list li,.list-title h4 { flex: 1;padding: 0.2rem 0; font-size: 0.25rem; text-align: center; line-height: 0.5rem; border-right: 1px solid #ccc; }   
-    .list li:first-child,.list-title h4:first-child {flex: none;width: 12%; } 
-    .list li:last-child,.list-title h4:last-child { border-right: none;} 
+    .list-title h4 { padding: 0.2rem 0;}
+    .list,.list-title { border-bottom: 1px solid #ccc; }
+    .list li,.list-title { display: flex; }
+    .list li div,.list-title h4 { flex: 1; font-size: 0.25rem; text-align: center; line-height: 0.5rem; border-right: 1px solid #ccc; }   
+    .list li div:first-child,.list-title h4:first-child {flex: none;width: 12%; } 
+    .list li div:last-child,.list-title h4:last-child { border-right: none;} 
     
+    .list li:first-child div { padding-top: 0.2rem;}
+    .list li:last-child div { padding-bottom: 0.2rem;}
+    
+    #audio { display: none;}
     
     </style>
 @stop
@@ -34,190 +44,151 @@
   		$(function () {
 			var data = {!! collect($plan) !!};
 			console.log(data);
-			
+			var room_len = 0;
+			var str_kz = '<h4>时间</h4>';
+			for (var name in data.room) {
+				room_len++;
+				str_kz+='<h4>'+data.room[name]+'</h4>';
+				for (var kz in data.plan) {
+					if (!data.plan[kz][name]) {
+						data.plan[kz][name] = {student:[{name:'&nbsp;'}]};
+					}				
+				}					
+			}
+			var arr = [];
+			var num = 0 ;
+			for (var time in data.plan) {
+				if (num%room_len==0) {
+					arr.push({});
+				}
+				arr[arr.length-1][time]=data.plan[time];
+				num++;
+			}		
 			var str = '';
-			for (var name in data ) {
-				writekaozhan(data[name]);
-				
+			for (var i = 0 ; i < arr.length; i++) {
+				var _str = '';
+				for (var time in arr[i]) {
+					var _list = '';
+					var _arr = arr[i][time];
+					for (var room in _arr) {
+						var _arr2 = [];
+						for (var j = 0 ; j < _arr[room].student.length; j++) {
+							_arr2.push(_arr[room].student[j].name);
+						}
+						_list+='<div>'+_arr2.join('、')+'</div>';
+					}
+					_str+='<li><div class="time">'+timetodate(time,6)+'</div>'+_list+'</li>';
+				}				
+				str+='<ul class="list hide">'+_str+'</ul>';
 			}
 			
-			function writekaozhan(kaozhan) {
-				console.log(kaozhan);
-				
-				
-				var str_kz = '<h4>时间</h4>';
-				var _list = '';
-				
-				var _time = '';
-				
-				
-				for (var kz in kaozhan) {
-					str_kz+='<h4>'+kaozhan[kz].name+'</h4>';
-					var _stu = kaozhan[kz].child;
-					
-//					for (var time in _stu) {
-//						_time+='<div>'+time+'</div>';
-//						for (var _item in stu[time].items) {
-//							_name+='<div>'+stu[time].items[_item].name+'</div>';
-//						}
-//						
-//						
-//						
-//					}
-					
-					
-					
-				}
-				
-				_list = '<li>'+_time+'</li>';
-				
-				
-//				return '<div class="list-title">'+str_kz+'</div><ul class="list">'+_list+'</ul>';
-				$('.box').append('<div class="list-con">'+str+'</div>');
-			};
+			$('.list-con').html('<div class="list-title">'+str_kz+'</div>'+str);
 			
-  			
+			$('.list').eq(0).removeClass('hide');
+			$('.list').eq(1).removeClass('hide');
+			
+			$('.next').click(function () {
+				$('.list:first').remove();
+				if ($('.list').length==0) {
+					$('.list-con').html('<div class="no-data">本场考试已结束</div>');
+					return false;
+				}
+				$('.list').eq(0).removeClass('hide');
+				$('.list').eq(1).removeClass('hide');
+				
+				if ($('.play i').hasClass('fa-volume-up')) {
+					playaudio();
+				}
+			});
+			
+			$('.play').click(function () {
+				if ($(this).find('i').hasClass('fa-volume-up')) {
+					pauseaudio();
+					$(this).find('i').removeClass('fa-volume-up');
+					$(this).find('i').addClass('fa-volume-off');
+				} else {
+					playaudio();
+					$(this).find('i').removeClass('fa-volume-off');
+					$(this).find('i').addClass('fa-volume-up');
+				}
+			});
+			
+			
   		});
-
+  		
+  		function pauseaudio() {
+  			$('#audio')[0].onended = null;
+  			$('#audio')[0].pause();
+  			clearInterval($('#audio')[0].timer);
+  			$('#audio')[0].times = 0;;
+  			$('#audio').attr('src','');
+  		};
+  		
+		function playaudio() {
+			pauseaudio();
+			var name = {};
+			var arr = [];
+			if ($('.list').length==0) {
+				return false;
+			}
+			$('.list:first div:not(.time)').each(function () {
+				if ($(this).html()=='&nbsp;') {
+					return true;
+				} 
+				var _arr = $(this).html().split('、');
+				for (var i = 0 ; i < _arr.length; i++) {
+					if (_arr[i]=='&nbsp;'||$.trim(_arr[i])=='') {
+						continue;
+					} 
+					if (!name[_arr[i]]) {
+						name[_arr[i]] = 1;
+					}	
+				}
+			});
+			for (var _name in name) {	
+				arr.push(_name);
+			}
+			$.ajax({
+				type:"get",
+				url:"/getSpeechUrl",
+				data:{text:'请考生：'+arr.join('、')+'，做好准备，，！'},
+				success:function (res) {
+					console.log(res);
+					$('#audio').attr('src',res);
+					$('#audio')[0].oncanplay = function () {
+						$('#audio')[0].play();
+						$('#audio')[0].onended = function () {
+							$('#audio')[0].times++;
+							if ($('#audio')[0].times>=3) {
+								pauseaudio();
+							} else {
+								$('#audio')[0].play();
+							}
+						}
+					};
+				}
+			});				
+		};
+					
     </script>		
 @stop
 
 @section('body')
  <div class="box">
 
-    <h3 class="top white center">{{$exam->name}}</h3>
+    <h3 class="top white center">
+    	{{$exam->name}}
+    	<button class="next">下一组</button>
+    	<button class="play"><i class="fa fa-volume-off" aria-hidden="true"></i></button>
+    </h3>
     
     <div class="list-con">
-	    <div class="list-title">
-	    	<h4 class="time">时间</h4>
-	    	<h4>考站1</h4>
-	    	<h4>考站2</h4>
-	    	<h4>考站3</h4>
-	    	<h4>考站4</h4>
-	    	<h4>考站3</h4>
-	    	<h4>考站4</h4>
-	    </div>
-	    <ul class="list">
-	    	<li>
-	    		<div>12:56</div>
-	    		<div>12:56</div>
-	    		<div>12:56</div>
-	    		<div>12:56</div>
-	    		<div>12:56</div>
-	    		<div>12:56</div>
-	    	</li>
-	    	<li>
-	    		<div>孙杰</div>
-	    		<div>唐小伟</div>
-	    		<div>范典</div>
-	    		<div>兰功伟</div>
-	    		<div>范典</div>
-	    		<div>兰功伟</div>
-	    	</li>
-	    	<li>
-	    		<div>唐小伟</div>
-	    		<div>范典</div>
-	    		<div>兰功伟</div>
-	    		<div>孙杰</div>
-	    		<div>兰功伟</div>
-	    		<div>孙杰</div>
-	    	</li>
-	    	<li>
-	    		<div>范典</div>
-	    		<div>兰功伟</div>
-	    		<div>孙杰</div>
-	    		<div>唐小伟</div>
-	    		<div>孙杰</div>
-	    		<div>唐小伟</div>
-	    	</li>
-	    	<li>
-	    		<div>兰功伟</div>
-	    		<div>孙杰</div>
-	    		<div>唐小伟</div>
-	    		<div>范典</div>
-	    		<div>唐小伟</div>
-	    		<div>范典</div>
-	    	</li>
-	    	<li>
-	    		<div>范典</div>
-	    		<div>兰功伟</div>
-	    		<div>孙杰</div>
-	    		<div>唐小伟</div>
-	    		<div>孙杰</div>
-	    		<div>唐小伟</div>
-	    	</li>
-	    	<li>
-	    		<div>兰功伟</div>
-	    		<div>孙杰</div>
-	    		<div>唐小伟</div>
-	    		<div>范典</div>
-	    		<div>唐小伟</div>
-	    		<div>范典</div>
-	    	</li>
-	    </ul>
-   	
-    </div>
-	
-	<div class="list-con">
-	    <div class="list-title">
-	    	<h4 class="time">时间</h4>
-	    	<h4>考站1</h4>
-	    	<h4>考站2</h4>
-	    	<h4>考站3</h4>
-	    	<h4>考站4</h4>
-	    </div>
-	    <ul class="list">
-	    	<li>
-	    		<div>12:56</div>
-	    		<div>12:56</div>
-	    		<div>12:56</div>
-	    		<div>12:56</div>
-	    		<div>12:56</div>
-	    		<div>12:56</div>
-	    	</li>
-	    	<li>
-	    		<div>孙杰</div>
-	    		<div>唐小伟</div>
-	    		<div>范典</div>
-	    		<div>兰功伟</div>
-	    		<div>范典</div>
-	    		<div>兰功伟</div>
-	    	</li>
-	    	<li>
-	    		<div>唐小伟</div>
-	    		<div>范典</div>
-	    		<div>兰功伟</div>
-	    		<div>孙杰</div>
-	    		<div>兰功伟</div>
-	    		<div>孙杰</div>
-	    	</li>
-	    	<li>
-	    		<div>范典</div>
-	    		<div>兰功伟</div>
-	    		<div>孙杰</div>
-	    		<div>唐小伟</div>
-	    		<div>孙杰</div>
-	    		<div>唐小伟</div>
-	    	</li>
-	    	<li>
-	    		<div>兰功伟</div>
-	    		<div>孙杰</div>
-	    		<div>唐小伟</div>
-	    		<div>范典</div>
-	    		<div>唐小伟</div>
-	    		<div>范典</div>
-	    	</li>
-	    </ul>
-	
-	
+	    
 		
 	</div>
-
-
-
- 
- 
-
+	
+	<audio id="audio" src=""></audio>
+	
 </div>
 
 @stop{{-- 内容主体区域 --}}

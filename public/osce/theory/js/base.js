@@ -73,6 +73,7 @@
 	};
 	//时间戳转时间格式2016-05-01 12:01:12
 	w.timetodate = function (num,n,t) {
+		n=n||1;
 		//判断如果是秒转换成毫秒
 		if (String(num).length<=10) {
 			num = num*1000;
