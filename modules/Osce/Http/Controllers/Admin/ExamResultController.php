@@ -465,7 +465,11 @@ class ExamResultController extends CommonController{
             }
             $newlist[$k]["objective"] = $theory[0];
             $newlist[$k]["subjective"] = $theory[1];
-            $newlist[$k]["score_theory"] = $newlist[$k]["objective"]+$newlist[$k]["subjective"];
+            if(!empty($testlogs)) {
+                $newlist[$k]["score_theory"] = ($newlist[$k]["objective"] + $newlist[$k]["subjective"]);
+            }else{
+                $newlist[$k]["score_theory"] = "无";
+            }
             $newlist[$k]["score_all"] = $newlist[$k]["objective"]+$newlist[$k]["subjective"]+$v->score_total;
         }
         $hello =[['姓名','学号','考试名称','考站数','技能考试总成绩','理伦考试总成绩','总分']];

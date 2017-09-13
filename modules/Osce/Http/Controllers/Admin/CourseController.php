@@ -264,7 +264,11 @@ class CourseController extends CommonController
             }
             $newlist[$k]["objective"] = $theory[0];
             $newlist[$k]["subjective"] = $theory[1];
-            $newlist[$k]["score_theory"] = $newlist[$k]["objective"]+$newlist[$k]["subjective"];
+            if(!empty($testlogs)) {
+                $newlist[$k]["score_theory"] = ($newlist[$k]["objective"] + $newlist[$k]["subjective"])."分";
+            }else{
+                $newlist[$k]["score_theory"] = "无";
+            }
             $newlist[$k]["score_all"] = $newlist[$k]["objective"]+$newlist[$k]["subjective"]+$v->score_total;
 
         }

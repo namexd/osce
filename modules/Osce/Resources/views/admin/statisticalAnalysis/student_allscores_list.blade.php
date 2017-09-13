@@ -92,7 +92,7 @@
                             <td>{{$item->exam_name}}</td>
                             <td>{{$item->station_total}}</td>
                             <td>{{$item->score_total}}分</td>
-                            <td>{{$item->score_theory}}分</td>
+                            <td>{{$item->score_theory}}</td>
                             <td>{{$item->score_all}}分</td>
                         </tr>
                     @empty
