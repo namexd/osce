@@ -81,6 +81,7 @@
                             <th>考站数</th>
                             <th>技能考试总成绩</th>
                             <th>理论考试总成绩</th>
+                            <th>总成绩</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -92,6 +93,7 @@
                             <td>{{$item->station_total}}</td>
                             <td>{{$item->score_total}}分</td>
                             <td>{{$item->score_theory}}分</td>
+                            <td>{{$item->score_all}}分</td>
                         </tr>
                     @empty
                         <tr><td colspan="7">{{$backMes}}</td></tr>

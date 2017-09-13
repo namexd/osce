@@ -231,10 +231,6 @@ class CourseController extends CommonController
             list($screening_ids, $elderExam_ids) = ExamScreening::getAllScreeningByExam($examId);
             //获得学生的列表在该考试的列表
             $list = Student::getStudentScoreList($screening_ids, $message);
-            //为每一条数据插入统计值
-            foreach ($list as $key => &$item) {
-                $item->ranking = $key + 1;
-            }
             if (!count($list)) {
                 $backMes = '该考试还未出成绩';
             }
@@ -259,7 +255,6 @@ class CourseController extends CommonController
             $newlist[$k]["exam_name"] = $v->exam_name;
             $newlist[$k]["station_total"] = $v->station_total;
             $newlist[$k]["score_total"] = $v->score_total;
-            $newlist[$k]["ranking"] = $v->ranking;
             $newlist[$k]["student_id"] = $v->student_id;
             if(!empty($arr[$v->student_id])) {
                 $theory = explode("#", $arr[$v->student_id]);
@@ -269,6 +264,8 @@ class CourseController extends CommonController
             $newlist[$k]["objective"] = $theory[0];
             $newlist[$k]["subjective"] = $theory[1];
             $newlist[$k]["score_theory"] = $newlist[$k]["objective"]+$newlist[$k]["subjective"];
+            $newlist[$k]["score_all"] = $newlist[$k]["objective"]+$newlist[$k]["subjective"]+$v->score_total;
+
         }
         $newlist = $this->array_to_object($newlist);
 
