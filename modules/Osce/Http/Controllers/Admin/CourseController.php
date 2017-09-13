@@ -239,7 +239,7 @@ class CourseController extends CommonController
         $testlogs = TestLog::where('exam_id',$examId)->first();
         if(!empty($testlogs)){
             $lgid = $testlogs->id;
-            $TestStatistics = TestStatistics::where('id',$lgid)->get();
+            $TestStatistics = TestStatistics::where('logid',$lgid)->get();
         }
         $arr = [];
         $newlist = [];
