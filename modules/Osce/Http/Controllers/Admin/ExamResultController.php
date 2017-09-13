@@ -29,6 +29,7 @@ use Modules\Osce\Entities\Subject;
 use Modules\Osce\Entities\TestAttach;
 use Modules\Osce\Http\Controllers\CommonController;
 use Modules\Osce\Repositories\Common;
+use Modules\Osce\Entities\TestLog;
 
 class ExamResultController extends CommonController{
 
@@ -410,6 +411,73 @@ class ExamResultController extends CommonController{
         {
             return redirect()->back()->withErrors(['code'=>$ex->getCode(), 'msg'=>$ex->getMessage()]);
         }
+    }
+
+
+    //成绩汇总导出
+    public function getExportAllScore(Request $request){
+
+        $this->validate($request, [
+            'exam_id' => 'integer'
+        ]);
+        $examId = '';
+        $message = '';
+        $examDownlist = Exam::select('id', 'name')->where('exam.status', '<>', 0)->where('pid','=',0)->orderBy('begin_dt', 'desc')->get();
+        //获得最近的考试的id
+        $lastExam = Exam::orderBy('begin_dt', 'desc')->where('exam.status', '<>', 0)->where('pid','=',0)->first();
+
+        if (is_null($lastExam)) {
+            $list = [];
+        } else {
+            $lastExamId = $lastExam->id;
+            //获得参数
+            $examId = $request->input('exam_id', $lastExamId);
+            list($screening_ids, $elderExam_ids) = ExamScreening::getAllScreeningByExam($examId);
+            //获得学生的列表在该考试的列表
+            $list = Student::getStudentScoreList($screening_ids,"");
+        }
+        //查询一下有没有理伦考试
+        $testlogs = TestLog::where('exam_id',$examId)->first();
+        if(!empty($testlogs)){
+            $lgid = $testlogs->id;
+            $TestStatistics = TestStatistics::where('id',$lgid)->get();
+        }
+        $arr = [];
+        $newlist = [];
+        if(!empty($TestStatistics)){
+            foreach($TestStatistics as $k=>$v){
+                $arr[$v->stuid] = $v->objective."#".$v->subjective;
+            }
+        }
+
+        foreach($list as $k=>$v){
+            $newlist[$k]["student_name"] = $v->student_name;
+            $newlist[$k]["student_code"] = $v->student_code;
+            $newlist[$k]["exam_name"] = $v->exam_name;
+            $newlist[$k]["station_total"] = $v->station_total;
+            $newlist[$k]["score_total"] = $v->score_total;
+            $newlist[$k]["student_id"] = $v->student_id;
+            if(!empty($arr[$v->student_id])) {
+                $theory = explode("#", $arr[$v->student_id]);
+            }else{
+                $theory = [0,0];
+            }
+            $newlist[$k]["objective"] = $theory[0];
+            $newlist[$k]["subjective"] = $theory[1];
+            $newlist[$k]["score_theory"] = $newlist[$k]["objective"]+$newlist[$k]["subjective"];
+            $newlist[$k]["score_all"] = $newlist[$k]["objective"]+$newlist[$k]["subjective"]+$v->score_total;
+        }
+        $hello =[['姓名','学号','考试名称','考站数','技能考试总成绩','理伦考试总成绩','总分']];
+        $i = 1;
+        foreach($newlist as $v){
+           $hello[$i] =[$v['student_name'],$v['student_code'],$v['exam_name'],$v['station_total'],$v['score_total'],$v['score_theory'],$v['score_all']];
+            $i++;
+        }
+        Excel::create(iconv('UTF-8', 'GBK//ignore', '成绩汇总'),function($excel) use ($hello){
+            $excel->sheet('score', function($sheet) use ($hello){
+                $sheet->rows($hello);
+            });
+        })->export('xls');
     }
 
 

@@ -305,6 +305,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::get('exam/download-image',['uses'=>'ExamResultController@getDownloadImage','as'=>'osce.admin.getDownloadImage']);
 		Route::get('exam/exam-station-list',['uses'=>'ExamResultController@getExamStationList','as'=>'osce.admin.getExamStationList']);
 		Route::get('exam/export-score',	['uses'=>'ExamResultController@getExportScore','as'=>'osce.admin.getExportScore']);			//成绩导出 TODO: fandian 216-05-25
+		Route::get('exam/export-allscore',	['uses'=>'ExamResultController@getExportAllScore','as'=>'osce.admin.getExportAllScore']);			//成绩导出 TODO: fandian 216-05-25
 		Route::get('exam/subject-score',	['uses'=>'ExamResultController@getSubjectScore','as'=>'osce.admin.getSubjectScore']);			//成绩导出 TODO: fandian 216-05-25
 
 		//sp
@@ -351,6 +352,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::get('course/index',['uses'=>'CourseController@getIndex','as'=>'osce.admin.course.getIndex']);
 		Route::get('course/student',['uses'=>'CourseController@getStudent','as'=>'osce.admin.course.getStudent']);
 		Route::get('course/student-score',['uses'=>'CourseController@getStudentScore','as'=>'osce.admin.course.getStudentScore']);
+		Route::get('course/student-allscore',['uses'=>'CourseController@getStudentAllScore','as'=>'osce.admin.course.getStudentAllScore']);
 		Route::get('course/student-details',['uses'=>'CourseController@getStudentDetails','as'=>'osce.admin.course.getStudentDetails']);
 		Route::get('course/subject',['uses'=>'CourseController@getSubject','as'=>'osce.admin.course.getSubject']);
 		Route::get('course/invalid-score',['uses'=>'CourseController@invalidScore','as'=>'osce.admin.course.invalidScore']);

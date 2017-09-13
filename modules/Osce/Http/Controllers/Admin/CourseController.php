@@ -20,6 +20,8 @@ use Modules\Osce\Entities\Station;
 use Modules\Osce\Entities\StationTeacher;
 use Modules\Osce\Entities\Student;
 use Modules\Osce\Entities\Subject;
+use Modules\Osce\Entities\TestLog;
+use Modules\Osce\Entities\TestStatistics;
 use Modules\Osce\Http\Controllers\CommonController;
 use Cache;
 use Modules\Osce\Repositories\Common;
@@ -200,6 +202,99 @@ class CourseController extends CommonController
         ]);
     }
 
+    /**
+     * 总成绩查询
+     * @param Request $request
+     * @return \Illuminate\View\View
+     * @author ZouYuChao
+     */
+    public function getStudentAllScore(Request $request)
+    {
+        $this->validate($request, [
+            'exam_id' => 'sometimes|integer',
+            'message' => 'sometimes'
+        ]);
+        $examId = '';
+        $message = '';
+        $examDownlist = Exam::select('id', 'name')->where('exam.status', '<>', 0)->where('pid','=',0)->orderBy('begin_dt', 'desc')->get();
+        //获得最近的考试的id
+        $lastExam = Exam::orderBy('begin_dt', 'desc')->where('exam.status', '<>', 0)->where('pid','=',0)->first();
+
+        if (is_null($lastExam)) {
+            $list = [];
+            $backMes = '目前没有已结束的考试';
+        } else {
+            $lastExamId = $lastExam->id;
+            //获得参数
+            $examId = $request->input('exam_id', $lastExamId);
+            $message = $request->input('message');
+            list($screening_ids, $elderExam_ids) = ExamScreening::getAllScreeningByExam($examId);
+            //获得学生的列表在该考试的列表
+            $list = Student::getStudentScoreList($screening_ids, $message);
+            //为每一条数据插入统计值
+            foreach ($list as $key => &$item) {
+                $item->ranking = $key + 1;
+            }
+            if (!count($list)) {
+                $backMes = '该考试还未出成绩';
+            }
+        }
+        //查询一下有没有理伦考试
+        $testlogs = TestLog::where('exam_id',$examId)->first();
+        if(!empty($testlogs)){
+            $lgid = $testlogs->id;
+            $TestStatistics = TestStatistics::where('id',$lgid)->get();
+        }
+        $arr = [];
+        $newlist = [];
+        if(!empty($TestStatistics)){
+            foreach($TestStatistics as $k=>$v){
+                $arr[$v->stuid] = $v->objective."#".$v->subjective;
+            }
+        }
+
+        foreach($list as $k=>$v){
+            $newlist[$k]["student_name"] = $v->student_name;
+            $newlist[$k]["student_code"] = $v->student_code;
+            $newlist[$k]["exam_name"] = $v->exam_name;
+            $newlist[$k]["station_total"] = $v->station_total;
+            $newlist[$k]["score_total"] = $v->score_total;
+            $newlist[$k]["ranking"] = $v->ranking;
+            $newlist[$k]["student_id"] = $v->student_id;
+            if(!empty($arr[$v->student_id])) {
+                $theory = explode("#", $arr[$v->student_id]);
+            }else{
+                $theory = [0,0];
+            }
+            $newlist[$k]["objective"] = $theory[0];
+            $newlist[$k]["subjective"] = $theory[1];
+            $newlist[$k]["score_theory"] = $newlist[$k]["objective"]+$newlist[$k]["subjective"];
+        }
+        $newlist = $this->array_to_object($newlist);
+
+
+
+        return view('osce::admin.statisticalAnalysis.student_allscores_list', [
+            'data' => $list,
+            'newdata' => $newlist,
+            'examDownlist' => $examDownlist,
+            'exam_id' => $examId,
+            'message' => $message,
+            'backMes' => isset($backMes) ? $backMes : ''
+        ]);
+    }
+    public function array_to_object($arr) {
+        if (gettype($arr) != 'array') {
+            return;
+        }
+        foreach ($arr as $k => $v) {
+            if (gettype($v) == 'array' || getType($v) == 'object') {
+                $arr[$k] = (object)$this->array_to_object($v);
+            }
+        }
+
+        return (object)$arr;
+    }
     /**
      * 考生成绩详情
      * @param Request $request
