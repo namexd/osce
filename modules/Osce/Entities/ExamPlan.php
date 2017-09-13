@@ -852,7 +852,7 @@ class ExamPlan extends CommonModel
     public function showSpeechPlans($exam,$screening_id)
     {
         $list = $this->where(['exam_id' => $exam->id,'exam_screening_id'=>$screening_id])->get();
-        $timeData = [];
+        $timeData = [];$roomData=[];
         foreach ($list as $record) {
             if ($exam->sequence_mode == 1) //考场模式
             {
@@ -872,6 +872,7 @@ class ExamPlan extends CommonModel
             $timeData[strtotime($record->begin_dt)][$record->room_id]['end'] = strtotime($record->end_dt);
             $timeData[strtotime($record->begin_dt)][$record->room_id]['screening'] = $screening_id;
             $timeData[strtotime($record->begin_dt)][$record->room_id]['student'][] = $student->toArray();
+            $roomData[$record->room_id]=$name;
 
         }
 
@@ -879,7 +880,7 @@ class ExamPlan extends CommonModel
 
 
 
-        return $timeData;
+        return ['plan'=>$timeData,'room'=>$roomData];
 
 
     }
