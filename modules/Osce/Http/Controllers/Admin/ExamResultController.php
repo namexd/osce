@@ -439,14 +439,20 @@ class ExamResultController extends CommonController{
         //查询一下有没有理伦考试
         $testlogs = TestLog::where('exam_id',$examId)->first();
         if(!empty($testlogs)){
+            $sarr = [];
             $lgid = $testlogs->id;
+            $ksstus = Student::where('exam_id',$examId)->get();
+            foreach($ksstus as $ksstu){
+                $sarr[$ksstu->userid] = $ksstu->id;
+            }
             $TestStatistics = TestStatistics::where('logid',$lgid)->get();
         }
         $arr = [];
         $newlist = [];
         if(!empty($TestStatistics)){
             foreach($TestStatistics as $k=>$v){
-                $arr[$v->stuid] = $v->objective."#".$v->subjective;
+                $stukey = $sarr[$v->stuid];
+                $arr[$stukey] = $v->objective."#".$v->subjective;
             }
         }
 
