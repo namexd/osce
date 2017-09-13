@@ -849,6 +849,58 @@ class ExamPlan extends CommonModel
 
 
     }
+    public function showSpeechPlans($exam)
+    {
+        $list = $this->where('exam_id', '=', $exam->id)->get();
+
+        $arrays = [];
+        foreach ($list as $record) {
+            //$arrays = $screen->groupBy('station_id');
+            $screeningId = $record->exam_screening_id;
+            $station_id = $record->station_id;
+            //$station        =   $record->station;
+            $screeningId = $record->exam_screening_id;
+            if ($exam->sequence_mode == 1) //考场模式
+            {
+                $arrays[$screeningId][$record->room_id][strtotime($record->begin_dt)][] = $record;
+            } else //考站模式
+            {
+                $arrays[$screeningId][$record->room_id . '-' . $record->station_id][strtotime($record->begin_dt)][] = $record;
+            }
+        }
+
+        $timeData = [];
+        foreach ($arrays as $screeningId => $screening) {
+            foreach ($screening as $entityId => $timeList) {
+                foreach ($timeList as $batch => $recordList) {
+                    foreach ($recordList as $record) {
+                        if ($exam->sequence_mode == 1) //考场模式
+                        {
+                            $name = $record->room->name;
+                        } else //考站模式
+                        {
+                            $name = $record->room->name . '-' . $record->station->name;
+                        }
+
+                        $student = $record->student;
+                        if (is_null($student)) {
+                            throw new \Exception('参加考试的学生已经被删除！', 9999);
+                        }
+//                        dump($batch);
+                        $timeData[$screeningId][$entityId]['name'] = $name;
+                        $timeData[$screeningId][$entityId]['child'][$batch]['start'] = strtotime($record->begin_dt);
+                        $timeData[$screeningId][$entityId]['child'][$batch]['end'] = strtotime($record->end_dt);
+                        $timeData[$screeningId][$entityId]['child'][$batch]['screening'] = $screeningId;
+                        $timeData[$screeningId][$entityId]['child'][$batch]['student'] = $student->toArray();
+
+                    }
+                }
+            }
+        }
+        return $timeData;
+
+
+    }
 
     /**
      * 保存学生考试顺序
