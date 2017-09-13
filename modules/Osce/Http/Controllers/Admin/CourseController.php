@@ -253,13 +253,14 @@ class CourseController extends CommonController
             $newlist[$k]["student_name"] = $v->student_name;
             $newlist[$k]["student_code"] = $v->student_code;
             $newlist[$k]["exam_name"] = $v->exam_name;
-            $newlist[$k]["station_total"] = $v->station_total;
             $newlist[$k]["score_total"] = $v->score_total;
             $newlist[$k]["student_id"] = $v->student_id;
             if(!empty($arr[$v->student_id])) {
                 $theory = explode("#", $arr[$v->student_id]);
+                $newlist[$k]["station_total"] = $v->station_total+1;
             }else{
                 $theory = [0,0];
+                $newlist[$k]["station_total"] = $v->station_total;
             }
             $newlist[$k]["objective"] = $theory[0];
             $newlist[$k]["subjective"] = $theory[1];
