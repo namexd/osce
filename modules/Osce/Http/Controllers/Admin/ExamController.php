@@ -1325,45 +1325,17 @@ class ExamController extends CommonController
      * @return View {'id':$exam->id}
      */
     public function getSpeechEaxmPlan(Request $request){
-        $this->validate($request,[
-            'id'    =>  'required|integer'
-        ]);
 
-        $id         =   $request    ->  get('id');
-
-        $exam       =   Exam::find($id);
-        if(is_null($exam))
+        $exam       =   Exam::where('status',1)->first();
+        $screening      =   ExamScreening::where('status',1)->first();
+        if(is_null($exam) || is_null($screening))
         {
             throw new \Exception('没有找到该考试');
         }
+        $Screening      =   ExamScreening::where('status',1)->first();
         $ExamPlanModel  =   new ExamPlan();
-        try {
-            $plan   =   $ExamPlanModel  ->showSpeechPlans($exam);
-        } catch (\Exception $ex) {
-            if ($ex->getCode() == 9999) {
-                //$user   =   Auth::user();
-                $plan = [];
-                return view('osce::admin.examManage.speech_examplan',['exam'=>$exam,'plan'=>$plan])->withErrors($ex->getMessage());
-            }
-        }
-//        $plan   =   $this           ->  getEmptyTime($plan);
-        //$user   =   Auth::user();
-        //如果$plan为空，就判断该考试在临时表中是否有数据
 
-        try {
-            if (count($plan) == 0) {
-                if (ExamPlanRecord::where('exam_id', $id)->first()) {
-                    $app = new App();
-                    $smartArrangeRepository = new SmartArrangeRepository($app);
-                    $plan = $smartArrangeRepository->output($exam);
-                    return view('osce::admin.examManage.speech_examplan', ['exam' => $exam, 'plan' => $plan])->withErrors('当前排考计划没有保存！');
-                } else {
-                    $plan = [];
-                }
-            }
-        } catch (\Exception $ex) {
-            return view('osce::admin.examManage.speech_examplan',['exam'=>$exam,'plan'=>$plan])->withErrors($ex->getMessage());
-        }
+        $plan   =   $ExamPlanModel  ->showSpeechPlans($exam,$screening->id);
         return view('osce::admin.examManage.speech_examplan',['exam'=>$exam,'plan'=>$plan]);
     }
 
