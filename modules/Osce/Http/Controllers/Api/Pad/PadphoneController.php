@@ -36,7 +36,7 @@ class PadphoneController extends  CommonController{
         $exam = Exam::where('status', 1)->first();
         if(empty($exam)){
             return response()->json(
-                $this->success_data([], 0, 'error')
+                $this->success_data([], 0, '考试未开始或已结束！')
             );
         }
         $exam_id = $exam->id;
