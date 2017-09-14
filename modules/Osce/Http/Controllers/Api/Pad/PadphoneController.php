@@ -34,6 +34,11 @@ class PadphoneController extends  CommonController{
 
         //取exam表中exam status状态为1的 得到id
         $exam = Exam::where('status', 1)->first();
+        if(empty($exam)){
+            return response()->json(
+                $this->success_data([], 0, 'error')
+            );
+        }
         $exam_id = $exam->id;
         //通过得到的exam_id查exam_screeing
         $examscreening = ExamScreening::where('exam_id', $exam_id)->where('status', 1)->first();
