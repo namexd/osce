@@ -42,7 +42,8 @@ class PadphoneController extends  CommonController{
         $shownum = ExamPlan::where('exam_id', $exam_id)->where('exam_screening_id', $exam_screening_id)->max('serialnumber');
         $list = [];
         //根据老师和考试对应的信息查对应的考站
-        $stationteacher = StationTeacher::where('exam_id', $exam_id)->where('exam_screening_id', $exam_screening_id)->where('user_id', $userid)->first();
+        //$stationteacher = StationTeacher::where('exam_id', $exam_id)->where('exam_screening_id', $exam_screening_id)->where('user_id', $userid)->first();
+        $stationteacher = StationTeacher::where('exam_id', $exam_id)->where('user_id', $userid)->first();
         $station_id = $stationteacher->station_id;
         //通过考站查对应的房间号
         $room = RoomStation::where('station_id', $station_id)->first();
@@ -114,7 +115,8 @@ class PadphoneController extends  CommonController{
         $examscreening = ExamScreening::where('exam_id', $exam_id)->where('status', 1)->first();
         $exam_screening_id = $examscreening->id;
         //根据老师和考试对应的信息查对应的考站
-        $stationteacher = StationTeacher::where('exam_id', $exam_id)->where('exam_screening_id', $exam_screening_id)->where('user_id', $userid)->first();
+        //$stationteacher = StationTeacher::where('exam_id', $exam_id)->where('exam_screening_id', $exam_screening_id)->where('user_id', $userid)->first();
+        $stationteacher = StationTeacher::where('exam_id', $exam_id)->where('user_id', $userid)->first();
         $station_id = $stationteacher->station_id;
         //通过考站查对应的房间号
         $room = RoomStation::where('station_id', $station_id)->first();
@@ -286,7 +288,8 @@ class PadphoneController extends  CommonController{
         $examscreening = ExamScreening::where('exam_id',$exam_id)->where('status',1)->first();
         $exam_screening_id = $examscreening->id;
         //根据老师和考试对应的信息查对应的考站
-        $stationteacher = StationTeacher::where('exam_id',$exam_id)->where('exam_screening_id',$exam_screening_id)->where('user_id',$userid)->first();
+        //$stationteacher = StationTeacher::where('exam_id',$exam_id)->where('exam_screening_id',$exam_screening_id)->where('user_id',$userid)->first();
+        $stationteacher = StationTeacher::where('exam_id',$exam_id)->where('user_id',$userid)->first();
         $station_id = $stationteacher->station_id;
         //通过考站查对应的房间号
         $room = RoomStation::where('station_id',$station_id)->first();
