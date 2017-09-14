@@ -725,4 +725,6 @@ Route::group(['prefix' => 's', 'namespace' => 'Modules\Osce\Http\Controllers\Bil
 	//学生接口
 	Route::get('student', ['uses' => 'BillboardController@getStudent', 'as' => 'osce.billboard.getStudent']);
 });
+//叫号
+Route::get('yell', ['uses'=>'Modules\Osce\Http\Controllers\Admin\ExamController@getSpeechEaxmPlan']);
 
