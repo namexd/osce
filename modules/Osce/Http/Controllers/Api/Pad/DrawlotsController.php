@@ -1032,16 +1032,16 @@ class DrawlotsController extends CommonController
             //拿到当前老师支持的考站
             $stationId = $this->getTeacherStation($exam_screening_id, $exam, $id);
             $station = Station::where('id', $stationId)->first();
+
             //拿到房间
             $room = $this->getRoomId($id, $exam->id);
-
             //判断其考站或考场是否在该次考试中使用
             $check = $this->checkEffected($exam, $room, $station);
 
             Common::valueIsNull($check, -785, '当前考站或考场没有安排在此考试中');
 
             //将考场名字和考站名字封装起来
-            $station->name = $room->name . '-' . $station->name;
+            $station->name = $room->name . '-' . $station->name.'--('. $room->room->name.')';
             //场次id
             $station->exam_screening_id = $exam_screening_id;
 
@@ -1069,7 +1069,7 @@ class DrawlotsController extends CommonController
             //有别名使用别名没有别名使用考试名
             if(empty($room->name)){
                 $asStation =!empty($ExamDraft->name)?$ExamDraft->name:$subject->title;
-                $station->name = $asStation . $station->name;
+                $station->name = $asStation . $station->name.'--('. $room->room->name.')';
             }
             $station->room_id = $room->room_id;
             //将考试的id封装进去
