@@ -172,7 +172,8 @@ class PadphoneController extends  CommonController{
             if(empty($res)){
                 ExamScreening::where('id',$examscreening->id)->update(['status' => 2]);
                 //清除缓存
-                Cache::forget('userid_'.$userid.'exam_id_'.$exam_id.'exam_screening_id_'.$examscreening->id);
+                //Cache::forget('userid_'.$userid.'exam_id_'.$exam_id.'exam_screening_id_'.$examscreening->id);
+                \Cache::flush();
                 //当前考次结束，开启下一场考试，不是本次考试不会开启成功
                 $gid = $examscreening->id+1;
                 ExamScreening::where('id',$gid)->where('exam_id',$exam_id)->update(['status' => 1]);
