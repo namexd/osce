@@ -300,7 +300,7 @@ class PadphoneController extends  CommonController{
             ->leftjoin('teacher', 'station_teacher.user_id', '=', 'teacher.id')
             ->select('station_teacher.station_id','station.name','subject.title as subject_title','subject.mins','subject.id as subject_id','teacher.name as teacher_name')
             ->where('station_teacher.exam_id',$exam_id)
-            ->where('station_teacher.exam_screening_id',$exam_screening_id)
+            //->where('station_teacher.exam_screening_id',$exam_screening_id)
             ->where('station_teacher.user_id',$userid)
             ->first();
          //查一下对应的考试课目
