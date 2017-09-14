@@ -47,8 +47,17 @@ class PadphoneController extends  CommonController{
         $shownum = ExamPlan::where('exam_id', $exam_id)->where('exam_screening_id', $exam_screening_id)->max('serialnumber');
         $list = [];
         //根据老师和考试对应的信息查对应的考站
-        //$stationteacher = StationTeacher::where('exam_id', $exam_id)->where('exam_screening_id', $exam_screening_id)->where('user_id', $userid)->first();
-        $stationteacher = StationTeacher::where('exam_id', $exam_id)->where('user_id', $userid)->first();
+        $stages = StationTeacher::where('exam_id', $exam_id)->groupBy('exam_screening_id')->get();
+        $jdarr =collect($stages)->pluck('exam_screening_id')->all();
+        $stagecount = count($jdarr);
+
+        if($stagecount==1){
+            $stationteacher = StationTeacher::where('exam_id', $exam_id)->where('user_id', $userid)->first();
+        }else{
+            $stationteacher = StationTeacher::where('exam_id', $exam_id)->where('exam_screening_id', $exam_screening_id)->where('user_id', $userid)->first();
+        }
+
+
         $station_id = $stationteacher->station_id;
         //通过考站查对应的房间号
         $room = RoomStation::where('station_id', $station_id)->first();
@@ -101,48 +110,6 @@ class PadphoneController extends  CommonController{
             );
     }
 
-
-    /**
-     * 获得前当前考生
-     */
-       public function getNowstu(Request $request)
-    {
-        $this->validate($request, [
-            'userid' => 'required|integer'
-        ]);
-        //取老师的id
-        $userid = $request->get('userid');
-
-        //取exam表中exam status状态为1的 得到id
-        $exam = Exam::where('status', 1)->first();
-        $exam_id = $exam->id;
-        //通过得到的exam_id查exam_screeing
-        $examscreening = ExamScreening::where('exam_id', $exam_id)->where('status', 1)->first();
-        $exam_screening_id = $examscreening->id;
-        //根据老师和考试对应的信息查对应的考站
-        //$stationteacher = StationTeacher::where('exam_id', $exam_id)->where('exam_screening_id', $exam_screening_id)->where('user_id', $userid)->first();
-        $stationteacher = StationTeacher::where('exam_id', $exam_id)->where('user_id', $userid)->first();
-        $station_id = $stationteacher->station_id;
-        //通过考站查对应的房间号
-        $room = RoomStation::where('station_id', $station_id)->first();
-        $room_id = $room->room_id;
-        $list = ExamPlan::leftjoin('student', 'exam_plan.student_id', '=', 'student.id')
-            ->select('exam_plan.id as planid', 'student.id as stuid', 'student.avator', 'student.idcard', 'student.code',  'student.exam_sequence','exam_plan.student_id as pstuid', 'student.name as stuname')
-            ->where('exam_plan.exam_id', $exam_id)
-            ->where('exam_plan.exam_screening_id', $exam_screening_id)
-            ->where('exam_plan.room_id', $room_id)
-            ->where('exam_plan.status','<',2)
-            ->orderBy('exam_plan.begin_dt', 'asc')
-            ->take(1)
-            ->get();
-        if (empty($list)) {
-            $list = [];
-        }
-        return response()->json(
-            $this->success_data($list, 1, 'success')
-        );
-
-    }
 
 
     /**
@@ -301,14 +268,30 @@ class PadphoneController extends  CommonController{
         $room = RoomStation::where('station_id',$station_id)->first();
         $room_id = $room->room_id;
 
-        $data = StationTeacher::leftjoin('station', 'station_teacher.station_id', '=', 'station.id')
-            ->leftjoin('subject', 'station.subject_id', '=', 'subject.id')
-            ->leftjoin('teacher', 'station_teacher.user_id', '=', 'teacher.id')
-            ->select('station_teacher.station_id','station.name','subject.title as subject_title','subject.mins','subject.id as subject_id','teacher.name as teacher_name')
-            ->where('station_teacher.exam_id',$exam_id)
-            //->where('station_teacher.exam_screening_id',$exam_screening_id)
-            ->where('station_teacher.user_id',$userid)
-            ->first();
+        //根据老师和考试对应的信息查对应的考站
+        $stages = StationTeacher::where('exam_id', $exam_id)->groupBy('exam_screening_id')->get();
+        $jdarr =collect($stages)->pluck('exam_screening_id')->all();
+        $stagecount = count($jdarr);
+
+        if($stagecount==1){
+            $data = StationTeacher::leftjoin('station', 'station_teacher.station_id', '=', 'station.id')
+                ->leftjoin('subject', 'station.subject_id', '=', 'subject.id')
+                ->leftjoin('teacher', 'station_teacher.user_id', '=', 'teacher.id')
+                ->select('station_teacher.station_id','station.name','subject.title as subject_title','subject.mins','subject.id as subject_id','teacher.name as teacher_name')
+                ->where('station_teacher.exam_id',$exam_id)
+                ->where('station_teacher.user_id',$userid)
+                ->first();
+        }else{
+            $data = StationTeacher::leftjoin('station', 'station_teacher.station_id', '=', 'station.id')
+                ->leftjoin('subject', 'station.subject_id', '=', 'subject.id')
+                ->leftjoin('teacher', 'station_teacher.user_id', '=', 'teacher.id')
+                ->select('station_teacher.station_id','station.name','subject.title as subject_title','subject.mins','subject.id as subject_id','teacher.name as teacher_name')
+                ->where('station_teacher.exam_id',$exam_id)
+                ->where('station_teacher.exam_screening_id',$exam_screening_id)
+                ->where('station_teacher.user_id',$userid)
+                ->first();
+        }
+
          //查一下对应的考试课目
         $sid = $data->subject_id;
         $subjectcase = SubjectCases::where('subject_id',$sid)->first();

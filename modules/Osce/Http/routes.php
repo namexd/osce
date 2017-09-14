@@ -416,7 +416,6 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 
 		//phone pad接口
 		Route::get('getstulist', ['uses'=>'PadphoneController@getStulist','as'=>'osce.padphone.getstulist']);//老师登录进系统显示学生列表
-		//Route::get('getnowstu', ['uses'=>'PadphoneController@getNowstu','as'=>'osce.padphone.getnowstu']);//获得前当前考生
 		Route::get('stopnowstu', ['uses'=>'PadphoneController@stopNowstu','as'=>'osce.padphone.stopnowstu']);//设置当前考生为缺考
 		Route::get('startnowstu', ['uses'=>'PadphoneController@startNowstu','as'=>'osce.padphone.startnowstu']);//设置当前考生为开始考试
 		Route::get('finishnowstu', ['uses'=>'PadphoneController@finishNowstu','as'=>'osce.padphone.finishnowstu']);//提交评份结束当前考试
