@@ -1330,7 +1330,9 @@ class ExamController extends CommonController
         $screening      =   ExamScreening::where('status',1)->first();
         if(is_null($exam) || is_null($screening))
         {
-            throw new \Exception('没有找到该考试');
+            //throw new \Exception('没有找到该考试');
+
+            return view('osce::admin.examManage.speech_examplan',['exam'=>[],'plan'=>[]]);
         }
         $Screening      =   ExamScreening::where('status',1)->first();
         $ExamPlanModel  =   new ExamPlan();

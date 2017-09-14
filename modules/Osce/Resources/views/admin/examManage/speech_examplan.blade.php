@@ -177,7 +177,7 @@
  <div class="box">
 
     <h3 class="top white center">
-    	{{$exam->name}}
+    	{{$exam->name or '考试未开始！'}}
     	<button class="next">下一组</button>
     	<button class="play"><i class="fa fa-volume-off" aria-hidden="true"></i></button>
     </h3>
