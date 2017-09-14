@@ -85,7 +85,7 @@ class PadphoneController extends  CommonController{
             }
         }
         $list2 = ExamPlan::leftjoin('student', 'exam_plan.student_id', '=', 'student.id')
-            ->select('exam_plan.id as planid', 'student.id as stuid', 'student.avator', 'student.idcard', 'student.code',  'student.exam_sequence','exam_plan.student_id as pstuid', 'student.name as stuname')
+            ->select('exam_plan.id as planid', 'exam_plan.begin_dt','student.id as stuid', 'student.avator', 'student.idcard', 'student.code',  'student.exam_sequence','exam_plan.student_id as pstuid', 'student.name as stuname')
             ->where('exam_plan.exam_id', $exam_id)
             ->where('exam_plan.exam_screening_id', $exam_screening_id)
             ->where('exam_plan.room_id', $room_id)
