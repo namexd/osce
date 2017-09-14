@@ -242,6 +242,10 @@ class PadphoneController extends  CommonController{
                 $gid = $examscreening->id+1;
                 ExamScreening::where('id',$gid)->where('exam_id',$exam_id)->update(['status' => 1]);
                 $sbz = 0;
+                $kanexam = ExamScreening::where('exam_id',$exam_id)->where('status','<',2)->first();
+                if(!empty($kanexam)){
+                    $bz = 0;
+                }
             }else{
                 $bz = 0;
             }
