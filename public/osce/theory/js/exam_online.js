@@ -21,7 +21,7 @@ function setnamestr(question,i) {
 function setdanxuanstr(arr,str) {
 	for (var i = 0 ; i < arr.length; i++) {
 		var _str2 = '';
-		var _arr = arr[i].content.replace(/\s/g,"").split(/\w\./g);
+		var _arr = arr[i].content.replace(/\s/g,"").split(/[a-z|A-Z]\./g);
 		for(var j = 0 ;j<_arr.length;j++){
 		    if(_arr[j] == "" || typeof(_arr[j]) == "undefined"){
 		        _arr.splice(j,1);
