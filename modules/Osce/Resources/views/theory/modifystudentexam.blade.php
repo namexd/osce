@@ -220,6 +220,7 @@
 							</div>
 							<input type="hidden" name="logid" id="logid" value="" />
 							<input type="hidden" name="stuid" id="stuid" value="" />
+							<input type="hidden" name="page" id="page" value="{{request()->get('page')}}" />
 							<button class="btn btn-primary" id="pijuan" type="submit">提交批卷</button>
 							<button class="btn btn-default" onclick="javascript:history.go(-1);">返回</button>
 						</form>

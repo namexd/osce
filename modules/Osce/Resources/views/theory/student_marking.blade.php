@@ -46,7 +46,7 @@
                         
                         <td>
                         	@if($val->status==0)
-	                            <a class="state1 modal-control" href="{{route('osce.cexam.modifystudentexam',['logid'=>$val->logid,'userid'=>$val->stuid,'exam'=>$val->logdata->exam->name])}}">
+	                            <a class="state1 modal-control" href="{{route('osce.cexam.modifystudentexam',['logid'=>$val->logid,'userid'=>$val->stuid,'exam'=>$val->logdata->exam->name,'page'=>request()->get('page')])}}">
 	                                <span class="read  state2 detail"><i class="fa fa-pencil-square-o fa-2x"></i>打分</span>
 	                            </a>
                         	
