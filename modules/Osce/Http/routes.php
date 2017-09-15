@@ -8,7 +8,17 @@ Route::get('/c',function(){
 });
 
 Route::get('/A',['uses'=>'Modules\Osce\Http\Controllers\Admin\AddModuleController@index']);
-Route::get('theory', ['uses'=>'Modules\Osce\Http\Controllers\Admin\TestController@examList',  'as' => 'osce.theory.examList']);//理论考试排考查看
+
+//理论考试排考查看
+Route::get('theory', ['uses'=>'Modules\Osce\Http\Controllers\Admin\TestController@examList',  'as' => 'osce.theory.examList']);
+
+//考生理论考试登陆
+Route::group(['prefix' => 'theory-login', 'namespace' => 'Modules\Osce\Http\Controllers\Theory'], function () {
+	Route::get('index', ['uses' => 'TheoryLoginController@getIndex', 'as' => 'osce.theory.login.getIndex']);
+	Route::post('index', ['uses' => 'TheoryLoginController@postIndex', 'as' => 'osce.theory.login.postIndex']);
+});
+//叫号
+Route::get('yell', ['uses'=>'Modules\Osce\Http\Controllers\Admin\ExamController@getSpeechEaxmPlan']);
 
 Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'], function () {
 	//---新加理论考试系统start
@@ -713,12 +723,6 @@ Route::group(['prefix' => 's', 'namespace' => 'Modules\Osce\Http\Controllers\Bil
 	Route::get('student', ['uses' => 'BillboardController@getStudent', 'as' => 'osce.billboard.getStudent']);
 });
 
-
-//告示牌登陆
-Route::group(['prefix' => 'theory-login', 'namespace' => 'Modules\Osce\Http\Controllers\Theory'], function () {
-	Route::get('index', ['uses' => 'TheoryLoginController@getIndex', 'as' => 'osce.theory.login.getIndex']);
-	Route::post('index', ['uses' => 'TheoryLoginController@postIndex', 'as' => 'osce.theory.login.postIndex']);
-});
 Route::group(['prefix' => 's', 'namespace' => 'Modules\Osce\Http\Controllers\Billboard', 'middleware' => 'billboard'], function () {
 
 	//告示牌主页
@@ -726,6 +730,4 @@ Route::group(['prefix' => 's', 'namespace' => 'Modules\Osce\Http\Controllers\Bil
 	//学生接口
 	Route::get('student', ['uses' => 'BillboardController@getStudent', 'as' => 'osce.billboard.getStudent']);
 });
-//叫号
-Route::get('yell', ['uses'=>'Modules\Osce\Http\Controllers\Admin\ExamController@getSpeechEaxmPlan']);
 
