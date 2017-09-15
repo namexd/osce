@@ -161,7 +161,7 @@ class CexamController extends CommonController
         //$info = $this->rmsg($result['code'],$result['msg']);
 
         \Auth::logout();
-        return view('osce::theory.theory_login')->withErrors('1答卷成功');
+        return redirect()->route('osce.theory.login.getIndex')->withErrors('1答卷成功');
 
     }
 
