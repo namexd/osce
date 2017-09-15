@@ -8,12 +8,14 @@
 
 namespace Modules\Osce\Http\Controllers\Admin;
 
+use App\Entities\SysUserRole;
 use Illuminate\Http\Request;
 use App\Repositories\Common as AppCommon;
 use Modules\Osce\Entities\Exam;
 use Modules\Osce\Entities\Student;
 use Modules\Osce\Http\Controllers\CommonController;
 use Modules\Osce\Repositories\Common;
+use Auth;
 
 
 class IndexController extends CommonController
@@ -21,7 +23,9 @@ class IndexController extends CommonController
     public function dashboard(){
         $exam   =   new Exam();
         $data   =   $exam->selectExamToday();
-        if(count($data) > 0){
+        $userRole = SysUserRole::where('user_id',Auth::user()->id)->first();
+
+        if(count($data) > 0 &&  $userRole->role->name !='监考老师'){
             return view('osce::admin.index.examboard',['data'=>$data]);
         }else{
             return view('osce::admin.index.dashboard');
