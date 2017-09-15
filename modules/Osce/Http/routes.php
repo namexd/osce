@@ -8,10 +8,12 @@ Route::get('/c',function(){
 });
 
 Route::get('/A',['uses'=>'Modules\Osce\Http\Controllers\Admin\AddModuleController@index']);
+Route::get('theory', ['uses'=>'Modules\Osce\Http\Controllers\Admin\TestController@examList',  'as' => 'osce.theory.examList']);//理论考试排考查看
 
 Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'], function () {
 	//---新加理论考试系统start
 	//考试管理
+
 	Route::group(['prefix' => "theory",'namespace' => 'Admin'], function()
 	{
 		Route::get('add', ['uses'=>'TestController@add', 'as' => 'osce.theory.add']);//添加考试
