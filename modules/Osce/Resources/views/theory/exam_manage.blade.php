@@ -46,9 +46,9 @@
 			laydate(end);
 			
 			$('#rate_choose').change(function () {
-				if ($(this).val()=='1') {
+				if ($(this).val()=='0') {
 					$('.convert').addClass('hide');
-					$('#convert').val(0);
+					$('#convert').val('1');
 				} else {
 					$('#convert').val('');
 					$('.convert').removeClass('hide');
@@ -63,7 +63,7 @@
 				if(noempty('.form-horizontal')){
 					return false;
 				}
-				if ($('#rate_choose').val()=='0') {
+				if ($('#rate_choose').val()=='1') {
 					if ($.trim($('#convert').val())=='') {
 						uselayer(3,'请填写统一折算率');
 						$('#convert').focus();
@@ -127,15 +127,15 @@
 	                    <label for="rate_choose" class="col-sm-2 control-label">折算方式：</label>
 						<div class="col-sm-5">
 							<select id="rate_choose" class="form-control">
-								<option value="1">不需要折算</option>
-								<option value="0">统一折算率</option>
+								<option value="0">不需要折算</option>
+								<option value="1">统一折算率</option>
 							</select>
 						</div>
 	                </div>
 	                <div class="form-group convert hide">
 	                    <label for="convert" class="col-sm-2 control-label">统一折算率：</label>
 	                    <div class="col-sm-5">
-							<input type="text" name="convert" id="convert" placeholder="请填写折算率(%)" class="form-control"  />
+							<input type="text" name="convert" id="convert" value="1" placeholder="请填写折算率(%)" class="form-control"  />
 	                    </div>
 	                </div>
 	                <div class="hr-line-dashed"></div>	
