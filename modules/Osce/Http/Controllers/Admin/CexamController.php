@@ -229,8 +229,7 @@ class CexamController extends CommonController
 
     public function modifyExamResult(Request $request)
     {
-        $dataArray=$request->only('id','isright','poins','logid','stuid');
-
+        $dataArray=$request->only('id','isright','poins','logid','stuid','page');
 
         $exam = new Cexam();
 
@@ -260,7 +259,7 @@ class CexamController extends CommonController
         $sysarray['stuid']=$dataArray['stuid'];
         //更新统计表里的分数
         $exam ->updatestatics($sysarray);
-        return redirect()->route('osce.theory.studentmarking',array('id'=>$dataArray['logid']))->withErrors('1批巻成功');
+        return redirect()->route('osce.theory.studentmarking',array('id'=>$dataArray['logid'],'page'=>$dataArray['page']))->withErrors('1批巻成功');
 
     }
 
