@@ -43,21 +43,17 @@ class PadphoneController extends  CommonController{
         //通过得到的exam_id查exam_screeing
         $examscreening = ExamScreening::where('exam_id', $exam_id)->where('status', 1)->first();
         $exam_screening_id = $examscreening->id;
+        $gradation_order = $examscreening->gradation_order;
         //显示多少个学生
         $shownum = ExamPlan::where('exam_id', $exam_id)->where('exam_screening_id', $exam_screening_id)->max('serialnumber');
         $list = [];
         //根据老师和考试对应的信息查对应的考站
-        $stages = StationTeacher::where('exam_id', $exam_id)->groupBy('exam_screening_id')->get();
-        $jdarr =collect($stages)->pluck('exam_screening_id')->all();
-        $stagecount = count($jdarr);
-
-        if($stagecount==1){
-            $stationteacher = StationTeacher::where('exam_id', $exam_id)->where('user_id', $userid)->first();
-        }else{
-            $stationteacher = StationTeacher::where('exam_id', $exam_id)->where('exam_screening_id', $exam_screening_id)->where('user_id', $userid)->first();
-        }
-
-
+        /* $stages = StationTeacher::where('exam_id', $exam_id)->groupBy('exam_screening_id')->get();
+         $jdarr =collect($stages)->pluck('exam_screening_id')->all();
+         $stagecount = count($jdarr);*/
+        //找到分阶段的序号取最小的 exam_screening_id
+        $minsid = ExamScreening::where('gradation_order',$gradation_order)->min('id');
+        $stationteacher = StationTeacher::where('exam_id', $exam_id)->where('exam_screening_id', $minsid)->where('user_id', $userid)->first();
         $station_id = $stationteacher->station_id;
         //通过考站查对应的房间号
         $room = RoomStation::where('station_id', $station_id)->first();
@@ -260,6 +256,7 @@ class PadphoneController extends  CommonController{
         //通过得到的exam_id查exam_screeing
         $examscreening = ExamScreening::where('exam_id',$exam_id)->where('status',1)->first();
         $exam_screening_id = $examscreening->id;
+        $gradation_order = $examscreening->gradation_order;
         //根据老师和考试对应的信息查对应的考站
         //$stationteacher = StationTeacher::where('exam_id',$exam_id)->where('exam_screening_id',$exam_screening_id)->where('user_id',$userid)->first();
         $stationteacher = StationTeacher::where('exam_id',$exam_id)->where('user_id',$userid)->first();
@@ -268,29 +265,18 @@ class PadphoneController extends  CommonController{
         $room = RoomStation::where('station_id',$station_id)->first();
         $room_id = $room->room_id;
 
-        //根据老师和考试对应的信息查对应的考站
-        $stages = StationTeacher::where('exam_id', $exam_id)->groupBy('exam_screening_id')->get();
-        $jdarr =collect($stages)->pluck('exam_screening_id')->all();
-        $stagecount = count($jdarr);
+        //根据老师和考试对应的信息查对应的考站 找到分阶段的序号取最小的 exam_screening_id
+        $minsid = ExamScreening::where('gradation_order',$gradation_order)->min('id');
 
-        if($stagecount==1){
-            $data = StationTeacher::leftjoin('station', 'station_teacher.station_id', '=', 'station.id')
-                ->leftjoin('subject', 'station.subject_id', '=', 'subject.id')
-                ->leftjoin('teacher', 'station_teacher.user_id', '=', 'teacher.id')
-                ->select('station_teacher.station_id','station.name','subject.title as subject_title','subject.mins','subject.id as subject_id','teacher.name as teacher_name')
-                ->where('station_teacher.exam_id',$exam_id)
-                ->where('station_teacher.user_id',$userid)
-                ->first();
-        }else{
-            $data = StationTeacher::leftjoin('station', 'station_teacher.station_id', '=', 'station.id')
-                ->leftjoin('subject', 'station.subject_id', '=', 'subject.id')
-                ->leftjoin('teacher', 'station_teacher.user_id', '=', 'teacher.id')
-                ->select('station_teacher.station_id','station.name','subject.title as subject_title','subject.mins','subject.id as subject_id','teacher.name as teacher_name')
-                ->where('station_teacher.exam_id',$exam_id)
-                ->where('station_teacher.exam_screening_id',$exam_screening_id)
-                ->where('station_teacher.user_id',$userid)
-                ->first();
-        }
+        $stationteacher = StationTeacher::where('exam_id', $exam_id)->where('exam_screening_id', $minsid)->where('user_id', $userid)->first();
+        $data = StationTeacher::leftjoin('station', 'station_teacher.station_id', '=', 'station.id')
+            ->leftjoin('subject', 'station.subject_id', '=', 'subject.id')
+            ->leftjoin('teacher', 'station_teacher.user_id', '=', 'teacher.id')
+            ->select('station_teacher.station_id','station.name','subject.title as subject_title','subject.mins','subject.id as subject_id','teacher.name as teacher_name')
+            ->where('station_teacher.exam_id',$exam_id)
+            ->where('station_teacher.exam_screening_id',$minsid)
+            ->where('station_teacher.user_id',$userid)
+            ->first();
 
          //查一下对应的考试课目
         $sid = $data->subject_id;
