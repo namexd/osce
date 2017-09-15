@@ -23,7 +23,14 @@
 		$(function () {
 			'use strict'
 			
-		    $('input[name="number[]"],input[name="score[]"]').keyup(function () {
+		    $('input[name="number[]"]').keyup(function () {
+		        this.value = this.value.replace(/[^\d]/g, '');
+		        if (parseInt($(this).val())>$(this).attr('_max')) {
+		        	$(this).val($(this).attr('_max'));
+		        	uselayer(3,'数量不能大于总题数！');
+		        }		        
+		    });	
+		    $('input[name="score[]"]').keyup(function () {
 		        this.value = this.value.replace(/[^\d]/g, '');
 		    });				
 			
@@ -40,23 +47,24 @@
 						bok = false;
 						return false;
 					}
-					if ($(this).find('input').eq(1).val()==''&&$(this).find('input').eq(0).val()!='') {
+					if ($(this).find('input').eq(1).val()=='0'&&$(this).find('input').eq(0).val()!=''||$(this).find('input').eq(1).val()==''&&$(this).find('input').eq(0).val()!='') {
 						uselayer(3,'请填写分值');
 						$(this).find('input').eq(1).focus();
 						bok = false;
 						return false;
 					}
+					
 					str+=$(this).find('input').eq(0).val();
 				});
-				if (!str) {
-					uselayer(3,'请至少选择一种题型！');
-					$('.form-horizontal .form-group:not(:first):not(:last) input').eq(0).focus();
-					bok = false;
-				}
 				if (!bok) {
 					return false;
 				}
-
+				if (!str) {
+					uselayer(3,'请至少选择一种题型！');
+					$('.form-horizontal .form-group:not(:first):not(:last) input').eq(0).focus();
+					return false;
+				}
+				
 				uselayer(2,'确定要生成试卷吗？',function () {
 					Api.ajax({
 						type:'post',
@@ -105,7 +113,7 @@
 		                <div class="form-group">
 		                    <label for="end" class="col-sm-4 control-label">{{$val->typeValues[$val->type]}}（共{{$val->sum_count}}题），选</label>
 		                    <div class="col-sm-2">
-								<input type="text" placeholder="" class="form-control " name="number[]" />
+								<input type="text" placeholder="" class="form-control " _max="{{$val->sum_count}}" name="number[]" />
 		                    </div>
 		                    <label for="end" class="col-sm-4 control-label control-name">题，每题分值</label>
 		                    <div class="col-sm-2 padL0">
