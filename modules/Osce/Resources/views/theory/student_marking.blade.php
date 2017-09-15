@@ -29,6 +29,7 @@
                         <th>试卷总分</th>
                         <th>客观题得分</th>
                         <th>主观题得分</th>
+                        <th>总得分</th>
                         <th>操作</th>
                     </tr>
                 </thead>
@@ -41,6 +42,7 @@
                         <td >{{$val->logdata->test->score}}</td>  
                         <td >{{$val->objective}}</td>
                         <td >{{$val->subjective}}</td> 
+                        <td >{{$val->objective+$val->subjective}}</td> 
                         
                         <td>
                         	@if($val->status==0)
