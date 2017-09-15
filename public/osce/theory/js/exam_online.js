@@ -14,7 +14,7 @@ function setnamestr(question,i) {
 			+'<span class="font16">'+(i+1)+'、'+question.question+'（'+question.poins+'分）'
 			+(question.score||question.score==0?'<i class="defen">（得分：'+question.score+'分）</i>':'')+'</span>'
 			+(question.images?'<img src="question.images" />':'')
-			+'<div class="dafen"><strong>得分：</strong><input type="text" name="poins[]" class="form-control" /></div>'
+			+'<div class="dafen"><strong>得分：</strong><input type="text" name="poins[]" _max="'+question.poins+'" class="form-control" /></div>'
 		+'</div>'				
 	return	_name		
 };

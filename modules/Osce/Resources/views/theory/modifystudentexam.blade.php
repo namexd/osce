@@ -152,6 +152,10 @@
 				$('.type_1 input,.type_2 input,.type_3 input').remove();				
 			    $("input.form-control").keyup(function () {
 			        this.value = this.value.replace(/[^\d]/g, '');
+			        if (parseInt($(this).val())>$(this).attr('_max')) {
+			        	$(this).val($(this).attr('_max'));
+			        	uselayer(3,'评分不能大于该题最大分！');
+			        }
 			    });					
 				$("input.form-control").eq(0).focus();
 				
