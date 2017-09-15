@@ -28,7 +28,7 @@ class TestController extends CommonController
     //显示最近一个月的考试列表
     public function examList(){
         $list= TestLog::where('start','>',date('Y-m-d H:i:s',strtotime('-1 month')))->get();
-        return view('osce::theory.exam_list')->with('list',$list);
+        return view('osce::theory.slect_exam_list')->with('list',$list);
 
     }
 
