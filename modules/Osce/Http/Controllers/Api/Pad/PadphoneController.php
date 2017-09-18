@@ -77,7 +77,6 @@ class PadphoneController extends  CommonController{
             if(!in_array(0,$statusArr) && !in_array(1,$statusArr)){
                 $queue=$queue+1;
                 Cache::put('userid_'.$userid.'exam_id_'.$exam_id.'exam_screening_id_'.$exam_screening_id,$queue,36000);
-                if(Cache::get('yell_exam_'.$exam_id) != $queue) Cache::put('yell_exam_'.$exam_id,$queue,36000);
 
                 $list = ExamPlan::leftjoin('student', 'exam_plan.student_id', '=', 'student.id')
                     ->select('exam_plan.status','exam_plan.id as planid', 'student.id as stuid', 'student.avator','student.idcard', 'student.code', 'student.exam_sequence','exam_plan.student_id as pstuid', 'student.name as stuname')

@@ -877,29 +877,6 @@ class ExamPlan extends CommonModel
         return ['plan'=>$timeData,'room'=>$roomData,'number'=>$number];
     }
 
-    //获取当前考生
-    public function showSpeechNow($exam_id,$room_id,$shownum){
-
-        $queue = Cache::get('yell_exam_'.$exam_id,0);
-        $list = $this->where(['exam_id'=> $exam_id,'room_id'=>$room_id])
-            ->orderBy('begin_dt', 'asc')
-            ->take($shownum)
-            ->skip($queue*$shownum)->get();
-        /*if (!empty($list)) {
-            $statusArr =collect($list)->pluck('status')->all();
-            if(!in_array(0,$statusArr) && !in_array(1,$statusArr)){
-                $queue=$queue+1;
-                Cache::put('yell_exam_'.$exam_id,$queue,36000);
-                $list = $this->where(['exam_id'=> $exam_id,'room_id'=>$room_id])
-                    ->orderBy('begin_dt', 'asc')
-                    ->take($shownum)
-                    ->skip($queue*$shownum)
-                    ->get();
-            }
-        }*/
-        return $list;
-    }
-
     /**
      * 保存学生考试顺序
      * @access public
