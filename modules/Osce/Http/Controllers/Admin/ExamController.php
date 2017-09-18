@@ -1340,6 +1340,23 @@ class ExamController extends CommonController
         $plan   =   $ExamPlanModel  ->showSpeechPlans($exam,$screening->id);
         return view('osce::admin.examManage.speech_examplan',['exam'=>$exam,'plan'=>$plan]);
     }
+    public function getSpeechNow(Request $request){
+
+        $id = $request->get('exam_id');
+        $exam       =   Exam::where('status',1)->first();
+        $screening      =   ExamScreening::where('status',1)->first();
+        if(is_null($exam) || is_null($screening))
+        {
+            //throw new \Exception('没有找到该考试');
+
+            return view('osce::admin.examManage.speech_examplan',['exam'=>[],'plan'=>[]]);
+        }
+        $Screening      =   ExamScreening::where('status',1)->first();
+        $ExamPlanModel  =   new ExamPlan();
+
+        $plan   =   $ExamPlanModel  ->showSpeechPlans($exam,$screening->id);
+        return view('osce::admin.examManage.speech_examplan',['exam'=>$exam,'plan'=>$plan]);
+    }
 
     /**
      * 智能排考着陆页

@@ -19,7 +19,8 @@ Route::group(['prefix' => 'theory-login', 'namespace' => 'Modules\Osce\Http\Cont
 });
 //叫号
 Route::get('yell', ['uses'=>'Modules\Osce\Http\Controllers\Admin\ExamController@getSpeechEaxmPlan']);
-
+//大屏当前学生列表
+Route::get('yell/list',['uses'=>'Modules\Osce\Http\Controllers\Admin\ExamController@r@getSpeechNow']);
 Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'], function () {
 	//---新加理论考试系统start
 	//考试管理
@@ -433,7 +434,6 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::get('finishnowstu', ['uses'=>'PadphoneController@finishNowstu','as'=>'osce.padphone.finishnowstu']);//提交评份结束当前考试
 		Route::get('getteachersubject', ['uses'=>'PadphoneController@getTeacherSubject','as'=>'osce.padphone.getteachersubject']);//老师登陆进来要考的考试项目，和对应要显示的病例内容
 		Route::get('getstugo', ['uses'=>'PadphoneController@getStugo','as'=>'osce.padphone.getstugo']);//学生考完显示下组去那个房间
-
 	});
 });
 
@@ -646,10 +646,6 @@ Route::get('test/test', function(Redis $redis) {
 //		}
 //	}
 //	dd($arr);
-
-	$a = 1111;
-//	dd($a['1']);
-	dd($a['1']);
 	
 });
 
