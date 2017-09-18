@@ -21,11 +21,12 @@ use Auth;
 class IndexController extends CommonController
 {
     public function dashboard(){
-        $exam   =   new Exam();
-        $data   =   $exam->selectExamToday();
+
         $userRole = SysUserRole::where('user_id',Auth::user()->id)->first();
 
-        if(count($data) > 0 &&  $userRole->role->name !='监考老师'){
+        if(!empty($userRole) && $userRole->role->name !='监考老师'){
+            $exam   =   new Exam();
+            $data   =   $exam->selectExamToday();
             return view('osce::admin.index.examboard',['data'=>$data]);
         }else{
             return view('osce::admin.index.dashboard');
