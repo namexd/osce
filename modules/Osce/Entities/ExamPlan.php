@@ -846,8 +846,6 @@ class ExamPlan extends CommonModel
             }
         }
         return $timeData;
-
-
     }
     public function showSpeechPlans($exam,$screening_id)
     {
@@ -875,14 +873,8 @@ class ExamPlan extends CommonModel
             $roomData[$record->room_id]=$name;
 
         }
-
-
-
-
-
-        return ['plan'=>$timeData,'room'=>$roomData];
-
-
+        $number = $this->where('exam_id', $exam->id)->max('serialnumber');
+        return ['plan'=>$timeData,'room'=>$roomData,'number'=>$number];
     }
 
     /**

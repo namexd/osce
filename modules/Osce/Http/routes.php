@@ -303,7 +303,8 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		//智能排考
 		Route::get('exam/intelligence-eaxm-plan', ['uses'=>'ExamController@getIntelligenceEaxmPlan','as'=>'osce.admin.exam.getIntelligenceEaxmPlan']);
 		Route::get('exam/intelligence', ['uses'=>'ExamController@getIntelligence','as'=>'osce.admin.exam.getIntelligence']);
-		Route::get('exam/speech-plan', ['uses'=>'ExamController@getSpeechEaxmPlan','as'=>'osce.admin.exam.getSpeechPlan']);
+		Route::get('exam/speech-plan', ['uses'=>'ExamController@getSpeechEaxmPlan','as'=>'osce.admin.exam.getSpeechPlan']);//获取当前考试所有考生
+		Route::get('exam/speech-now', ['uses'=>'ExamController@getSpeechNow','as'=>'osce.admin.exam.getSpeechNow']);//获取正在考试的一组考生
 		Route::post('exam/intelligence', ['uses'=>'ExamController@postIntelligence','as'=>'osce.admin.exam.postIntelligence']);
 		Route::post('exam/save-exam-plan', ['uses'=>'ExamController@postSaveExamPlan','as'=>'osce.admin.exam.postSaveExamPlan']);
 		Route::get('exam/change-student', ['uses'=>'ExamController@getChangeStudent','as'=>'osce.admin.exam.getChangeStudent']);
@@ -433,7 +434,6 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::get('finishnowstu', ['uses'=>'PadphoneController@finishNowstu','as'=>'osce.padphone.finishnowstu']);//提交评份结束当前考试
 		Route::get('getteachersubject', ['uses'=>'PadphoneController@getTeacherSubject','as'=>'osce.padphone.getteachersubject']);//老师登陆进来要考的考试项目，和对应要显示的病例内容
 		Route::get('getstugo', ['uses'=>'PadphoneController@getStugo','as'=>'osce.padphone.getstugo']);//学生考完显示下组去那个房间
-
 	});
 });
 
@@ -646,10 +646,6 @@ Route::get('test/test', function(Redis $redis) {
 //		}
 //	}
 //	dd($arr);
-
-	$a = 1111;
-//	dd($a['1']);
-	dd($a['1']);
 	
 });
 
