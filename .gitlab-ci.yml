@@ -1,11 +1,4 @@
 deploy_job:
     stage: deploy
     script:
-    - rm -rf /php_5.6.27-fpm/${CI_BUILD_REF_NAME}
-    - git archive --format=tar --prefix=${CI_BUILD_REF_NAME}/ HEAD | (cd /php_5.6.27-fpm/ && tar xf -)
-    - chmod -R 777 /php_5.6.27-fpm/${CI_BUILD_REF_NAME}/bootstrap/cache /php_5.6.27-fpm/${CI_BUILD_REF_NAME}/storage /php_5.6.27-fpm/${CI_BUILD_REF_NAME}/public
-    - setfacl -R -d -m user:999:rwx /php_5.6.27-fpm/${CI_BUILD_REF_NAME}
-    - rm -rf /php_7.0.12-fpm/${CI_BUILD_REF_NAME}
-    - git archive --format=tar --prefix=${CI_BUILD_REF_NAME}/ HEAD | (cd /php_7.0.12-fpm/ && tar xf -)
-    - chmod -R 777 /php_7.0.12-fpm/${CI_BUILD_REF_NAME}/bootstrap/cache /php_7.0.12-fpm/${CI_BUILD_REF_NAME}/storage /php_7.0.12-fpm/${CI_BUILD_REF_NAME}/public
-    - setfacl -R -d -m user:999:rwx /php_7.0.12-fpm/${CI_BUILD_REF_NAME}
+    - if [ -d /php_5.6.27-fpm ]; then rm -rf /php_5.6.27-fpm/${CI_BUILD_REF_NAME}.${CI_PROJECT_NAME}; git archive --format=tar --prefix=${CI_BUILD_REF_NAME}.${CI_PROJECT_NAME}/ HEAD | (cd /php_5.6.27-fpm/ && tar xf -); chmod -R 777 /php_5.6.27-fpm/${CI_BUILD_REF_NAME}.${CI_PROJECT_NAME}/bootstrap/cache /php_5.6.27-fpm/${CI_BUILD_REF_NAME}.${CI_PROJECT_NAME}/storage /php_5.6.27-fpm/${CI_BUILD_REF_NAME}.${CI_PROJECT_NAME}/public/admin/uploads; setfacl -R -d -m user:999:rwx /php_5.6.27-fpm/${CI_BUILD_REF_NAME}.${CI_PROJECT_NAME}; fi
