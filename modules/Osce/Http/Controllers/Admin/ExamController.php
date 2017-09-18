@@ -1347,7 +1347,11 @@ class ExamController extends CommonController
         if($plan){
             $ExamPlanModel  =   new ExamPlan();
             $now  =   $ExamPlanModel  ->showSpeechNow($exam_id,$plan->room_id,$plan->number);
-            return response()->json( $this->success_data($now) );
+            $nowList =[];
+            foreach($now as $val){
+                $nowList[]=$val->student->name;
+            }
+            return response()->json( $this->success_data($nowList) );
         }else{
             return response()->json( $this->success_data([],0,'考试未开始或已结束！') );
         }
