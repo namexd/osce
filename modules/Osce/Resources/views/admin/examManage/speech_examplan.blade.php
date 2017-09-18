@@ -14,7 +14,7 @@
         position: relative;
     }
     .top button { position: absolute; top: 0; right: 0.2rem; border: none; outline: none; width: 1rem; font-size: 0.25rem; background: none;}
-    .top .play { right: 1.4rem; font-size: 0.35rem;}
+    .top .play {/* right: 1.4rem;*/ right: 0.2rem; font-size: 0.35rem;}
     
     .no-data { text-align: center;  font-size: 0.25rem; border-top: 1px solid #ccc; line-height: 3rem;}
 	p,h3,h4,ul,li { margin: 0; padding: 0;}
@@ -44,10 +44,10 @@
   		$(function () {
 			var data = {!! collect($plan) !!};
 			console.log(data);
-			var room_len = 0;
+			var room_len = data.number;
 			var str_kz = '<h4>时间</h4>';
 			for (var name in data.room) {
-				room_len++;
+//				room_len++;
 				str_kz+='<h4>'+data.room[name]+'</h4>';
 				for (var kz in data.plan) {
 					if (!data.plan[kz][name]) {
@@ -84,8 +84,6 @@
 			
 			$('.list-con').html('<div class="list-title">'+str_kz+'</div>'+str);
 			
-			$('.list').eq(0).removeClass('hide');
-			$('.list').eq(1).removeClass('hide');
 			
 			$('.next').click(function () {
 				$('.list:first').remove();
@@ -113,24 +111,56 @@
 				}
 			});
 			
+			getspeechnow();
+			var timer = setInterval(getspeechnow,10000);
+			
+			
 			
   		});
   		
-  		function pauseaudio() {
-  			$('#audio')[0].onended = null;
-  			$('#audio')[0].pause();
-  			clearInterval($('#audio')[0].timer);
-  			$('#audio')[0].times = 0;;
-  			$('#audio').attr('src','');
+  		function getspeechnow() {
+			$.ajax({
+				type:"get",
+				url:"{{route('osce.admin.exam.getSpeechNow')}}",
+				data:{exam_id:'{{$exam->id}}'},
+				success:function (res) {
+					hasname(res.data);
+				}
+			});	
   		};
   		
-		function playaudio() {
-			pauseaudio();
-			var name = {};
-			var arr = [];
+  		
+  		function hasname(arr) {
 			if ($('.list').length==0) {
+				$('.list-con').html('<p class="no-data">考试已结束</p>');
 				return false;
 			}
+			var name = getlistname();
+			var ok = true;
+			for (var i = 0 ; i < arr.length; i++) {
+				if (!name[arr[i]]) {
+					ok = false;
+					break;
+				}
+			}
+			if (!ok) {
+				$('.list:first').remove();
+				hasname(arr);
+			} else {
+				$('.list').eq(0).removeClass('hide');
+				$('.list').eq(1).removeClass('hide');
+				if ($('.list:first').attr('isplay')!='1'&&$('.play i').hasClass('fa-volume-up')) {
+					playaudio();
+				}
+				$('.list:first').attr('isplay','1');
+			}  			
+  			
+  		};
+  		
+  		
+  		
+  		function getlistname() {
+  			var name = {};
 			$('.list:first div:not(.time)').each(function () {
 				if ($(this).html()=='&nbsp;') {
 					return true;
@@ -144,7 +174,25 @@
 						name[_arr[i]] = 1;
 					}	
 				}
-			});
+			});		
+  			return name;
+  		};
+  		
+  		function pauseaudio() {
+  			$('#audio')[0].onended = null;
+  			$('#audio')[0].pause();
+  			clearInterval($('#audio')[0].timer);
+  			$('#audio')[0].times = 0;;
+  			$('#audio').attr('src','');
+  		};
+  		
+		function playaudio() {
+			pauseaudio();
+			if ($('.list').length==0) {
+				return false;
+			}
+			var arr = [];
+			var name = getlistname();
 			for (var _name in name) {	
 				arr.push(_name);
 			}
@@ -178,7 +226,7 @@
 
     <h3 class="top white center">
     	{{$exam->name or '考试未开始！'}}
-    	<button class="next">下一组</button>
+    	<button class="next hide">下一组</button>
     	<button class="play"><i class="fa fa-volume-off" aria-hidden="true"></i></button>
     </h3>
     
