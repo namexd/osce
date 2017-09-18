@@ -1324,7 +1324,7 @@ class ExamController extends CommonController
      *
      * @return View {'id':$exam->id}
      */
-    public function getSpeechEaxmPlan(Request $request){
+    public function getSpeechEaxmPlan(){
 
         $exam       =   Exam::where('status',1)->first();
         $screening      =   ExamScreening::where('status',1)->first();
@@ -1340,22 +1340,17 @@ class ExamController extends CommonController
         $plan   =   $ExamPlanModel  ->showSpeechPlans($exam,$screening->id);
         return view('osce::admin.examManage.speech_examplan',['exam'=>$exam,'plan'=>$plan]);
     }
-    public function getSpeechNow(Request $request){
+    public function getSpeechNow(){
 
-        $id = $request->get('exam_id');
-        $exam       =   Exam::where('status',1)->first();
-        $screening      =   ExamScreening::where('status',1)->first();
-        if(is_null($exam) || is_null($screening))
-        {
-            //throw new \Exception('没有找到该考试');
-
-            return view('osce::admin.examManage.speech_examplan',['exam'=>[],'plan'=>[]]);
+        $exam=   Exam::where('status',1)->first();
+        if($exam){
+            $plan = ExamPlan::where('status',1)->select(DB::Raw('exam_id,room_id,max(serialnumber) as number'))->first();
+            $ExamPlanModel  =   new ExamPlan();
+            $now  =   $ExamPlanModel  ->showSpeechNow($exam->id,$plan->room_id,$plan->number);
+            return response()->json( $this->success_data($now) );
+        }else{
+            return response()->json( $this->success_data([],0,'考试未开始或已结束！') );
         }
-        $Screening      =   ExamScreening::where('status',1)->first();
-        $ExamPlanModel  =   new ExamPlan();
-
-        $plan   =   $ExamPlanModel  ->showSpeechPlans($exam,$screening->id);
-        return view('osce::admin.examManage.speech_examplan',['exam'=>$exam,'plan'=>$plan]);
     }
 
     /**

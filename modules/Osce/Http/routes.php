@@ -20,7 +20,7 @@ Route::group(['prefix' => 'theory-login', 'namespace' => 'Modules\Osce\Http\Cont
 //叫号
 Route::get('yell', ['uses'=>'Modules\Osce\Http\Controllers\Admin\ExamController@getSpeechEaxmPlan']);
 //大屏当前学生列表
-Route::get('yell/list',['uses'=>'Modules\Osce\Http\Controllers\Admin\ExamController@r@getSpeechNow']);
+Route::get('yell/list',['uses'=>'Modules\Osce\Http\Controllers\Admin\ExamController@getSpeechNow']);
 Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'], function () {
 	//---新加理论考试系统start
 	//考试管理
