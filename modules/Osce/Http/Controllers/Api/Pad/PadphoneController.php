@@ -101,9 +101,13 @@ class PadphoneController extends  CommonController{
             $data["list"] = $list;
             $data["nowstu"] = $list2;
 
-            return response()->json(
-                $this->success_data($data, 1, 'success')
-            );
+            if(empty($data['list'])){
+                return response()->json( $this->success_data([],0,'考试未开始或已结束！') );
+            }else{
+                return response()->json($this->success_data($data, 1, 'success'));
+            }
+
+
     }
 
 
