@@ -52,7 +52,7 @@ class PadphoneController extends  CommonController{
          $jdarr =collect($stages)->pluck('exam_screening_id')->all();
          $stagecount = count($jdarr);*/
         //找到分阶段的序号取最小的 exam_screening_id
-        $minsid = ExamScreening::where('gradation_order',$gradation_order)->min('id');
+        $minsid = ExamScreening::where('gradation_order',$gradation_order)->where('exam_id',$exam_id)->min('id');
         $stationteacher = StationTeacher::where('exam_id', $exam_id)->where('exam_screening_id', $minsid)->where('user_id', $userid)->first();
         $station_id = $stationteacher->station_id;
         //通过考站查对应的房间号
@@ -266,7 +266,7 @@ class PadphoneController extends  CommonController{
         $room_id = $room->room_id;
 
         //根据老师和考试对应的信息查对应的考站 找到分阶段的序号取最小的 exam_screening_id
-        $minsid = ExamScreening::where('gradation_order',$gradation_order)->min('id');
+        $minsid = ExamScreening::where('gradation_order',$gradation_order)->where('exam_id',$exam_id)->min('id');
 
         $stationteacher = StationTeacher::where('exam_id', $exam_id)->where('exam_screening_id', $minsid)->where('user_id', $userid)->first();
         $data = StationTeacher::leftjoin('station', 'station_teacher.station_id', '=', 'station.id')
