@@ -19,8 +19,7 @@ Route::group(['prefix' => 'theory-login', 'namespace' => 'Modules\Osce\Http\Cont
 });
 //叫号
 Route::get('yell', ['uses'=>'Modules\Osce\Http\Controllers\Admin\ExamController@getSpeechEaxmPlan']);
-//大屏当前学生列表
-Route::get('yell/list',['uses'=>'Modules\Osce\Http\Controllers\Admin\ExamController@getSpeechNow']);
+
 Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'], function () {
 	//---新加理论考试系统start
 	//考试管理
@@ -304,7 +303,8 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		//智能排考
 		Route::get('exam/intelligence-eaxm-plan', ['uses'=>'ExamController@getIntelligenceEaxmPlan','as'=>'osce.admin.exam.getIntelligenceEaxmPlan']);
 		Route::get('exam/intelligence', ['uses'=>'ExamController@getIntelligence','as'=>'osce.admin.exam.getIntelligence']);
-		Route::get('exam/speech-plan', ['uses'=>'ExamController@getSpeechEaxmPlan','as'=>'osce.admin.exam.getSpeechPlan']);
+		Route::get('exam/speech-plan', ['uses'=>'ExamController@getSpeechEaxmPlan','as'=>'osce.admin.exam.getSpeechPlan']);//获取当前考试所有考生
+		Route::get('exam/speech-now', ['uses'=>'ExamController@getSpeechNow','as'=>'osce.admin.exam.getSpeechNow']);//获取正在考试的一组考生
 		Route::post('exam/intelligence', ['uses'=>'ExamController@postIntelligence','as'=>'osce.admin.exam.postIntelligence']);
 		Route::post('exam/save-exam-plan', ['uses'=>'ExamController@postSaveExamPlan','as'=>'osce.admin.exam.postSaveExamPlan']);
 		Route::get('exam/change-student', ['uses'=>'ExamController@getChangeStudent','as'=>'osce.admin.exam.getChangeStudent']);

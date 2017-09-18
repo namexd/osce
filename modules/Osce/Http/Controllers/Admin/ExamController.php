@@ -1340,13 +1340,13 @@ class ExamController extends CommonController
         $plan   =   $ExamPlanModel  ->showSpeechPlans($exam,$screening->id);
         return view('osce::admin.examManage.speech_examplan',['exam'=>$exam,'plan'=>$plan]);
     }
-    public function getSpeechNow(){
+    public function getSpeechNow(Request $request){
 
-        $exam=   Exam::where('status',1)->first();
-        if($exam){
-            $plan = ExamPlan::where('status',1)->select(DB::Raw('exam_id,room_id,max(serialnumber) as number'))->first();
+        $exam_id = $request->get('exam_id');
+        $plan = ExamPlan::where('exam_id',$exam_id)->select(DB::Raw('exam_id,room_id,max(serialnumber) as number'))->first();
+        if($plan){
             $ExamPlanModel  =   new ExamPlan();
-            $now  =   $ExamPlanModel  ->showSpeechNow($exam->id,$plan->room_id,$plan->number);
+            $now  =   $ExamPlanModel  ->showSpeechNow($exam_id,$plan->room_id,$plan->number);
             return response()->json( $this->success_data($now) );
         }else{
             return response()->json( $this->success_data([],0,'考试未开始或已结束！') );
