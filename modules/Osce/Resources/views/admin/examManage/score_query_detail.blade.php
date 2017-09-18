@@ -61,8 +61,8 @@
         <div class="ibox-title">
             <h5>考生成绩明细</h5>
             <a href="javascript:history.back(-1)" class="btn btn-outline btn-default" style="float:right;margin:-10px 10px 0 0;">返回</a>
-            <a href="{{route('osce.admin.course.getResultVideo', [ 'exam_id'=>$result['exam_id'], 'student_id'=>$result['student_id'], 'station_id'=>$result['station_id'] ])}}" class="btn btn-outline btn-default" style="float:right;margin:-10px 10px 0 0;">查看视频</a>
-        </div>
+            <!--<a href="{{route('osce.admin.course.getResultVideo', [ 'exam_id'=>$result['exam_id'], 'student_id'=>$result['student_id'], 'station_id'=>$result['station_id'] ])}}" class="btn btn-outline btn-default" style="float:right;margin:-10px 10px 0 0;">查看视频</a>
+        --></div>
         <div class="ibox-content">
             <table class="table table-bordered">
                 <tbody>
