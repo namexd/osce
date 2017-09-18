@@ -885,7 +885,7 @@ class ExamPlan extends CommonModel
             ->orderBy('begin_dt', 'asc')
             ->take($shownum)
             ->skip($queue*$shownum)->get();
-        if (!empty($list)) {
+        /*if (!empty($list)) {
             $statusArr =collect($list)->pluck('status')->all();
             if(!in_array(0,$statusArr) && !in_array(1,$statusArr)){
                 $queue=$queue+1;
@@ -896,7 +896,7 @@ class ExamPlan extends CommonModel
                     ->skip($queue*$shownum)
                     ->get();
             }
-        }
+        }*/
         return $list;
     }
 
