@@ -2,11 +2,10 @@
 Route::get('/test/mi', function () {
 	return bcrypt(request()->get('value')?:123456);
 });
-Route::get('/c',function(){
+/*Route::get('/c',function(){
 	$c = \Cache::flush();
 	dd($c);
-});
-
+});*/
 Route::get('/A',['uses'=>'Modules\Osce\Http\Controllers\Admin\AddModuleController@index']);
 
 //理论考试排考查看

@@ -78,6 +78,7 @@ class IndexController extends CommonController
                 if($examScreening->status != 1)
                 {
                     $examScreening->status = 1;
+                    \Cache::flush();
                     if(!$examScreening->save())
                     {
                         throw new \Exception('场次开考失败！');
