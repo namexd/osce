@@ -1346,13 +1346,15 @@ class ExamController extends CommonController
         $exam_id = $request->get('exam_id');
         $showNum = ExamPlan::where('exam_id',$exam_id)->max('serialnumber');
         $plan = ExamPlan::where('exam_id',$exam_id)->orderBy('begin_dt','desc')->select('room_id')->first();
-        if($plan){
+
+        $screen = ExamScreening::where(['status'=>1,'exam_id'=>$exam_id])->first();
+        if($plan && $screen){
             $station = StationTeacher::where('exam_id',$exam_id)->get();
             foreach($station as $val){
-                $queue[] = Cache::get('userid_'.$val->user_id.'exam_id_'.$exam_id.'exam_screening_id_'.$val->exam_screening_id,0);
+                $queue[] = Cache::get('userid_'.$val->user_id.'exam_id_'.$exam_id.'exam_screening_id_'.$screen->id,0);
             }
             $queueNow =min($queue);
-            $list = ExamPlan::where(['exam_id'=> $exam_id,'room_id'=>$plan->room_id])
+            $list = ExamPlan::where(['exam_id'=> $exam_id,'room_id'=>$plan->room_id,'exam_screening_id'=>$screen->id])
                 ->orderBy('begin_dt', 'asc')
                 ->take($showNum)
                 ->skip($queueNow*$showNum)->get();
