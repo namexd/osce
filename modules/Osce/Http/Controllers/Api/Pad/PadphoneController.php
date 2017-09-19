@@ -7,6 +7,8 @@
 namespace Modules\Osce\Http\Controllers\Api\Pad;
 use Illuminate\Http\Request;
 use Modules\Osce\Entities\Exam;
+use Modules\Osce\Entities\ExamDraft;
+use Modules\Osce\Entities\ExamGradation;
 use Modules\Osce\Entities\ExamPlan;
 use Modules\Osce\Entities\ExamScreening;
 use Modules\Osce\Entities\RoomStation;
@@ -56,7 +58,17 @@ class PadphoneController extends  CommonController{
         $stationteacher = StationTeacher::where('exam_id', $exam_id)->where('exam_screening_id', $minsid)->where('user_id', $userid)->first();
         $station_id = $stationteacher->station_id;
         //通过考站查对应的房间号
-        $room = RoomStation::where('station_id', $station_id)->first();
+        $examgradation = ExamGradation::where('exam_id',$exam_id)->where('order',$gradation_order)->first();
+        $gradation_id = $examgradation->id;
+        $room = ExamDraft::leftjion('exam_draft_flow', 'exam_draft.exam_draft_flow_id', '=', 'exam_draft_flow.id')
+                ->select('exam_draft.room_id')
+                ->where('exam_draft_flow.exam_id', $exam_id)
+                ->where('exam_draft_flow.exam_screening_id', $exam_screening_id)
+                ->where('exam_draft_flow.exam_gradation_id', $gradation_id)
+                ->where('exam_draft.station_id', $station_id)
+                ->first();
+
+        //$room = RoomStation::where('station_id', $station_id)->first();
         $room_id = $room->room_id;
         //得出学生列表
 
@@ -267,7 +279,16 @@ class PadphoneController extends  CommonController{
         $stationteacher = StationTeacher::where('exam_id',$exam_id)->where('user_id',$userid)->first();
         $station_id = $stationteacher->station_id;
         //通过考站查对应的房间号
-        $room = RoomStation::where('station_id',$station_id)->first();
+        $examgradation = ExamGradation::where('exam_id',$exam_id)->where('order',$gradation_order)->first();
+        $gradation_id = $examgradation->id;
+        $room = ExamDraft::leftjion('exam_draft_flow', 'exam_draft.exam_draft_flow_id', '=', 'exam_draft_flow.id')
+            ->select('exam_draft.room_id')
+            ->where('exam_draft_flow.exam_id', $exam_id)
+            ->where('exam_draft_flow.exam_screening_id', $exam_screening_id)
+            ->where('exam_draft_flow.exam_gradation_id', $gradation_id)
+            ->where('exam_draft.station_id', $station_id)
+            ->first();
+        //$room = RoomStation::where('station_id',$station_id)->first();
         $room_id = $room->room_id;
 
         //根据老师和考试对应的信息查对应的考站 找到分阶段的序号取最小的 exam_screening_id
