@@ -67,7 +67,9 @@ class PadphoneController extends  CommonController{
                 ->where('exam_draft_flow.exam_gradation_id', $gradation_id)
                 ->where('exam_draft.station_id', $station_id)
                 ->first();
-
+        if(empty($room)){
+            return response()->json( $this->success_data([],0,'未查询到对应房间！') );
+        }
         //$room = RoomStation::where('station_id', $station_id)->first();
         $room_id = $room->room_id;
         //得出学生列表
