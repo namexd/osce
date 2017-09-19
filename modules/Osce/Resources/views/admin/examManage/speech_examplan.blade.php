@@ -110,17 +110,17 @@
 					$(this).find('i').addClass('fa-volume-up');
 				}
 			});
-			
+			@if($exam)
 			getspeechnow();
 			var timer = setInterval(getspeechnow,10000);
-			
+			@endif
   		});
   		
   		function getspeechnow() {
 			$.ajax({
 				type:"get",
 				url:"{{route('osce.admin.exam.getSpeechNow')}}",
-				data:{exam_id:'{{$exam->id}}'},
+				data:{exam_id:'{{$exam->id or ''}}'},
 				success:function (res) {
 					hasname(res.data.list,res.data.name);
 				}
