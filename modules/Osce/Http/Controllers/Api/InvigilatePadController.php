@@ -488,7 +488,8 @@ class InvigilatePadController extends CommonController
             $studentInfo = Student::find($studentId);
 
             if(is_null($studentInfo)){
-                throw new \Exception('未找到该考生的学生信息', -221);
+                return response()->json($this->success_data([], 0, '未找到该考生的学生信息'));
+                //throw new \Exception('未找到该考生的学生信息', -221);
             }
             $exam_id = $studentInfo->exam_id;
 
@@ -549,7 +550,8 @@ class InvigilatePadController extends CommonController
             $TestResultModel  = new TestResult();
             $result = $TestResultModel->addTestResult($data, $score, $exam_id);
             if (!$result) {
-                throw new \Exception('成绩保存失败');
+                return response()->json($this->success_data([], 0, '成绩提交失败，请重新提交'));
+                //throw new \Exception('成绩保存失败');
             }
             //所有考生完成了当前考试
             if ($ExamFinishStatus == $studentExamSum)

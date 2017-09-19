@@ -1344,7 +1344,8 @@ class ExamController extends CommonController
 
 
         $exam_id = $request->get('exam_id');
-        $plan = ExamPlan::where('exam_id',$exam_id)->select(DB::Raw('exam_id,room_id,max(serialnumber) as number'))->first();
+        $showNum = ExamPlan::where('exam_id',$exam_id)->max('serialnumber');
+        $plan = ExamPlan::where('exam_id',$exam_id)->orderBy('begin_dt','desc')->select('room_id')->first();
         if($plan){
             $station = StationTeacher::where('exam_id',$exam_id)->get();
             foreach($station as $val){
@@ -1353,13 +1354,13 @@ class ExamController extends CommonController
             $queueNow =min($queue);
             $list = ExamPlan::where(['exam_id'=> $exam_id,'room_id'=>$plan->room_id])
                 ->orderBy('begin_dt', 'asc')
-                ->take($plan->number)
-                ->skip($queueNow*$plan->number)->get();
+                ->take($showNum)
+                ->skip($queueNow*$showNum)->get();
             $nowList =[];
             foreach($list as $val){
                 $nowList[]=$val->student->name;
             }
-            return response()->json( $this->success_data($nowList) );
+            return response()->json( $this->success_data(['list'=>$nowList,'name'=>$plan->room->name]) );
         }else{
             return response()->json( $this->success_data([],0,'考试未开始或已结束！') );
         }
