@@ -114,8 +114,6 @@
 			getspeechnow();
 			var timer = setInterval(getspeechnow,10000);
 			
-			
-			
   		});
   		
   		function getspeechnow() {
@@ -145,7 +143,7 @@
 			}
 			if (!ok) {
 				$('.list:first').remove();
-				hasname(arr);
+				hasname(arr,room);
 			} else {
 				$('.list').eq(0).removeClass('hide');
 				$('.list').eq(1).removeClass('hide');
