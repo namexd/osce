@@ -129,7 +129,7 @@
   		
   		
   		function hasname(arr,room) {
-			if ($('.list').length==0) {
+			if ($('.list').length==0 || arr.length==0) {
 				$('.list-con').html('<p class="no-data">考试已结束</p>');
 				return false;
 			}
