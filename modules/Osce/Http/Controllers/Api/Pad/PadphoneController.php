@@ -102,6 +102,8 @@ class PadphoneController extends  CommonController{
                     ->get();
             }
         }
+
+
         $list2 = ExamPlan::leftjoin('student', 'exam_plan.student_id', '=', 'student.id')
             ->select('exam_plan.id as planid', 'exam_plan.begin_dt','student.id as stuid', 'student.avator', 'student.idcard', 'student.code',  'student.exam_sequence','exam_plan.student_id as pstuid', 'student.name as stuname')
             ->where('exam_plan.exam_id', $exam_id)
@@ -114,7 +116,8 @@ class PadphoneController extends  CommonController{
             $data["list"] = $list;
             $data["nowstu"] = $list2;
 
-            if(empty($data['list'])){
+
+            if(empty($data['nowstu'])){
                 return response()->json( $this->success_data([],0,'考试未开始或已结束！') );
             }else{
                 return response()->json($this->success_data($data, 1, 'success'));
