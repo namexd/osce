@@ -58,6 +58,7 @@ return [
             'database'  => env('DB_DATABASE_MSC', 'v3.10.1_child_mis'),
             'username'  => env('DB_USERNAME_MSC', 'dev_user'),
             'password'  => env('DB_PASSWORD_MSC', 'cd67a0768e89'),
+            'port'      => env('DB_PORT', '3306'),
             'charset'   => 'utf8',
             'collation' => 'utf8_unicode_ci',
             'prefix'    => '',
@@ -65,11 +66,11 @@ return [
         ],
         'sys_mis' => [
             'driver'    => 'mysql',
-
             'host'      => env('DB_HOST_SYS', 'mysql_5.6.34'),
             'database'  => env('DB_DATABASE_SYS', 'v3.10.1_child_sys'),
             'username'  => env('DB_USERNAME_MSC', 'dev_user'),
             'password'  => env('DB_PASSWORD_MSC', 'cd67a0768e89'),
+            'port'      => env('DB_PORT', '3306'),
             'charset'   => 'utf8',
             'collation' => 'utf8_unicode_ci',
             'prefix'    => '',
@@ -82,6 +83,7 @@ return [
             'database'  => env('DB_DATABASE_OSCE', 'v3.10.1_child_mis'),
             'username'  => env('DB_USERNAME_OSCE', 'dev_user'),
             'password'  => env('DB_PASSWORD_OSCE', 'cd67a0768e89'),
+            'port'      => env('DB_PORT', '3306'),
             'charset'   => 'utf8',
             'collation' => 'utf8_unicode_ci',
             'prefix'    => '',
