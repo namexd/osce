@@ -60,7 +60,7 @@ class PadphoneController extends  CommonController{
         //通过考站查对应的房间号
         $examgradation = ExamGradation::where('exam_id',$exam_id)->where('order',$gradation_order)->first();
         $gradation_id = $examgradation->id;
-        $room = ExamDraft::leftjion('exam_draft_flow', 'exam_draft.exam_draft_flow_id', '=', 'exam_draft_flow.id')
+        $room = ExamDraft::leftjoin('exam_draft_flow', 'exam_draft.exam_draft_flow_id', '=', 'exam_draft_flow.id')
                 ->select('exam_draft.room_id')
                 ->where('exam_draft_flow.exam_id', $exam_id)
                 ->where('exam_draft_flow.exam_screening_id', $exam_screening_id)
@@ -281,7 +281,7 @@ class PadphoneController extends  CommonController{
         //通过考站查对应的房间号
         $examgradation = ExamGradation::where('exam_id',$exam_id)->where('order',$gradation_order)->first();
         $gradation_id = $examgradation->id;
-        $room = ExamDraft::leftjion('exam_draft_flow', 'exam_draft.exam_draft_flow_id', '=', 'exam_draft_flow.id')
+        $room = ExamDraft::leftjoin('exam_draft_flow', 'exam_draft.exam_draft_flow_id', '=', 'exam_draft_flow.id')
             ->select('exam_draft.room_id')
             ->where('exam_draft_flow.exam_id', $exam_id)
             ->where('exam_draft_flow.exam_screening_id', $exam_screening_id)
