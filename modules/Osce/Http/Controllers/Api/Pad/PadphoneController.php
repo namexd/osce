@@ -63,7 +63,7 @@ class PadphoneController extends  CommonController{
         $room = ExamDraft::leftjoin('exam_draft_flow', 'exam_draft.exam_draft_flow_id', '=', 'exam_draft_flow.id')
                 ->select('exam_draft.room_id')
                 ->where('exam_draft_flow.exam_id', $exam_id)
-                ->where('exam_draft_flow.exam_screening_id', $exam_screening_id)
+                ->where('exam_draft_flow.exam_screening_id', $minsid)
                 ->where('exam_draft_flow.exam_gradation_id', $gradation_id)
                 ->where('exam_draft.station_id', $station_id)
                 ->first();
@@ -289,7 +289,7 @@ class PadphoneController extends  CommonController{
         $room = ExamDraft::leftjoin('exam_draft_flow', 'exam_draft.exam_draft_flow_id', '=', 'exam_draft_flow.id')
             ->select('exam_draft.room_id')
             ->where('exam_draft_flow.exam_id', $exam_id)
-            ->where('exam_draft_flow.exam_screening_id', $exam_screening_id)
+            ->where('exam_draft_flow.exam_screening_id', $minsid)
             ->where('exam_draft_flow.exam_gradation_id', $gradation_id)
             ->where('exam_draft.station_id', $station_id)
             ->first();
