@@ -75,7 +75,7 @@
 						for (var j = 0 ; j < _arr[room].student.length; j++) {
 							_arr2.push(_arr[room].student[j].name);
 						}
-						_list+='<div>'+_arr2.join('、')+'</div>';
+						_list+='<div _room="'+_arr[room].name+'">'+_arr2.join('、')+'</div>';
 					}
 					_str+='<li><div class="time">'+timetodate(time,6)+'</div>'+_list+'</li>';
 				}				
@@ -124,18 +124,18 @@
 				url:"{{route('osce.admin.exam.getSpeechNow')}}",
 				data:{exam_id:'{{$exam->id}}'},
 				success:function (res) {
-					hasname(res.data);
+					hasname(res.data.list,res.data.name);
 				}
 			});	
   		};
   		
   		
-  		function hasname(arr) {
+  		function hasname(arr,room) {
 			if ($('.list').length==0) {
 				$('.list-con').html('<p class="no-data">考试已结束</p>');
 				return false;
 			}
-			var name = getlistname();
+			var name = getlistname($('.list:first div:not(.time)[_room="'+room+'"]'));
 			var ok = true;
 			for (var i = 0 ; i < arr.length; i++) {
 				if (!name[arr[i]]) {
@@ -159,9 +159,10 @@
   		
   		
   		
-  		function getlistname() {
+  		function getlistname(obj) {
+  			obj = obj||$('.list:first div:not(.time)');
   			var name = {};
-			$('.list:first div:not(.time)').each(function () {
+			$(obj).each(function () {
 				if ($(this).html()=='&nbsp;') {
 					return true;
 				} 
