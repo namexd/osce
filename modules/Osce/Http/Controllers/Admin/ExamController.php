@@ -1366,7 +1366,7 @@ class ExamController extends CommonController
             }
             return response()->json( $this->success_data(['list'=>$nowList,'name'=>$plan->room->name]) );
         }else{
-            return response()->json( $this->success_data([],0,'考试未开始或已结束！') );
+            return response()->json( $this->success_data(['list'=>[]],0,'考试未开始或已结束！') );
         }
     }
 
