@@ -1348,11 +1348,13 @@ class ExamController extends CommonController
         $plan = ExamPlan::where('exam_id',$exam_id)->orderBy('begin_dt','desc')->select('room_id')->first();
 
         $screen = ExamScreening::where(['status'=>1,'exam_id'=>$exam_id])->first();
+        //dd($screen);
         if($plan && $screen){
-            $station = StationTeacher::where('exam_id',$exam_id)->get();
+            $station = StationTeacher::where(['exam_id'=>$exam_id,'exam_screening_id'=>$screen->id])->get();
             foreach($station as $val){
                 $queue[] = Cache::get('userid_'.$val->user_id.'exam_id_'.$exam_id.'exam_screening_id_'.$screen->id,0);
             }
+            //dd($queue);
             $queueNow =min($queue);
             $list = ExamPlan::where(['exam_id'=> $exam_id,'room_id'=>$plan->room_id,'exam_screening_id'=>$screen->id])
                 ->orderBy('begin_dt', 'asc')
