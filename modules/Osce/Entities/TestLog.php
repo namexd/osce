@@ -17,7 +17,7 @@ class TestLog extends Model
     protected $table 		= 	'g_test_log';
     public $incrementing	=	true;
     public $timestamps	    =	false;
-    protected $fillable 	=   ['id','exam_id','tid','teacher','times','start','end','status','ifshow'];
+    protected $fillable 	=   ['id','exam_id','tid','teacher','times','start','end','convert','status','ifshow'];
     protected $hidden = [];
 
 
