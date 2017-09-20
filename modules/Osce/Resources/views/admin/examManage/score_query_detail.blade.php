@@ -129,7 +129,7 @@
                     <div class="col-md-6 ">
                         <div class="form-group">
                             <div class="col-sm-12">
-                            <label class="control-label">病人关怀情况：</label>
+                            <label class="control-label">操作的熟练度：</label>
                             @for ($i = 0; $i < 5; $i++)
                                 <i class="fa fa-star {{$i<$result['patient']?'perfect':''}}"></i>
                             @endfor
@@ -137,7 +137,7 @@
                         </div>
                         <div class="form-group">
                             <div class="col-sm-12">
-                            <label class="control-label">沟通亲和能力：</label>
+                            <label class="control-label">医患沟通技巧：</label>
                             @for ($i = 0; $i < 5; $i++)
                                 <i class="fa fa-star {{$i<$result['affinity']?'perfect':''}}"></i>
                             @endfor
