@@ -48,7 +48,7 @@
 			$('#rate_choose').change(function () {
 				if ($(this).val()=='0') {
 					$('.convert').addClass('hide');
-					$('#convert').val('1');
+					$('#convert').val('100');
 				} else {
 					$('#convert').val('');
 					$('.convert').removeClass('hide');
