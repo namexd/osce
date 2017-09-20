@@ -25,11 +25,16 @@ class CexamController extends CommonController
     public function addaExame(Request $request)
     {
         $dataArray=$request->only('exam_id','tid','start','end','teacher','times','convert');
-
-        $isHas = TestLog::where('start','<',$dataArray['start'])->where('end','>',$dataArray['start'])->orWhere(function ($query)use ( $dataArray )  {
-            $query->where('start', '<', $dataArray['end'])
-                ->where('end', '>', $dataArray['end']);
-        })->first();
+        $isExam = TestLog::where('exam_id',$dataArray['exam_id'])->first();
+        if($isExam){
+            return redirect()->back()->withErrors('本场技能考试已存在一场理论考试！');
+        }
+        $isHas = TestLog::where('start','<',$dataArray['start'])
+            ->where('end','>',$dataArray['start'])
+            ->orWhere(function ($query)use ( $dataArray ){
+                $query->where('start', '<', $dataArray['end'])
+                    ->where('end', '>', $dataArray['end']);
+            })->first();
         if(empty($isHas)){
             if($dataArray['convert'] < 1 || $dataArray['convert'] > 100){
                 return redirect()->back()->withErrors('参数有误！');
