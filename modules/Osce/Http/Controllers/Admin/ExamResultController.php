@@ -30,6 +30,7 @@ use Modules\Osce\Entities\TestAttach;
 use Modules\Osce\Http\Controllers\CommonController;
 use Modules\Osce\Repositories\Common;
 use Modules\Osce\Entities\TestLog;
+use Modules\Osce\Entities\TestStatistics;
 
 class ExamResultController extends CommonController{
 
