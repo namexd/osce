@@ -242,7 +242,7 @@ class CourseController extends CommonController
             $lgid = $testlogs->id;
             $ksstus = Student::where('exam_id',$examId)->get();
             foreach($ksstus as $ksstu){
-                $sarr[$ksstu->userid] = $ksstu->id;
+                $sarr[$ksstu->user_id] = $ksstu->id;
             }
             $TestStatistics = TestStatistics::where('logid',$lgid)->get();
         }
