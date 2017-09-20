@@ -13,10 +13,10 @@
         font-size: 0.4rem;
         position: relative;
     }
-    .top button { position: absolute; top: 0; right: 0.2rem; border: none; outline: none; width: 1rem; font-size: 0.25rem; background: none;}
+    .top button { position: absolute; top: 0; right: 1.4rem; border: none; outline: none; width: 1rem; font-size: 0.25rem; background: none;}
     .top .play {/* right: 1.4rem;*/ right: 0.2rem; font-size: 0.35rem;}
     
-    .no-data { text-align: center;  font-size: 0.25rem; border-top: 1px solid #ccc; line-height: 3rem;}
+    .no-data { text-align: center;  font-size: 0.4rem; border-top: 1px solid #ccc; line-height: 3rem;}
 	p,h3,h4,ul,li { margin: 0; padding: 0;}
     .white{color: white;}
     .list-title h4 { padding: 0.2rem 0;}
@@ -35,8 +35,10 @@
 @stop
 @section('head_js')
    <script>
-   	
-   	
+   		var timer;
+   		var next = 0;
+   		var room_len=0;
+   		
 		window.onresize = function () {
 			document.documentElement.style.fontSize=document.documentElement.clientWidth/16+'px';
 		}
@@ -44,7 +46,7 @@
   		$(function () {
 			var data = {!! collect($plan) !!};
 			console.log(data);
-			var room_len = data.number;
+			room_len = data.number;
 			var str_kz = '<h4>时间</h4>';
 			for (var name in data.room) {
 //				room_len++;
@@ -84,19 +86,18 @@
 			
 			$('.list-con').html('<div class="list-title">'+str_kz+'</div>'+str);
 			
-			
-			$('.next').click(function () {
-				$('.list:first').remove();
-				if ($('.list').length==0) {
-					$('.list-con').html('<div class="no-data">本场考试已结束</div>');
-					return false;
-				}
-				$('.list').eq(0).removeClass('hide');
-				$('.list').eq(1).removeClass('hide');
+			var cate = '{{$exam->sequence_cate}}';
+			if (cate=='2') {
+				$('.list:not(:last) li:last-child div,.list:not(:first) li:first-child div').css('padding','0');
+				$('.list:not(:last)').css('border-bottom','none');
+				$('.list,.next').removeClass('hide');
 				
+			}
+			$('.next').click(function () {				
+	  			next+=room_len;
 				if ($('.play i').hasClass('fa-volume-up')) {
-					playaudio();
-				}
+					playshunxu();
+				}				
 			});
 			
 			$('.play').click(function () {
@@ -105,14 +106,19 @@
 					$(this).find('i').removeClass('fa-volume-up');
 					$(this).find('i').addClass('fa-volume-off');
 				} else {
-					playaudio();
+					if (cate=='2') {
+						playshunxu();
+					} else {
+						playaudio();
+					}					
+					
 					$(this).find('i').removeClass('fa-volume-off');
 					$(this).find('i').addClass('fa-volume-up');
 				}
 			});
 			@if($exam)
-			getspeechnow();
-			var timer = setInterval(getspeechnow,10000);
+//			getspeechnow();
+//			timer = setInterval(getspeechnow,10000);
 			@endif
   		});
   		
@@ -130,6 +136,7 @@
   		
   		function hasname(arr,room) {
 			if ($('.list').length==0 || arr.length==0) {
+				clearInterval(timer);
 				$('.list-con').html('<p class="no-data">考试已结束</p>');
 				return false;
 			}
@@ -185,8 +192,30 @@
   			$('#audio').attr('src','');
   		};
   		
+  		function playshunxu () {
+  			var _arr = [];
+  			for (var i = 0 ; i <room_len; i++ ) {
+  				var _obj = $('.list-con li').eq(next+i);
+  				
+  				if ($(_obj)) {
+  					
+  					if ($(_obj).find('div').eq(1).html()!='&nbsp;'&&$(_obj).find('div').eq(1).html()!=undefined) {
+  						_arr.push($(_obj).find('div').eq(1).html());
+  					}
+  				}
+  			}
+  			if (_arr.length==0) {
+  				$('.next').css('display','none');
+  				next-=room_len;
+  			} else {
+  				toplayaudio('请考生：'+_arr.join('、')+'，做好准备，，！');
+  			}
+  			
+  		};
+
+  		
 		function playaudio() {
-			pauseaudio();
+			
 			if ($('.list').length==0) {
 				return false;
 			}
@@ -195,10 +224,15 @@
 			for (var _name in name) {	
 				arr.push(_name);
 			}
+			console.log(arr);
+			toplayaudio('请考生：'+arr.join('、')+'，做好准备，，！');
+		};
+  		function toplayaudio(str) {
+  			pauseaudio();
 			$.ajax({
 				type:"get",
 				url:"/getSpeechUrl",
-				data:{text:'请考生：'+arr.join('、')+'，做好准备，，！'},
+				data:{text:str},
 				success:function (res) {
 					console.log(res);
 					$('#audio').attr('src',res);
@@ -214,9 +248,8 @@
 						}
 					};
 				}
-			});				
-		};
-					
+			});	 			
+  		};					
     </script>		
 @stop
 
