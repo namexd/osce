@@ -1345,11 +1345,11 @@ class ExamController extends CommonController
 
         $exam_id = $request->get('exam_id');
         $showNum = ExamPlan::where('exam_id',$exam_id)->max('serialnumber');
-        $plan = ExamPlan::where('exam_id',$exam_id)->orderBy('begin_dt','desc')->select('room_id')->first();
         $screen = ExamScreening::where(['status'=>1,'exam_id'=>$exam_id])->first();
+        $minscreenid = ExamScreening::where('gradation_order',$screen->gradation_order)->where('exam_id',$exam_id)->min('id');
+        $plan = ExamPlan::where(['exam_id'=>$exam_id,'exam_screening_id'=>$minscreenid])->orderBy('begin_dt','desc')->select('room_id')->first();
         //dd($screen);
         if($plan && $screen){
-            $minscreenid = ExamScreening::where('gradation_order',$screen->gradation_order)->where('exam_id',$exam_id)->min('id');
             $station = StationTeacher::where(['exam_id'=>$exam_id,'exam_screening_id'=>$minscreenid])->get();
             //dd($station);
             foreach($station as $val){
