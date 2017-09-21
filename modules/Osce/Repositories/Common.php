@@ -15,6 +15,7 @@ use Modules\Osce\Entities\Exam;
 use Modules\Osce\Entities\ExamAbsent;
 use Modules\Osce\Entities\ExamDraft;
 use Modules\Osce\Entities\ExamOrder;
+use Modules\Osce\Entities\ExamPlan;
 use Modules\Osce\Entities\ExamQueue;
 use Modules\Osce\Entities\ExamResult;
 use Modules\Osce\Entities\ExamScore;
@@ -802,6 +803,11 @@ class Common
                 foreach ($examScreenings as $screening) {
                     $screening->update(['status' => 0]);       //TODO 更改状态为0
                 }
+            }
+            //更改考试计划状态
+            $examPlans = ExamPlan::where('exam_id', '=', $id)->get();
+            if (!$examPlans->isEmpty()) {
+                ExamPlan::where('exam_id', '=', $id)->update(['status' => 0]);//TODO 更改状态为0
             }
             //删除缺考
             $examAbsent = ExamAbsent::where('exam_id', '=', $id)->get();
