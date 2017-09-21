@@ -86,7 +86,7 @@
 			
 			$('.list-con').html('<div class="list-title">'+str_kz+'</div>'+str);
 			
-			var cate = '{{$exam->sequence_cate}}';
+			var cate = '{{$exam->sequence_cate or ''}}';
 			if (cate=='2') {
 				$('.list:not(:last) li:last-child div,.list:not(:first) li:first-child div').css('padding','0');
 				$('.list:not(:last)').css('border-bottom','none');
