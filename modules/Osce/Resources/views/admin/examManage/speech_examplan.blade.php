@@ -117,8 +117,8 @@
 				}
 			});
 			@if($exam)
-//			getspeechnow();
-//			timer = setInterval(getspeechnow,10000);
+			getspeechnow();
+			timer = setInterval(getspeechnow,10000);
 			@endif
   		});
   		
