@@ -110,6 +110,9 @@
 					<input type="hidden" name="client_secret" id="client_secret" value="111">
 					<div id="passwdTip" style="color: #a94442; display: none">用户名或密码错误，请重新输入</div>
 					<div class="clearfix">
+						<a style="float:left; margin-left: 10px;" onclick="alert('功能修改中，静待开放')" href="javascript:;">
+							<small class="txt">注册用户</small>
+						</a>
 						<label class="check_label checkbox_input" style="display: none">
                             <div class="check_icon check" style="display: inline-block"></div>
                             <input type="checkbox" name="message_type[]" value="1" data-bv-field="message_type[]">
