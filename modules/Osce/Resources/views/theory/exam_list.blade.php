@@ -34,6 +34,7 @@
                         <th>序号</th>
                         <th>考试名称</th>
                         <th>试卷</th>
+                        <th>折合率</th>
                         <th>监考老师</th>
                         <th>开始时间</th>
                         <th>结束时间</th>
@@ -46,6 +47,7 @@
                         <td >{{$k+1}}</td>
                         <td >{{$val->exam->name}}的理论考试</td>
                         <td >{{$val->test->name}}</td>
+                        <td >{{$val->convert*100}}%</td>
                         <td >{{$val->teacherdata->name}}</td>
                         <td >{{$val->start}}</td>  
                         <td >{{$val->end}}</td>                  
