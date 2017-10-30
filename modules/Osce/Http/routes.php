@@ -46,6 +46,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::get('del', ['uses'=>'TestController@del',  'as' => 'osce.theory.del']);
 		Route::get('rankStudent', ['uses'=>'TestController@rankStudent',  'as' => 'osce.theory.rankStudent']);//排考查看
 		Route::get('editQuestion', ['uses'=>'TestController@editQuestion',  'as' => 'osce.theory.editQuestion']);//修改考试题目
+		Route::get('addQuestion', ['uses'=>'TestController@addQuestion',  'as' => 'osce.theory.addQuestion']);//修改考试题目
 
 	});
 

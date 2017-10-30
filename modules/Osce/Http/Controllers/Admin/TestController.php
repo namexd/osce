@@ -183,6 +183,9 @@ class TestController extends CommonController
                 //判断是否关联考试并且考试是否已经开始
                 if($testStartTime && $testStartTime > date('Y-m-d H:i:s')){
                     $test->update($questionArr);
+                    //更新试卷表中的成绩
+                    $sumScore = TestContent::where('test_id',$test->test->id)->sum('poins');
+                    Test::find($test->test->id)->update(['score'=>$sumScore]);
                     return $this->success_data();
                 }else{
                         return $this->success_data([],0,'当前试卷已关联考试，并且已经开始，不允许编辑题目！');
@@ -206,11 +209,11 @@ class TestController extends CommonController
     public function addQuestion(Request $request){
         $this->validate($request, [
             'test_id' => 'required',
-            'type' => 'required',
+            /*'type' => 'required',
             'question' => 'required',
             'content' => 'required',
             'answer' => 'required',
-            'poins' => 'required',
+            'poins' => 'required',*/
         ], [
             'id.required' => '题目ID必传',
         ]);
@@ -249,7 +252,9 @@ class TestController extends CommonController
                     $questionArr['times'] = $request->get('times',3);
                     //$sumScore+=$result[13];*/
                     TestContent::create($questionArr);
-                    $test->update(['score'=>($test->score+$questionArr['poins'])]);
+                    //更新试卷表中的成绩
+                    $sumScore = TestContent::where('test_id',$questionArr['test_id'])->sum('poins');
+                    $test->update(['score'=>$sumScore]);
                     return $this->success_data();
                 }else{
                     return $this->success_data([],0,'当前试卷已关联考试，并且已经开始，不允许编辑题目！');
