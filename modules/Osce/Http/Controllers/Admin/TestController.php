@@ -209,11 +209,11 @@ class TestController extends CommonController
     public function addQuestion(Request $request){
         $this->validate($request, [
             'test_id' => 'required',
-            /*'type' => 'required',
+            'type' => 'required',
             'question' => 'required',
             'content' => 'required',
             'answer' => 'required',
-            'poins' => 'required',*/
+            'poins' => 'required',
         ], [
             'id.required' => '题目ID必传',
         ]);
