@@ -27,6 +27,16 @@ class TestContent extends Model
     ];
     protected $visible = [ ];
 
-
+    /**
+     * 获取考试的试卷
+     */
+    public function test()
+    {
+        return $this->hasOne('Modules\Osce\Entities\Test','id','test_id');
+    }
+    public function testLog()
+    {
+        return $this->hasOne('Modules\Osce\Entities\TestLog','tid','test_id');
+    }
 
 }

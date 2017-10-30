@@ -10,9 +10,51 @@ use Modules\Osce\Entities\StationVcr;
 use Modules\Osce\Entities\StationVideo;
 use Pingpong\Modules\Routing\Controller;
 use Illuminate\Support\Facades\DB;
-abstract class CommonController extends Controller
+class CommonController extends Controller
 {
-
+    /**
+     * 文件上传
+     *
+     * @return string url
+     */
+    public function uploadFile($inputName = 'Filedata' ,$fileSize = 5 ,$filePath='uploads/temp/' )
+    {
+        $file = Input::file($inputName);
+        try {
+            if ($file->isValid()) {
+                //取得上传文件的大小：
+                $size = $file->getSize();
+                if ($size > 1024 * 1024 * $fileSize) {
+                    $info['code'] = 2;
+                    $info['message'] = '图片太大，上传失败';
+                    return $info;
+                }
+                //取得上传文件的MIME类型：//$mime = $file->getMimeType();
+                $mime = $file->getClientMimeType();
+                //if (($mime == "image/gif") || ($mime == "image/jpeg") || ($mime == "image/pjpeg") || ($mime == "image/png")) {
+                if ( in_array($mime ,['image/gif','image/jpeg','image/pjpeg','image/png','text/plain'])|| strpos($mime,'application/vnd.')===0 || strpos($mime,'application/msword')===0) {
+                    $entension = $file->getClientOriginalExtension(); //上传文件的后缀.
+                    $newName = date('YmdHis') . mt_rand(100, 999) . '.' . $entension;
+                    $path = $file->move($filePath, $newName);
+                    //$filepath = getcwd().'/'.$filePath  . $newName;
+                    $filepath = '/'.$filePath  . $newName;
+                    $info['code'] = 1;
+                    $info['message'] = '上传成功';
+                    $info['filepath'] = $filepath;
+                    //$info['filepath'] = Storage::put($filepath);
+                    //unlink($filepath);
+                    return $info;
+                }
+                $info['code'] = 3;
+                $info['message'] = '文件类型不支持';
+                return $info;
+            }
+        } catch (\Exception $ex) {
+            $info['code'] = intval(0);
+            $info['message'] = $ex->getMessage();
+            return $info;
+        }
+    }
     /**
      * 返回成功的json数据
      *

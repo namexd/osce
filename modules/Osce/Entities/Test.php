@@ -26,12 +26,21 @@ class Test extends Model
     ];
 
     /**
+     * 关联考试
+     */
+    public function testLog()
+    {
+        return $this->hasOne('Modules\Osce\Entities\TestLog','tid','id');
+    }
+
+    /**
      * 获取考试的试卷
      */
     public function question()
     {
         return $this->hasMany('Modules\Osce\Entities\TestContent','test_id','id');
     }
+
     /**
      * 获取考试的试卷不带密码
      */
