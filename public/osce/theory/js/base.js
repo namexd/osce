@@ -193,7 +193,7 @@
 	w.uploadFile = function (options) {
 		options = options||{};
 		options.json = options.json||{};
-		var shade = layer.load(2,{shade: [0.5,'#000']});
+		var shade = layer.load(0, {shade: [0.3,'#fff']});
 	    var fd = new FormData();
 	    for (var name in options.json) {
 	    	 fd.append(name,options.json[name]);
@@ -203,7 +203,7 @@
 	    xhr.addEventListener("load", uploadComplete, false);
 	    xhr.addEventListener("error", uploadFailed, false);
 	    xhr.addEventListener("abort", uploadCanceled, false);
-		xhr.open("POST", Api.url+options.url);
+		xhr.open("POST",options.url);
 	    xhr.send(fd);
 		function uploadProgress(evt) {
 		    if (evt.lengthComputable) {
@@ -213,16 +213,16 @@
 		}
 		function uploadComplete(evt) {
 		    /*上传完成后执行函数*/
-			layer.close(index);
+			layer.close(shade);
 		    options.fn&&options.fn(evt.target.responseText);
 		};
 		function uploadFailed(evt) {
-			layer.close(index);
+			layer.close(shade);
 			uselayer(1,"文件上传出错，请刷新重试");
 			options.error&&options.error(evt);
 		};
 		function uploadCanceled(evt) {
-			layer.close(index);
+			layer.close(shade);
 			uselayer(1,"上传超时，请刷新重试。");
 			options.error&&options.error(evt);
 	  	};		
