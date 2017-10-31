@@ -357,7 +357,7 @@ class TestController extends CommonController
             'image_url.required' => '图片地址必传',
         ]);
         $isHas = $request->get('image_url');
-        if($isHas && file_exists($isHas) ){
+        if($isHas && file_exists(public_path($isHas)) ){
             unlink(public_path($isHas));
         }
         return $this->success_data();
