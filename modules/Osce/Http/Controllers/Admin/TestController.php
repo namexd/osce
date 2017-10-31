@@ -54,6 +54,10 @@ class TestController extends CommonController
             -> groupBy('type')->get();
         return view('osce::theory.exam_autoquestion')->with('data',$data);
     }
+    //试卷新增
+    public function autoexamadd(Request $request){
+        return view('osce::theory.exam_add');
+    }
     //试卷修改
     public function autoexamedit(Request $request){
         $this->validate($request, [
@@ -212,9 +216,66 @@ class TestController extends CommonController
 
     }
     /*
-    *
-    *
-     */
+     * 同时新增多题目
+     * */
+    public function addQuestionList(Request $request){
+        $this->validate($request, [
+            'name' => 'required',
+            'question' => 'required',
+        ], [
+            'test_id.required' => '试卷ID必传',
+        ]);
+        //$questionArr = $request->only('test_id','type','question','content','answer','poins');
+        if($request->hasFile('exam_images')){
+            $fileData = $this->uploadFile('exam_images',10,'uploads/exam/');
+            if($fileData['code'] == 1){
+                $questionArr['images'] = $fileData['filepath'];
+            }
+        }
+        try {
+            $test =Test::create($questionArr['test_id']);
+            if($test){
+                $testStartTime = $test->testLog?$test->testLog->start:true;
+                //判断是否关联考试并且考试是否已经开始
+                if($testStartTime && $testStartTime > date('Y-m-d H:i:s')){
+                    /*
+                     * cognition 认知: 1解释 2记忆 3应用
+                     * source 题源: 1自编 2国内 3国外
+                     * lv 适应层次:1专科生 2本科生 3研究生 4博士生
+                     * require 要求度:1熟悉 2了解 3掌握
+                     * degree 难度: 1简单 2中等 3较难
+                     * pbase 考察知识模块
+                     * base 知识要点
+                     * separate 区分度
+                     * times 时长
+                     */
+                    $questionArr['cognition'] = $request->get('cognition',1);
+                    $questionArr['source'] = $request->get('source',1);
+                    $questionArr['lv'] = $request->get('lv',1);
+                    $questionArr['require'] = $request->get('require',1);
+                    $questionArr['degree'] = $request->get('degree',1);
+                    $questionArr['pbase'] = $request->get('pbase','基础知识');//考察知识模块默认值
+                    $questionArr['base'] = $request->get('base','基础知识');//知识要点默认值
+                    $questionArr['separate'] = $request->get('separate',0);//区分度默认值
+                    $questionArr['times'] = $request->get('times',3);
+                    //$sumScore+=$result[13];*/
+                    TestContent::create($questionArr);
+                    //更新试卷表中的成绩
+                    $sumScore = TestContent::where('test_id',$questionArr['test_id'])->sum('poins');
+                    $test->update(['score'=>$sumScore]);
+                    return $this->success_data();
+                }else{
+                    return $this->success_data([],0,'当前试卷已关联考试，并且已经开始，不允许编辑题目！');
+                }
+            }else{
+                return $this->success_data([],0,'参数有误！');
+            }
+        } catch (\Exception $ex) {
+            dd($ex);
+            return response()->json($this->fail($ex));
+        }
+
+    }
     /*
      * 新增题目
      * */
