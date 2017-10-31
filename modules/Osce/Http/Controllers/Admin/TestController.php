@@ -54,6 +54,18 @@ class TestController extends CommonController
             -> groupBy('type')->get();
         return view('osce::theory.exam_autoquestion')->with('data',$data);
     }
+    //试卷修改
+    public function autoexamedit(Request $request){
+        $this->validate($request, [
+            'id'    => 'required'
+        ],[
+            'id.required'   => '试卷ID必传'
+        ]);
+        $id =$request->get('id');
+        $data =Test::find($id);
+        return view('osce::theory.exam_edit')->with('data',$data);
+    }
+    //试卷预览
     public function autoexampreview(Request $request){
         $this->validate($request, [
             'id'    => 'required'
