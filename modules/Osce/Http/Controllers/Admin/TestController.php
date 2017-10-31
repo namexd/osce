@@ -19,7 +19,7 @@ use Modules\Osce\Repositories\Common;
 use Excel;
 use Modules\Osce\Entities\Test;
 use Modules\Osce\Entities\TestLog;
-use Input;
+
 class TestController extends CommonController
 {
 
@@ -342,9 +342,11 @@ class TestController extends CommonController
     }
     //上传图片
     public function toUpload(Request $request){
+        //dd($request->hasFile('exam_images'));
         if($request->hasFile('exam_images')){
-            $fileData = $this->uploadFile('theory_images',10,'uploads/theory/');
-            return $fileData;
+            return  $this->uploadFile('exam_images',10,'uploads/theory/');
+        }else{
+            return $this->success_data([],0,'参数有误！');
         }
     }
     //删除上传图片
