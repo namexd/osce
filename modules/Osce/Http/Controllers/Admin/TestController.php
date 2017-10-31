@@ -225,7 +225,6 @@ class TestController extends CommonController
         ], [
             'test_id.required' => '试卷ID必传',
         ]);
-        //$questionArr = $request->only('test_id','type','question','content','answer','poins');
         if($request->hasFile('exam_images')){
             $fileData = $this->uploadFile('exam_images',10,'uploads/exam/');
             if($fileData['code'] == 1){
@@ -233,11 +232,11 @@ class TestController extends CommonController
             }
         }
         try {
-            $test =Test::create($questionArr['test_id']);
+            $name = $request->get('name');
+            $question = $request->get('question');
+            $test =Test::create(['name'=>$name,'ctime'=>date('Y-m-d H:i:s')]);
             if($test){
-                $testStartTime = $test->testLog?$test->testLog->start:true;
-                //判断是否关联考试并且考试是否已经开始
-                if($testStartTime && $testStartTime > date('Y-m-d H:i:s')){
+                foreach($question as $key=>$val){
                     /*
                      * cognition 认知: 1解释 2记忆 3应用
                      * source 题源: 1自编 2国内 3国外
@@ -249,24 +248,29 @@ class TestController extends CommonController
                      * separate 区分度
                      * times 时长
                      */
-                    $questionArr['cognition'] = $request->get('cognition',1);
-                    $questionArr['source'] = $request->get('source',1);
-                    $questionArr['lv'] = $request->get('lv',1);
-                    $questionArr['require'] = $request->get('require',1);
-                    $questionArr['degree'] = $request->get('degree',1);
-                    $questionArr['pbase'] = $request->get('pbase','基础知识');//考察知识模块默认值
-                    $questionArr['base'] = $request->get('base','基础知识');//知识要点默认值
-                    $questionArr['separate'] = $request->get('separate',0);//区分度默认值
-                    $questionArr['times'] = $request->get('times',3);
-                    //$sumScore+=$result[13];*/
+                    $questionArr['test_id'] = $test->id;
+                    $questionArr['type'] = $val['type'];
+                    $questionArr['question'] = $val['question'];
+                    $questionArr['content'] = $val['content'];
+                    $questionArr['answer'] = $val['answer'];
+                    $questionArr['poins'] = $val['poins'];
+
+                    /*默认*/
+                    $questionArr['cognition'] = 1;
+                    $questionArr['source'] = 1;
+                    $questionArr['lv'] = 1;
+                    $questionArr['require'] = 1;
+                    $questionArr['degree'] = 1;
+                    $questionArr['pbase'] = '基础知识';//考察知识模块默认值
+                    $questionArr['base'] = '基础知识';//知识要点默认值
+                    $questionArr['separate'] =0;//区分度默认值
+                    $questionArr['times'] = 3;
                     TestContent::create($questionArr);
                     //更新试卷表中的成绩
-                    $sumScore = TestContent::where('test_id',$questionArr['test_id'])->sum('poins');
-                    $test->update(['score'=>$sumScore]);
-                    return $this->success_data();
-                }else{
-                    return $this->success_data([],0,'当前试卷已关联考试，并且已经开始，不允许编辑题目！');
                 }
+                $sumScore = TestContent::where('test_id',$test->id)->sum('poins');
+                $test->update(['score'=>$sumScore]);
+                return $this->success_data();
             }else{
                 return $this->success_data([],0,'参数有误！');
             }
