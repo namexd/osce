@@ -186,12 +186,12 @@ class TestController extends CommonController
         ]);
         $id = $request->get('id');
         $questionArr = $request->only('question','content','answer','poins');
-        if($request->hasFile('exam_images')){
+        /*if($request->hasFile('exam_images')){
             $fileData = $this->uploadFile('exam_images',10,'uploads/exam/');
             if($fileData['code'] == 1){
                 $questionArr['images'] = $fileData['filepath'];
             }
-        }
+        }*/
         try {
             $test =TestContent::find($id);
             if($test){
@@ -243,12 +243,12 @@ class TestController extends CommonController
                      * separate 区分度
                      * times 时长
                      */
-                    if($val->hasFile('exam_images')){
+                    /*if($val->hasFile('exam_images')){
                         $fileData = $this->uploadFile('exam_images',10,'uploads/exam/');
                         if($fileData['code'] == 1){
                             $questionArr['images'] = $fileData['filepath'];
                         }
-                    }
+                    }*/
                     $questionArr['test_id'] = $test->id;
                     $questionArr['type'] = $val['type'];
                     $questionArr['question'] = $val['question'];
@@ -296,12 +296,6 @@ class TestController extends CommonController
             'test_id.required' => '试卷ID必传',
         ]);
         $questionArr = $request->only('test_id','type','question','content','answer','poins');
-        if($request->hasFile('exam_images')){
-            $fileData = $this->uploadFile('exam_images',10,'uploads/exam/');
-            if($fileData['code'] == 1){
-                $questionArr['images'] = $fileData['filepath'];
-            }
-        }
         try {
             $test =Test::find($questionArr['test_id']);
             if($test){
@@ -345,6 +339,26 @@ class TestController extends CommonController
             return response()->json($this->fail($ex));
         }
 
+    }
+    //上传图片
+    public function toUpload(Request $request){
+        if($request->hasFile('exam_images')){
+            $fileData = $this->uploadFile('theory_images',10,'uploads/theory/');
+            return $fileData;
+        }
+    }
+    //删除上传图片
+    public function toDeleteUpload(Request $request){
+        $this->validate($request, [
+            'image_url' => 'required',
+        ], [
+            'image_url.required' => '图片地址必传',
+        ]);
+        $isHas = $request->get('image_url');
+        if($isHas && file_exists($isHas) ){
+            unlink(public_path($isHas));
+        }
+        return $this->success_data();
     }
     public function examscore(){
         $data = TestLog::where('end','<',date('Y-m-d H:i:s'))->paginate(10);

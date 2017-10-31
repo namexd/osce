@@ -50,6 +50,8 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::post('editQuestion', ['uses'=>'TestController@editQuestion',  'as' => 'osce.theory.editQuestion']);//修改考试题目
 		Route::post('addQuestion', ['uses'=>'TestController@addQuestion',  'as' => 'osce.theory.addQuestion']);//修改考试题目
 		Route::post('addQuestionList', ['uses'=>'TestController@addQuestionList',  'as' => 'osce.theory.addQuestionList']);//修改考试题目
+		Route::post('toUpload', ['uses'=>'TestController@toUpload',  'as' => 'osce.theory.toUpload']);//上传图片
+		Route::post('toDeleteUpload', ['uses'=>'TestController@toDeleteUpload',  'as' => 'osce.theory.toDeleteUpload']);//删除上传图片
 
 	});
 
