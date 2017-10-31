@@ -227,7 +227,7 @@ class TestController extends CommonController
             'answer' => 'required',
             'poins' => 'required',
         ], [
-            'id.required' => '题目ID必传',
+            'test_id.required' => '试卷ID必传',
         ]);
         $questionArr = $request->only('test_id','type','question','content','answer','poins');
         if($request->hasFile('exam_images')){
