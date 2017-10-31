@@ -223,14 +223,9 @@ class TestController extends CommonController
             'name' => 'required',
             'question' => 'required',
         ], [
-            'test_id.required' => '试卷ID必传',
+            'name.required' => '试卷名称必传',
+            'question.required' => '试卷考题必传',
         ]);
-        if($request->hasFile('exam_images')){
-            $fileData = $this->uploadFile('exam_images',10,'uploads/exam/');
-            if($fileData['code'] == 1){
-                $questionArr['images'] = $fileData['filepath'];
-            }
-        }
         try {
             $name = $request->get('name');
             $question = $request->get('question');
@@ -248,6 +243,12 @@ class TestController extends CommonController
                      * separate 区分度
                      * times 时长
                      */
+                    if($val->hasFile('exam_images')){
+                        $fileData = $this->uploadFile('exam_images',10,'uploads/exam/');
+                        if($fileData['code'] == 1){
+                            $questionArr['images'] = $fileData['filepath'];
+                        }
+                    }
                     $questionArr['test_id'] = $test->id;
                     $questionArr['type'] = $val['type'];
                     $questionArr['question'] = $val['question'];
