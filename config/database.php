@@ -139,7 +139,7 @@ return [
         'cluster' => false,
 
         //队列
-        'queue' => [
+        /*'queue' => [
             'host' => 'redis.atapp.com',
             'port' => 60379,
             'database' => 0,
@@ -161,6 +161,34 @@ return [
         ],
         'message' => [
             'host' => 'redis.atapp.com',
+            'port' => 60379,
+            'database' => 3,
+            'password' => '4f38ad'
+        ]*/
+		
+		//队列
+        'queue' => [
+            'host' => 'redis.sz-sulead.com',
+            'port' => 60379,
+            'database' => 0,
+            'password' => '4f38ad'
+        ],
+
+        'cache' => [
+            'host' => 'redis.sz-sulead.com',
+            'port' => 60379,
+            'database' => 1,
+            'password' => '4f38ad'
+        ],
+
+        'session' => [
+            'host' => 'redis.sz-sulead.com',
+            'port' => 60379,
+            'database' => 2,
+            'password' => '4f38ad'
+        ],
+        'message' => [
+            'host' => 'redis.sz-sulead.com',
             'port' => 60379,
             'database' => 3,
             'password' => '4f38ad'
