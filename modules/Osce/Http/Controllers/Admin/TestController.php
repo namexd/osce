@@ -19,6 +19,7 @@ use Modules\Osce\Repositories\Common;
 use Excel;
 use Modules\Osce\Entities\Test;
 use Modules\Osce\Entities\TestLog;
+use Input;
 
 class TestController extends CommonController
 {
