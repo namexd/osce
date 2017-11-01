@@ -14,69 +14,38 @@
 		.form-horizontal label i,.form-horizontal label em {color: red; }
 		.form-control.error {border: 1px solid #cc5965;}	
 		
-		#sj-form ul { padding: 0; color: #337ab7;line-height: 34px; text-decoration: underline;  }
-		#sj-form ul li { position: relative; cursor: pointer;padding-right: 20px; overflow: hidden;text-overflow: ellipsis;white-space: nowrap;}
-		#sj-form ul li em,#add-dx ul li em {color: #ed5565; position: absolute; right: 0; top: 8px;}
+		#sj-form ul { padding: 0; margin: 0; color: #337ab7; }
+		#sj-form ul li { border-bottom: 1px solid #337ab7; margin: 10px 0; position: relative; cursor: pointer;padding-right: 20px; overflow: hidden;text-overflow: ellipsis;white-space: nowrap;}
+		#sj-form ul li i { font-style: normal;}
+		#sj-form ul li em,#add-dx ul li em {color: #ed5565; position: absolute; right: 0; top: 2px;}
 		
 		
 		#add-dx { display: none; overflow: hidden; padding: 20px 0;}
 		#add-dx ul { padding: 0;}
-		#add-dx ul li { position: relative;}
+		#add-dx ul li { position: relative; margin-bottom: 5px;}
 		#add-dx ul li div { padding: 0 20px 0 50px;}
 		#add-dx ul li i { position: absolute; left: 0; top: 6px; width: 16px; height: 16px;}
-		#add-dx ul li span { position: absolute; left: 30px; top: 0; line-height: 34px; }
+		#add-dx ul li span { position: absolute; text-align: center; left: 30px; top: 0; line-height: 34px; }
 		
 		.tp-list div { float: left; margin:0 20px 20px 0; position: relative; border: 1px solid #ccc; width: 200px; height: 200px; line-height: 200px; text-align: center; vertical-align: middle;}
-		.tp-list div img { max-width: 100%; max-height: 100%;}
+		.tp-list div img { max-width: 98%; max-height: 98%;}
 		.tp-list div i { font-size: 50px;}
 		.tp-list div input { position: absolute; left: 0; top: 0; width: 100%; height: 100%; cursor: pointer; opacity: 0;}
 		.tp-list div em { position: absolute; right: -10px; top: -10px; cursor: pointer; z-index: 2; font-size: 26px; color: #ed5565; background: #fff;}
+		
+		.addtm-xz,.addtm-pd ,.addtm-wd  { display: none;}
+		
+		
 		
 	</style>
 
 @stop	
 @section('head_js')
+	<script src="{{ asset('osce/theory/js/layer-v3.1/layer.js') }}"></script>
+	<script src="{{ asset('osce/theory/js/exam_add.js') }}"></script>
+
 	<script>
-		var aZimu = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N'];
-		var openindex;
-		var listobj;		
-		$(function () {
-			
-			$('.dx-btn').click(function () {
-				
-				openindex = layer.open({
-					type: 1,
-					title: '新增单选题',
-					closeBtn: 1,
-					shadeClose:true,
-					area: ['800px',$(window).height()*0.8+'px'],
-					content: $('#add-dx'), //iframe的url，no代表不显示滚动条
-					success:function () {
-						
-					}
-				});				
-				
-				
-			});
-			
-			$('.uploadimg').change(function () {
-				var _this = $(this);
-				uploadFile({
-					url:"{{route('osce.theory.toUpload')}}",
-					json:{
-						exam_images:$(_this)[0].files[0]
-					},
-					fn:function (res) {
-						console.log(res)
-					}
-					
-				});
-				
-				
-			});
-			
-			
-		});
+
 	</script>
 
 @stop
@@ -91,12 +60,12 @@
         </div>	
         <div class="ibox-content">
         	<div class="row">
-		        <div id="sj-form" class="form-horizontal">
+		        <div id="sj-form" posturl="{{route('osce.theory.addQuestionList')}}" class="form-horizontal">
 	                
 	                <div class="form-group">
 	                    <label class="col-sm-2 control-label">试卷名称：<i>*</i></label>
 						<div class="col-sm-6">
-							<input type="text" id="ja-name" placeholder="请填写试卷名称" class="form-control"  />
+							<input type="text" id="sj-name" placeholder="请填写试卷名称" class="form-control"  />
 						</div>
 	                </div>
 	               
@@ -105,22 +74,60 @@
 	                <div class="form-group">
 	                    <label class="col-sm-2 control-label">单选题：</label>
 						<div class="col-sm-6">
-							<ul class="dx-list">
-								<li>
-									<i>1、</i><span>点击下方按钮新增题目点击下方按钮新增题目点击下方按钮新增题目点击下方按钮新增题目</span>
-									<em class="state2 fa fa-trash-o fa-2x"></em>
-								</li>
-								<li>
-									<i>2、</i><span>点击下方按钮新增题目点击下方按钮新增题目点击下方按钮新增题目点击下方按钮新增题目</span>
-									<em class="state2 fa fa-trash-o fa-2x"></em>
-								</li>
-								
-							</ul>
+							<ul class="dx-list"></ul>
 							<input type="button" class="btn btn-sm btn-primary dx-btn" value="新增单选题" />
 						</div>
 	                </div>	 
+	                <div class="hr-line-dashed"></div> 
 	                
-	                <div class="hr-line-dashed"></div>     
+	                <div class="form-group">
+	                    <label class="col-sm-2 control-label">多选题：</label>
+						<div class="col-sm-6">
+							<ul class="dx-list"></ul>
+							<input type="button" class="btn btn-sm btn-primary dx-btn" value="新增多选题" />
+						</div>
+	                </div>	 
+	                <div class="hr-line-dashed"></div>  
+	                <div class="form-group">
+	                    <label class="col-sm-2 control-label">判断题：</label>
+						<div class="col-sm-6">
+							<ul class="dx-list"></ul>
+							<input type="button" class="btn btn-sm btn-primary dx-btn" value="新增判断题" />
+						</div>
+	                </div>	 
+	                <div class="hr-line-dashed"></div>  
+	                <div class="form-group">
+	                    <label class="col-sm-2 control-label">填空题：</label>
+						<div class="col-sm-6">
+							<ul class="dx-list"></ul>
+							<input type="button" class="btn btn-sm btn-primary dx-btn" value="新增填空题" />
+						</div>
+	                </div>	 
+	                <div class="hr-line-dashed"></div>  
+	                <div class="form-group">
+	                    <label class="col-sm-2 control-label">名词解释题：</label>
+						<div class="col-sm-6">
+							<ul class="dx-list"></ul>
+							<input type="button" class="btn btn-sm btn-primary dx-btn" value="新增名词解释题" />
+						</div>
+	                </div>	 
+	                <div class="hr-line-dashed"></div>  
+	                <div class="form-group">
+	                    <label class="col-sm-2 control-label">论述题：</label>
+						<div class="col-sm-6">
+							<ul class="dx-list"></ul>
+							<input type="button" class="btn btn-sm btn-primary dx-btn" value="新增论述题" />
+						</div>
+	                </div>	 
+	                <div class="hr-line-dashed"></div>  
+	                <div class="form-group">
+	                    <label class="col-sm-2 control-label">简答题：</label>
+						<div class="col-sm-6">
+							<ul class="dx-list"></ul>
+							<input type="button" class="btn btn-sm btn-primary dx-btn" value="新增简答题" />
+						</div>
+	                </div>	 
+	                <div class="hr-line-dashed"></div>      
 	              
 			        <div class="form-group">
 	                    <div class="col-sm-4 col-sm-offset-2">
@@ -136,28 +143,32 @@
 			
 </div>		
 
-<div class="form-horizontal" id="add-dx">
+<div class="form-horizontal addtm-con" id="add-dx">
     <div class="form-group">
         <label class="col-sm-3 control-label">题型：</label>
 		<div class="col-sm-7">
-			<span class="form-control">单选题</span>
+			<input class="form-control type-name" value="" type="text" readonly="readonly" />
+			<input class="type-value" value="" type="hidden"/>
 		</div>
     </div>    
     <div class="hr-line-dashed"></div>   
     <div class="form-group">
+        <label class="col-sm-3 control-label"><i>*</i> 分值：</label>
+		<div class="col-sm-7">
+			<input class="form-control addtm-points" type="text" placeholder="请填写分值" />
+		</div>
+    </div>
+    <div class="hr-line-dashed"></div>   
+    <div class="form-group">
         <label class="col-sm-3 control-label"><i>*</i> 题干：</label>
 		<div class="col-sm-7">
-			<textarea placeholder="请填写题干" class="form-control" ></textarea>
+			<textarea class="form-control addtm-question" placeholder="请填写题干" ></textarea>
 		</div>
     </div>
     <div class="hr-line-dashed"></div>   
     <div class="form-group">
         <label class="col-sm-3 control-label">图片：</label>
-		<div class="col-sm-7 tp-list">
-			<!--<div>
-				<img src="https://www.baidu.com/img/540258baibian_d5f2e53b313d9f2355f795c8a854d0d7.png" />
-				<em class="fa fa-times-circle"></em>
-			</div>-->
+		<div class="col-sm-7 tp-list" uploadurl="{{route('osce.theory.toUpload')}}" deleteurl="{{route('osce.theory.toDeleteUpload')}}">
 			<div>
 				<i class="fa fa-plus"></i>
 				<input class="uploadimg" type="file" />
@@ -165,27 +176,49 @@
 		</div>
     </div>
     <div class="hr-line-dashed"></div>     
-    <div class="form-group">
+    <div class="form-group addtm-xz">
         <label class="col-sm-3 control-label"><i>*</i> 选项：</label>
 		<div class="col-sm-7">
 			<ul>
 				<li>
 					<i class="radio_icon"></i>
-					<span>A.</span>
+					<span class="xuhao-xx">A.</span>
 					<div><input type="text" class="form-control" /></div>
-					<em class="state2 fa fa-trash-o fa-2x"></em>
+					<em class="state2 fa fa-trash-o fa-2x remove-xx"></em>
 				</li>
 			</ul>
-			<input type="button" class="btn btn-sm btn-primary" value="新增选项" />
+			<input type="button" class="btn btn-sm btn-primary add-xx" value="新增选项" />
 		</div>
     </div>
-    <div class="hr-line-dashed"></div>     
-   
+    <div class="form-group addtm-pd">
+        <label class="col-sm-3 control-label"><i>*</i> 选项：</label>
+		<div class="col-sm-7">
+			<ul>
+				<li>
+					<i class="radio_icon"></i>
+					<div><input type="text" value="正确" readonly="readonly" class="form-control" /></div>
+				</li>
+				<li>
+					<i class="radio_icon"></i>
+					<div><input type="text" value="错误" readonly="readonly" class="form-control" /></div>
+				</li>
+			</ul>
+		</div>
+    </div>
+   	
+    <div class="form-group addtm-wd">
+        <label class="col-sm-3 control-label">参考评分点：</label>
+		<div class="col-sm-7">
+			<textarea class="form-control addtm-answer" placeholder="请填写参考评分点，多个参考评分点请换行" ></textarea>
+		</div>
+    </div>
+    <div class="hr-line-dashed"></div>    			
+
   
     <div class="form-group">
         <div class="col-sm-6 col-sm-offset-4">
-            <button class="btn btn-success">保存</button>
-            <a class="btn btn-white addqj-close">取消</a>
+            <button class="btn btn-success addtm-save">保存</button>
+            <a class="btn btn-white addtm-close">取消</a>
         </div>
     </div>
 </div>
