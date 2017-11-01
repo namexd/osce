@@ -68,8 +68,8 @@ return [
 
             'host'      => env('DB_HOST_SYS', 'mysql_5.6.34'),
             'database'  => env('DB_DATABASE_SYS', 'v3101_dev_sys_mis'),
-            'username'  => env('DB_USERNAME_MSC', 'osce_user'),
-            'password'  => env('DB_PASSWORD_MSC', '0431416db0'),
+            'username'  => env('DB_USERNAME_MSC', 'dev_user'),//osce_user
+            'password'  => env('DB_PASSWORD_MSC', 'cd67a0768e89'),//0431416db0
             'charset'   => 'utf8',
             'collation' => 'utf8_unicode_ci',
             'prefix'    => '',
@@ -80,8 +80,8 @@ return [
 
             'host'      => env('DB_HOST_OSCE', 'mysql_5.6.34'),
             'database'  => env('DB_DATABASE_OSCE', 'v3101_dev_osce_mis'),
-            'username'  => env('DB_USERNAME_OSCE', 'osce_user'),
-            'password'  => env('DB_PASSWORD_OSCE', '0431416db0'),
+            'username'  => env('DB_USERNAME_OSCE', 'dev_user'),
+            'password'  => env('DB_PASSWORD_OSCE', 'cd67a0768e89'),
             'charset'   => 'utf8',
             'collation' => 'utf8_unicode_ci',
             'prefix'    => '',
