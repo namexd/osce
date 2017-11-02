@@ -113,9 +113,13 @@
 					});
 				});	
 				
-				$('.type_4 .allSubject,.type_5 .allSubject,.type_6 .allSubject,.type_7 .allSubject').each(function () {
+				$('.type_4 .allSubject').each(function () {
 					$(this).find('li').eq(0).css('display','none');
-					$(this).find('li').eq(1).find('span').html($(this).find('li').eq(1).find('span').html().replace('学生答案：','参考答案：'));
+					$(this).find('li').eq(1).find('p').html($(this).find('li').eq(1).find('p').html().replace('学生答案：','参考答案：'));
+				});	
+				$('.type_5 .allSubject,.type_6 .allSubject,.type_7 .allSubject').each(function () {
+					$(this).find('li').eq(0).css('display','none');
+					$(this).find('li').eq(1).find('p').html($(this).find('li').eq(1).find('p').html().replace('学生答案：','参考评分点：'));
 				});	
 				
 								

@@ -135,7 +135,7 @@
 	                <div class="form-group convert hide">
 	                    <label for="convert" class="col-sm-2 control-label">统一折算率：</label>
 	                    <div class="col-sm-5">
-							<input type="text" name="convert" id="convert" value="1" placeholder="请填写折算率(%)" class="form-control"  />
+							<input type="text" name="convert" id="convert" value="100" placeholder="请填写折算率(%)" class="form-control"  />
 	                    </div>
 	                </div>
 	                <div class="hr-line-dashed"></div>	

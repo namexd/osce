@@ -96,7 +96,7 @@ $(function () {
 						}
 					}	
 					
-					if (_type=='4') {
+					if (_type=='4'||_type=='5'||_type=='6'||_type=='7') {
 						$('.addtm-answer').val(answer);
 					}
 				}

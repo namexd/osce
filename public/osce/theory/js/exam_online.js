@@ -11,7 +11,7 @@ var aZimu = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N'];
 function setnamestr(question,i) {
 	var _name = 
 		'<div class="clearfix">'
-			+'<span class="font16">'+(i+1)+'、'+question.question+'（'+question.poins+'分）'
+			+'<span class="font16">'+(i+1)+'、'+'（'+question.poins+'分）'+question.question
 			+(question.score||question.score==0?'<i class="defen">（得分：'+question.score+'分）</i>':'')+'</span>'
 			+(question.images?'<img src="question.images" />':'')
 			+'<div class="dafen"><strong>得分：</strong><input type="text" name="poins[]" _max="'+question.poins+'" class="form-control" /></div>'
@@ -73,7 +73,10 @@ function setpanduanstr(arr,str) {
 function settiankongstr(arr,str) {
 	for (var i = 0 ; i < arr.length; i++) {
 		var _str2 = '';
-		var _arr = arr[i].question.replace(/\s/g,"").replace(/_+/g,'__').match(/__/g);							
+		var _arr = arr[i].question.replace(/\s/g,"").replace(/_+/g,'__').match(/__/g);	
+		if (!_arr) {
+			_arr = ['_'];
+		}
 		for (var j = 0 ; j< _arr.length; j++) {
 			_str2+='<li class=""><input type="text" class="form-control" /></li>';
 		}
@@ -128,13 +131,14 @@ function tojiaojuan() {
 };
 
 function setzhuguan(arr,str) {
+	console.log(arr)
 	for (var i = 0 ; i < arr.length; i++) {
 		str+=
 			'<div class="allSubject" _a="'+arr[i].answer+'" _ra="'+arr[i].rightanswer+'">'
 				+setnamestr(arr[i],i)
 				+'<ul>'
-					+'<li class=""><span class="form-control">参考答案：'+arr[i].rightanswer+'</span></li>'
-					+'<li class=""><span class="form-control">学生答案：'+arr[i].answer+'</span></li>'
+					+'<li class=""><p>'+(arr[i].type==4?'参考答案':'参考评分点')+'：</p><span class="form-control">'+arr[i].rightanswer.replace(/\n/g,"<br/>")+'</span></li>'
+					+'<li class=""><p>学生答案：</p><span class="form-control">'+arr[i].answer.replace(/\n/g,"<br/>")+'</span></li>'
 				+'</ul>'
 				+'<input type="hidden" name="id[]" value="'+arr[i].cid+'" />'
 				+'<input type="hidden" name="isright[]" value="3" />'
