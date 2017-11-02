@@ -61,7 +61,7 @@
                     <tr>
                         <th>序号</th>
                         <th>试卷名称</th>
-                        <th>导入时间</th>
+                        <th>创建时间</th>
                         <th>操作</th>
                     </tr>
                 </thead>
