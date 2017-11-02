@@ -167,14 +167,17 @@ $(function () {
 		}
 		/*删除图片*/
 		if ($(e.target).hasClass('remove-image')) {
-			Api.ajax({
-				type:'post',
-				url:$('.tp-list').attr('deleteurl'),
-				json:{image_url:$(e.target).prev().attr('src')},
-				fn:function (res) {
-					$(e.target).parent().remove();
-				}
+			uselayer(2,"图片删除后将不可恢复，确定要删除？",function () {
+				Api.ajax({
+					type:'post',
+					url:$('.tp-list').attr('deleteurl'),
+					json:{image_url:$(e.target).prev().attr('src')},
+					fn:function (res) {
+						$(e.target).parent().remove();
+					}
+				});				
 			});
+
 		}
 		
 	});
@@ -265,9 +268,10 @@ $(function () {
 		}
 		var question = [];
 		$('.dx-list li').each(function () {
+			var aTp = $(this).attr('_tp').match(/<img[^>]*>/gi)
 			question.push({
 				type:$(this).attr('_type'),
-				question:$(this).attr('_tg')+$(this).attr('_tp'),
+				question:$(this).attr('_tg')+(aTp?aTp.join(''):''),
 				content:$(this).attr('_xx'),
 				answer:$(this).attr('_da'),
 				poins:$(this).attr('_fz')
@@ -277,24 +281,26 @@ $(function () {
 			uselayer(3,'请添加试题');
 			return false;			
 		}
-		Api.ajax({
-			type:'post',
-			url:$('#sj-form').attr('posturl'),
-			json:{
-				name:$.trim($('#sj-name').val()),
-				question:question
-			},
-			fn:function (res) {
-				console.log(res)
-				
+		uselayer(2,'确定要保存吗？',function () {
+			var _json = {
+					name:$.trim($('#sj-name').val()),
+					question:question
+			};
+			if ($('#sj-form').attr('_id')) {
+				_json.id = $('#sj-form').attr('_id');
 			}
-			
+			Api.ajax({
+				type:'post',
+				url:$('#sj-form').attr('posturl'),
+				json:_json,
+				fn:function (res) {
+					uselayer(1,'保存成功！',function () {
+						window.location.href=$('#sj-form').attr('jumpurl');
+					});
+				}
+			});				
 		});
-		
-		
-		
-		
-		
+	
 	});
 	
 	

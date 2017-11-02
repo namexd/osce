@@ -1,7 +1,7 @@
 @extends('osce::theory.base')
 
 @section('title')
-	新增试卷
+	试卷编辑
 @stop
 @section('head_css')
 	<style>
@@ -55,26 +55,37 @@
 <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row table-head-style1 ">
             <div class="col-xs-6">
-                <h5 class="title-label">新增试卷</h5>
+                <h5 class="title-label">试卷编辑</h5>
             </div>
         </div>	
         <div class="ibox-content">
         	<div class="row">
-		        <div id="sj-form" jumpurl="{{route('osce.theory.examquestion')}}" posturl="{{route('osce.theory.addQuestionList')}}" class="form-horizontal">
+		        <div id="sj-form" jumpurl="{{route('osce.theory.examquestion')}}" posturl="{{route('osce.theory.editQuestionList')}}" _id="{{$data->id}}" class="form-horizontal">
 	                
 	                <div class="form-group">
 	                    <label class="col-sm-2 control-label">试卷名称：<i>*</i></label>
 						<div class="col-sm-6">
-							<input type="text" id="sj-name" placeholder="请填写试卷名称" class="form-control"  />
+							<input value="{{$data->name}}" type="text" id="sj-name" placeholder="请填写试卷名称" class="form-control"  />
 						</div>
 	                </div>
 	               
 	                <div class="hr-line-dashed"></div>   
-	                
+	                <?php $question =collect($data->questionHas)->groupBy('type');?>
 	                <div class="form-group">
 	                    <label class="col-sm-2 control-label">单选题：</label>
 						<div class="col-sm-6">
-							<ul class="dx-list"></ul>
+							<ul class="dx-list">
+								@if (isset($question['1']))
+									@foreach($question['1'] as $key=>$val)
+										<li issave="1" _type="1" _typename="单选题" _fz="{{$val->poins}}" _tg="{{strip_tags($val->question)}}" _tp="{{$val->question}}"
+											_da="{{$val->answer}}" _xx="{{$val->content}}">
+											<i>{{$key+1}}、</i>
+											<span>（{{$val->poins}}分）{{strip_tags($val->question)}}</span>
+											<em class="state2 fa fa-trash-o fa-2x"></em>
+										</li>
+									@endforeach
+								@endif
+							</ul>
 							<input type="button" class="btn btn-sm btn-primary dx-btn" value="新增单选题" />
 						</div>
 	                </div>	 
@@ -83,7 +94,18 @@
 	                <div class="form-group">
 	                    <label class="col-sm-2 control-label">多选题：</label>
 						<div class="col-sm-6">
-							<ul class="dx-list"></ul>
+							<ul class="dx-list">
+								@if (isset($question['2']))
+									@foreach($question['2'] as $key=>$val)
+										<li issave="1" _type="2" _typename="多选题" _fz="{{$val->poins}}" _tg="{{strip_tags($val->question)}}" _tp="{{$val->question}}"
+											_da="{{$val->answer}}" _xx="{{$val->content}}">
+											<i>{{$key+1}}、</i>
+											<span>（{{$val->poins}}分）{{strip_tags($val->question)}}</span>
+											<em class="state2 fa fa-trash-o fa-2x"></em>
+										</li>
+									@endforeach	
+								@endif							
+							</ul>
 							<input type="button" class="btn btn-sm btn-primary dx-btn" value="新增多选题" />
 						</div>
 	                </div>	 
@@ -91,7 +113,18 @@
 	                <div class="form-group">
 	                    <label class="col-sm-2 control-label">判断题：</label>
 						<div class="col-sm-6">
-							<ul class="dx-list"></ul>
+							<ul class="dx-list">
+								@if (isset($question['3']))
+									@foreach($question['3'] as $key=>$val)
+										<li issave="1" _type="3" _typename="判断题" _fz="{{$val->poins}}" _tg="{{strip_tags($val->question)}}" _tp="{{$val->question}}"
+											_da="{{$val->answer}}" _xx="{{$val->content}}">
+											<i>{{$key+1}}、</i>
+											<span>（{{$val->poins}}分）{{strip_tags($val->question)}}</span>
+											<em class="state2 fa fa-trash-o fa-2x"></em>
+										</li>
+									@endforeach	
+								@endif							
+							</ul>
 							<input type="button" class="btn btn-sm btn-primary dx-btn" value="新增判断题" />
 						</div>
 	                </div>	 
@@ -99,7 +132,18 @@
 	                <div class="form-group">
 	                    <label class="col-sm-2 control-label">填空题：</label>
 						<div class="col-sm-6">
-							<ul class="dx-list"></ul>
+							<ul class="dx-list">
+								@if (isset($question['4']))
+									@foreach($question['4'] as $key=>$val)
+										<li issave="1" _type="4" _typename="填空题" _fz="{{$val->poins}}" _tg="{{strip_tags($val->question)}}" _tp="{{$val->question}}"
+											_da="{{$val->answer}}" _xx="{{strip_tags($val->question)}}">
+											<i>{{$key+1}}、</i>
+											<span>（{{$val->poins}}分）{{$val->question}}</span>
+											<em class="state2 fa fa-trash-o fa-2x"></em>
+										</li>
+									@endforeach		
+								@endif						
+							</ul>
 							<input type="button" class="btn btn-sm btn-primary dx-btn" value="新增填空题" />
 						</div>
 	                </div>	 
@@ -107,7 +151,18 @@
 	                <div class="form-group">
 	                    <label class="col-sm-2 control-label">名词解释题：</label>
 						<div class="col-sm-6">
-							<ul class="dx-list"></ul>
+							<ul class="dx-list">
+								@if (isset($question['5']))
+									@foreach($question['5'] as $key=>$val)
+										<li issave="1" _type="5" _typename="名词解释题" _fz="{{$val->poins}}" _tg="{{strip_tags($val->question)}}" _tp="{{$val->question}}"
+											_da="{{$val->answer}}" _xx="{{$val->content}}">
+											<i>{{$key+1}}、</i>
+											<span>（{{$val->poins}}分）{{strip_tags($val->question)}}</span>
+											<em class="state2 fa fa-trash-o fa-2x"></em>
+										</li>
+									@endforeach		
+								@endif						
+							</ul>
 							<input type="button" class="btn btn-sm btn-primary dx-btn" value="新增名词解释题" />
 						</div>
 	                </div>	 
@@ -115,7 +170,18 @@
 	                <div class="form-group">
 	                    <label class="col-sm-2 control-label">论述题：</label>
 						<div class="col-sm-6">
-							<ul class="dx-list"></ul>
+							<ul class="dx-list">
+								@if (isset($question['6'])) 
+									@foreach($question['6'] as $key=>$val)
+										<li issave="1" _type="6" _typename="论述题" _fz="{{$val->poins}}" _tg="{{strip_tags($val->question)}}" _tp="{{$val->question}}"
+											_da="{{$val->answer}}" _xx="{{$val->content}}">
+											<i>{{$key+1}}、</i>
+											<span>（{{$val->poins}}分）{{strip_tags($val->question)}}</span>
+											<em class="state2 fa fa-trash-o fa-2x"></em>
+										</li>
+									@endforeach									
+								@endif
+							</ul>
 							<input type="button" class="btn btn-sm btn-primary dx-btn" value="新增论述题" />
 						</div>
 	                </div>	 
@@ -123,7 +189,18 @@
 	                <div class="form-group">
 	                    <label class="col-sm-2 control-label">简答题：</label>
 						<div class="col-sm-6">
-							<ul class="dx-list"></ul>
+							<ul class="dx-list">
+								@if (isset($question['7']))
+									@foreach($question['7'] as $key=>$val)
+										<li issave="1" _type="7" _typename="简答题" _fz="{{$val->poins}}" _tg="{{strip_tags($val->question)}}" _tp="{{$val->question}}"
+											_da="{{$val->answer}}" _xx="{{$val->content}}">
+											<i>{{$key+1}}、</i>
+											<span>（{{$val->poins}}分）{{strip_tags($val->question)}}</span>
+											<em class="state2 fa fa-trash-o fa-2x"></em>
+										</li>
+									@endforeach		
+								@endif						
+							</ul>
 							<input type="button" class="btn btn-sm btn-primary dx-btn" value="新增简答题" />
 						</div>
 	                </div>	 
