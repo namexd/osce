@@ -180,7 +180,7 @@ class InvigilatorController extends CommonController
             'mobile'        =>  'required',
             'code'          =>  'required',
 //            'subject'       =>  'required',
-            'images_path'   =>  'required',
+//            'images_path'   =>  'required',
             'description'   =>  'sometimes',
         ],[
             'name.required'         =>  '监考教师姓名必填',
@@ -189,7 +189,7 @@ class InvigilatorController extends CommonController
             'email.required'        =>  '邮箱必填',
             'code.required'         =>  '监考教师编号必填',
 //            'subject.required'      =>  '考试项目必选',
-            'images_path.required'  =>  '请上传照片',
+//            'images_path.required'  =>  '请上传照片',
         ]);
 
         $user   =   Auth::user();
@@ -199,7 +199,7 @@ class InvigilatorController extends CommonController
         $type = $request->get('type',1);
         //用户数据
         $userData = $request -> only('name', 'gender','idcard','mobile','email','code');
-        $userData['avatar'] = $request  ->  get('images_path')[0];  //照片
+        $userData['avatar'] = $request  ->  has('images_path')?$request  ->  get('images_path')[0]:'/images/head.png';  //照片
         //老师数据
         $teacherData = $request -> only('name','code','description');  //姓名、编号、类型、备注
         if($type == 1){
@@ -277,7 +277,7 @@ class InvigilatorController extends CommonController
             'email'         =>  'required',
             'type'          =>  'required|in:2',
             'code'          =>  'required',
-            'images_path'   =>  'required',
+            //'images_path'   =>  'required',
             'case_id'       =>  'sometimes',
             'description'   =>  'sometimes',
             'subject'       =>  'sometimes'
@@ -289,7 +289,7 @@ class InvigilatorController extends CommonController
             'type.required'         =>  '监考教师类型必填',
             'code.required'         =>  '监考教师编号必填',
             'type.in'               =>  '监考教师类型不对',
-            'images_path.required'  =>  '请上传照片',
+            //'images_path.required'  =>  '请上传照片',
             'case_id.required'      =>  '监考教师病例必填'
         ]);
         try{
@@ -299,7 +299,7 @@ class InvigilatorController extends CommonController
             }
             //用户数据
             $userData = $request -> only('name', 'gender', 'idcard', 'mobile', 'email','code');
-            $userData['avatar'] = $request  ->  get('images_path')[0];  //照片
+            $userData['avatar'] = $request  ->  has('images_path')?$request  ->  get('images_path')[0]:'/images/head.png';  //照片
             //老师数据
             $teacherData = $request -> only('name','code','type','description');      //姓名、编号、类型、备注
             $teacherData['case_id']         = intval($request->get('case_id'));

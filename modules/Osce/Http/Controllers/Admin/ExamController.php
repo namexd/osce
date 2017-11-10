@@ -544,7 +544,7 @@ class ExamController extends CommonController
             'idcard'        =>  'required',
             'mobile'        =>  'required',
             'code'          =>  'required',
-            'images_path'   =>  'required',
+            //'images_path'   =>  'required',
             'exam_sequence' =>  'required',
             'grade_class'   =>  'required',
             'teacher_name'  =>  'required'
@@ -553,7 +553,7 @@ class ExamController extends CommonController
             'idcard.required'       =>  '身份证号必填',
             'mobile.required'       =>  '手机号必填',
             'code.required'         =>  '学号必填',
-            'images_path.required'  =>  '请上传照片',
+            //'images_path.required'  =>  '请上传照片',
             'exam_sequence.required'=>  '准考证号必填',
             'grade_class.required'  =>  '班级必填',
             'teacher_name.required' =>  '班主任姓名必填'
@@ -563,7 +563,7 @@ class ExamController extends CommonController
         $role_id = config('osce.studentRoleId', 2);
         //考试id
         $exam_id = $request->get('exam_id');
-        $images  = $request->get('images_path');      //照片
+        $images  = $request->get('images_path')?$request->get('images_path'):'/images/head.png';  //照片
         //用户数据(姓名,性别,身份证号,手机号,学号,邮箱,照片)
         $userData = $request->only('name','gender','idcard','mobile','code','email');
         $userData['avatar'] = $images[0];      //照片

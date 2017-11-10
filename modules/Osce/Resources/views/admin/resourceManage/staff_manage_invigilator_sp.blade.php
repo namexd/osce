@@ -43,13 +43,13 @@
             <div class="col-xs-6 col-md-2">
                 <h5 class="title-label">人员管理</h5>
             </div>
-            <div class="col-xs-6 col-md-3" style="float: right;">
+            <div class="col-xs-6 col-md-4" style="float: right;">
                 {{--<a href="{{route('osce.admin.invigilator.getdownloadTeacherImprotTpl')}}" class="btn btn-outline btn-default">下载模板</a>--}}
                 <a href="{{$tempUrl}}" class="btn btn-outline btn-default">下载模板</a>
                 <a  href="javascript:void(0)" class="btn btn-outline btn-default" id="file1">导入
                     <input type="file" name="teacher" id="file0" multiple="multiple" />
                 </a>
-                <a  href="{{route('osce.admin.invigilator.getAddSpInvigilator')}}" class="btn btn-primary" style="float: right;">新增</a>
+                <a  href="{{route('osce.admin.invigilator.getAddSpInvigilator')}}" class="btn btn-primary">新增</a>
             </div>
         </div>
         <div class="container-fluid ibox-content">
