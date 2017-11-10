@@ -2937,8 +2937,8 @@ function staff_manage_invigilator_add() {
     //图片检测
     $('#save').click(function(){
         if($('.img_box').find('img').attr('src')==undefined){
-            layer.msg('请上传图片！',{skin:'msg-error',icon:1});
-            return false;
+//          layer.msg('请上传图片！',{skin:'msg-error',icon:1});
+//          return false;
         }
     });
 
@@ -3516,8 +3516,8 @@ function staff_manage_invigilator_sp_add() {
     //图片检测
     $('#save').click(function(){
         if($('.img_box').find('img').attr('src')==undefined){
-            layer.msg('请上传图片！',{skin:'msg-error',icon:1});
-            return false;
+//          layer.msg('请上传图片！',{skin:'msg-error',icon:1});
+//          return false;
         }
     });
     /**
@@ -4100,8 +4100,8 @@ function staff_manage_invigilator_patrol_add() {
     //图片检测
     $('#save').click(function(){
         if($('.img_box').find('img').attr('src')==undefined){
-            layer.msg('请上传图片！',{skin:'msg-error',icon:1});
-            return false;
+//          layer.msg('请上传图片！',{skin:'msg-error',icon:1});
+//          return false;
         }
     });
 }
@@ -4323,8 +4323,8 @@ function staff_manage_invigilator_patrol_edit() {
     //图片检测
     $('#save').click(function(){
         if($('.img_box').find('img').attr('src')==undefined){
-            layer.msg('请上传图片！',{skin:'msg-error',icon:1});
-            return false;
+//          layer.msg('请上传图片！',{skin:'msg-error',icon:1});
+//          return false;
         }
     });
 }
