@@ -201,10 +201,8 @@ abstract class CommonController extends Controller
      * @method GET
      * @url
      * @access public
-     * @param Request $request get请求<br><br>
-     * <b>get请求字段：</b>
-     * * string
-     * @return json
+     * @param $status
+     * @return string
      * @version
      * @author weihuiguo <weihuiguo@sulida.com>
      * @date
@@ -222,8 +220,6 @@ abstract class CommonController extends Controller
         }else{
             $name = '没有考试';
         }
-
-
         return $name;
     }
 

@@ -109,4 +109,36 @@ class ExamScreeningStudent extends CommonModel
             $join->on($this->table.'.watch_id', '=', 'watch.id');
         })->where('watch.code',$code)->where($this->table.'.exam_screening_id',$screenId)->first();
     }
+
+    /**
+     * 缺考学生
+     * @param $examScreenId
+     * @param $studentId
+     * @throws \Exception
+     */
+    public static function dropStudent($examScreenId, $studentId) {
+        $connection = \DB::connection();
+        $connection ->beginTransaction();
+        try {
+            ExamQueue::query()
+                ->where('exam_screening_id', '=', $examScreenId)
+                ->where('student_id', '=', $studentId)
+                ->update(['status' => 4]);
+
+            ExamScreeningStudent::query()
+                ->where('exam_screening_id', '=', $examScreenId)
+                ->where('student_id', '=', $studentId)
+                ->update(['is_end' => 1, 'status' => 1]);
+
+            ExamOrder::query()
+                ->where('exam_screening_id', '=', $examScreenId)
+                ->where('student_id', '=', $studentId)
+                ->where('status', '=', 0)
+                ->update(['status' => 3]);
+            $connection->commit();
+        } catch(\Exception $ex) {
+            $connection->rollBack();
+            throw $ex;
+        }
+    }
 }

@@ -5,25 +5,14 @@ namespace Modules\Osce\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
 use Modules\Osce\Entities\Exam;
-
-
 use Modules\Osce\Entities\ExamAbsent;
-
-use Modules\Osce\Entities\ExamDraft;
 use Modules\Osce\Entities\ExamDraftFlow;
-use Modules\Osce\Entities\ExamFlow;
-use Modules\Osce\Entities\ExamFlowRoom;
-use Modules\Osce\Entities\ExamFlowStation;
 use Modules\Osce\Entities\ExamOrder;
 use Modules\Osce\Entities\ExamPlan;
 use Modules\Osce\Entities\ExamQueue;
 use Modules\Osce\Entities\ExamScreening;
-
 use Modules\Osce\Entities\ExamScreeningStudent;
 use Modules\Osce\Entities\QuestionBankEntities\ExamMonitor;
-use Modules\Osce\Entities\RoomStation;
-use Modules\Osce\Entities\Station;
-use Modules\Osce\Entities\StationTeacher;
 use Modules\Osce\Entities\Student;
 use Modules\Osce\Entities\Watch;
 use Modules\Osce\Entities\WatchLog;
@@ -380,6 +369,7 @@ class IndexController extends CommonController
                     throw new \Exception('正在考试 的考试 不是当前考试', 6);  //正在考试 的考试 不是当前考试（当前考试未开考，另外有其他的考试正在考）
                 }
             }
+
             //2、获取场次
             $examScreening   = Common::getExamScreening($exam_id);
             $examScreeningId = intval($examScreening->id);       //获取场次ID
@@ -398,7 +388,7 @@ class IndexController extends CommonController
             $student_id = intval($studentExam->id);                     //获取学生id
             //查看这个学生在该场次是否弃考
             $ExamMonitorModel =  new ExamMonitor();
-           $MonitorStudent =  $ExamMonitorModel ->ExamMonitor($exam_id,$student_id,$examScreeningId);
+            $MonitorStudent =  $ExamMonitorModel ->ExamMonitor($exam_id,$student_id,$examScreeningId);
             if(!$MonitorStudent->isEmpty()){
                 throw  new \Exception('该学生已弃考',-100);
             }
@@ -577,6 +567,9 @@ class IndexController extends CommonController
             if(is_null($watchInfo)){
                 return \Response::json(array('code'=>111)); //当前腕表不存在
             }
+            if ($watchInfo->status === 0) {
+                return \Response::json(array('code'=>112)); //当前腕表未绑定
+            }
             $id = $watchInfo->id;       //获取腕表id
 
             //根据腕表id查询腕表使用记录中对应的学生id
@@ -591,10 +584,12 @@ class IndexController extends CommonController
                     return \Response::json(array('code'=>0));       //解绑失败
                 }
             }
+
             //获取学生信息
             $student_id  = $watchLog->student_id;
             $studentInfo = Student::where('id', $student_id)->select(['id','name','code as idnum','idcard'])->first();
 
+            //
             //修改场次状态
             //根据考试id获取当前考试的场次id
             $examScreeningModel = new ExamScreening();
@@ -603,15 +598,16 @@ class IndexController extends CommonController
             {
                 $examScreening  = $examScreeningModel -> getNearestScreening($exam_id);
             }
+
             //不存在考试场次，直接解绑 TODO: fandian 2016-05-25 11:00
-            if(is_null($examScreening)){
+            if(is_null($examScreening)) {
                 $result = Watch::where('id', '=', $id)->update(['status'=>0]);    //解绑
-                if($result){
+                if($result) {
                     //腕表解绑，添加腕表解绑记录
                     $this->watchUnbundling($id, $student_id);
 
                     //检查考试是否可以结束
-                    $examScreeningModel  -> getExamCheck();
+                    $examScreeningModel  -> getExamCheck($exam_id);
                     $connection->commit();
                     //解绑成功
                     return \Response::json([
@@ -631,6 +627,7 @@ class IndexController extends CommonController
 
             $exam_screen_id = $examScreening->id;       //获取场次id
             //获取学生的考试状态
+
             $student      = new Student();
             $exameeStatus = $student->getExameeStatus($studentInfo->id,$exam_id,$exam_screen_id);
             $status       = $this->checkType($exameeStatus->status);
@@ -639,6 +636,7 @@ class IndexController extends CommonController
             $ExamFinishStatus = ExamQueue::whereNotIn('status', [3,4])->where('student_id', '=', $student_id)
                                          ->where('exam_screening_id', '=', $exam_screen_id)
                                          ->count();
+
             //如果考试流程结束
             if($ExamFinishStatus == 0)
             {
@@ -650,7 +648,7 @@ class IndexController extends CommonController
                 }
 
                 //更改 （状态改为 已解绑：status=2）
-                $ExamOrder =ExamOrder::where('student_id', '=', $student_id)->where('exam_id', '=', $exam_id)
+                $ExamOrder = ExamOrder::where('student_id', '=', $student_id)->where('exam_id', '=', $exam_id)
                          ->where('exam_screening_id', '=', $exam_screen_id)->get();
 
 
@@ -727,9 +725,16 @@ class IndexController extends CommonController
                                             ->where('exam_screening_id', '=', $exam_screen_id)->update(['is_end'=>2]);
 
                         //中途解绑（更改队列，往后推）
-                        $queueRes = ExamQueue::where('id', '=', $exameeStatus->id)->increment('next_num', 1);   //下一次次数增加
+                        $queueRes = ExamQueue::query()
+                            ->where('student_id', '=', $student_id)
+                            ->where('exam_id', '=', $examScreening->id)
+                            ->where('exam_screening_id', '=', $exam_id)
+                            ->increment('next_num', 1);   //下一次次数增加
+//                        $queueRes = ExamQueue::query()->where('id', '=', $exameeStatus->id)->update(['status' => 4]);
                         //插入日志
                         \Log::alert('中途解绑（更改队列，往后推）',[$queueRes]);
+                        // 更新缓存
+                        Common::updateAllCache($exam_id, $examScreening->id, true);
 
                         //TODO:罗海华 2016-02-06 14:27     检查考试是否可以结束
                         $examScreening = new ExamScreening();
@@ -754,6 +759,7 @@ class IndexController extends CommonController
         }
         catch(\Exception $ex)
         {
+            dd($ex->getMessage());
             $connection->rollBack();
             return \Response::json(array('code'=>0));
         }

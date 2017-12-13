@@ -343,10 +343,10 @@ class Exam extends CommonModel
     public function doStopFexam($id,$sid){
         ExamScreening::where('id', $id)
             ->update(['status' => 2]);
-		   //当前考次结束，开启下一场考试，不是本次考试不会开启成功
-           $gid = $id+1;
-           ExamScreening::where('id',$gid)->where('exam_id',$sid)->update(['status' => 1]);
-		   return 1;
+        //当前考次结束，开启下一场考试，不是本次考试不会开启成功
+        $gid = $id+1;
+        ExamScreening::where('id',$gid)->where('exam_id',$sid)->update(['status' => 1]);
+        return 1;
     }
     public function doStopZexam($id){
         ExamScreening::where('exam_id', $id)
@@ -790,7 +790,7 @@ class Exam extends CommonModel
             {
                 \Cache::remember('exam', 1, function () use($examId)
                 {
-                    $exam = Exam::where('status','=',1)->get();
+                    $exam = Exam::query()->where('status','=',1)->get();
                     if ($exam->count() != 1) {
                         throw new \Exception('获取当前考试信息失败！', -9999);
                     } else {

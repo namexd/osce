@@ -637,7 +637,7 @@ class DrawlotsController extends CommonController
         $this->validate($request, [
             'exam_queue_id' => 'sometimes|integer',
             'station_id' => 'required|integer',
-            'teacher_id' => 'required|integer'
+            'teacher_id' => 'required|integer',
 
         ], [
             'station_id.required' => '考站编号信息必须',
@@ -648,12 +648,22 @@ class DrawlotsController extends CommonController
             $stationId = (int)$request->input('station_id');
             $examQueueId = (int)$request->input('exam_queue_id');//队列id
             $teacher_id = (int)$request->input('teacher_id');
+            $remove = $request->input('remove', false);
             $exam = Exam::doingExam();
             //获取到当前考试场次
             $exam_screening_id = $this->getexamScreeing($exam);
             //给当前队列这个学生队列顺序后移
             if ($examQueueId) {
-                ExamQueue::where('id', $examQueueId)->increment('next_num', 1);//下一次次数增加
+                if ($remove) {
+                    $queue = ExamQueue::query()->where('id', $examQueueId)->first();
+                    if ($queue) {
+                        // 直接剔除该学生
+                        ExamScreeningStudent::dropStudent($exam_screening_id, $queue->student_id);
+                    }
+                }
+                else {
+                    ExamQueue::where('id', $examQueueId)->increment('next_num', 1);//下一次次数增加
+                }
             } else {//没有刷表的学生时点击下一个取当前小组第一个
                 list($room_id, $stations) = $this->getRoomIdAndStation($teacher_id, $exam);
                 //判断当前考试模式下的学生队列
@@ -665,18 +675,27 @@ class DrawlotsController extends CommonController
                 if (count($examQueue)) {
                     ExamQueue::where('id', $examQueue[0]->exam_queue_id)->increment('next_num', 1);//下一次次数增加
                 }
-
             }
+            list($room_id) = $this->getRoomIdAndStation($teacher_id, $exam);
+            Common::updateRoomCache($exam->id, $room_id);
+            Common::updateCache($teacher_id, $exam->id);
 
             //获取到当前队列学生顺序的第一个学生
-            list($room_id, $stations) = $this->getRoomIdAndStation($teacher_id, $exam);
-            //判断当前考试模式下的学生队列
-            if ($exam->sequence_mode == 1) {
-                $examQueue = ExamQueue::examineeByRoomId($room_id, $exam->id, $stations, $exam_screening_id);
-            } elseif ($exam->sequence_mode == 2) {
-                $examQueue = ExamQueue::examineeByStationId($stationId, $exam->id, $exam_screening_id);
-            } else {
-                throw new \Exception('考试模式不存在！', -703);
+//            list($room_id, $stations) = $this->getRoomIdAndStation($teacher_id, $exam);
+//            //判断当前考试模式下的学生队列
+//            if ($exam->sequence_mode == 1) {
+//                $examQueue = ExamQueue::examineeByRoomId($room_id, $exam->id, $stations, $exam_screening_id);
+//            } elseif ($exam->sequence_mode == 2) {
+//                $examQueue = ExamQueue::examineeByStationId($stationId, $exam->id, $exam_screening_id);
+//            } else {
+//                throw new \Exception('考试模式不存在！', -703);
+//            }
+//            $examQueue =
+            $key = 'current_teacher_id'. $teacher_id . '_exam_id' . $exam->id;
+            //从缓存中取出 当前组考生队列
+            $examQueue = \Cache::get($key);
+            if(is_null($examQueue)){
+                $examQueue = [];
             }
             foreach ($examQueue as $key => $val) {
                 $examQueue[$key]->student_avator = asset($examQueue[$key]->student_avator);
@@ -686,6 +705,10 @@ class DrawlotsController extends CommonController
 
             $this->getNextExaminee_arr($request);//推送下一组
             $this->getExaminee_arr($request);//推送当前小组
+            if ($remove) {
+                // 剔除时验证是否可以关闭该考试
+                (new ExamScreening())->getExamCheck();
+            }
             return response()->json(
                 $this->success_data($examQueue, 1, '验证完成')
             );

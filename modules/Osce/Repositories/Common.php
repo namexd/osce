@@ -999,13 +999,31 @@ class Common
      */
     public static  function updateAllCache($exam_id,$screen_id ,$push = false)
     {
+        //2、根据考场缓存当前组、下一组
+        try{
+            //获取该考试、该场次下 安排的所有考场
+            $ExamDraft = new ExamDraft();
+            $rooms = $ExamDraft->getRoomByExam($exam_id, $screen_id);
+            \Log::info('更新考场缓存获取到的考场',[$rooms]);
+            foreach ($rooms as $room)
+            {
+                //针对每一个考场 将当前组、下一组保存至缓存中
+                \Log::info('根据考场缓存当前组下一组', ['exam_id'=>$exam_id, 'room_id'=>$room->room_id]);
+                Common::updateRoomCache($exam_id, $room->room_id);
+            }
+
+        }catch (\Exception $exex)
+        {
+            \Log::info('根据考场缓存当前组下一组报错',['exam_id'=>$exam_id, 'file'=>$exex->getFile(), 'num'=>$exex->getLine(), 'message'=>$exex->getMessage()]);
+        }
+
         //1、根据老师缓存当前组、下一组
         try{
             //获取当前考试下安排的所有老师
             $teachers = StationTeacher::leftJoin('exam_station_status', 'exam_station_status.station_id', '=', 'station_teacher.station_id')
-                        ->where('exam_station_status.exam_screening_id', '=', $screen_id)
-                        ->where('exam_station_status.exam_id', '=', $exam_id)
-                        ->where('station_teacher.exam_id', '=', $exam_id)->get();
+                ->where('exam_station_status.exam_screening_id', '=', $screen_id)
+                ->where('exam_station_status.exam_id', '=', $exam_id)
+                ->where('station_teacher.exam_id', '=', $exam_id)->get();
             \Log::alert('绑定获取当前场次所有老师',[$teachers->toArray()]);
 
             if(!$teachers->isEmpty())
@@ -1022,25 +1040,7 @@ class Common
 
         }catch (\Exception $exe)
         {
-            \Log::debug('根据老师缓存当前组下一组报错',['exam_id'=>$exam_id, 'file'=>$exe->getFile(), 'num'=>$exe->getLine(), 'message'=>$exe->getMessage()]);
-        }
-
-        //2、根据考场缓存当前组、下一组
-        try{
-            //获取该考试、该场次下 安排的所有考场
-            $ExamDraft = new ExamDraft();
-            $rooms = $ExamDraft->getRoomByExam($exam_id, $screen_id);
-            \Log::info('更新考场缓存获取到的考场',[$rooms]);
-            foreach ($rooms as $room)
-            {
-                //针对每一个考场 将当前组、下一组保存至缓存中
-                \Log::info('根据考场缓存当前组下一组', ['exam_id'=>$exam_id, 'room_id'=>$room->room_id]);
-                Common::updateRoomCache($exam_id, $room->room_id);
-            }
-
-        }catch (\Exception $exex)
-        {
-            \Log::debug('根据考场缓存当前组下一组报错',['exam_id'=>$exam_id, 'file'=>$exex->getFile(), 'num'=>$exex->getLine(), 'message'=>$exex->getMessage()]);
+            \Log::info('根据老师缓存当前组下一组报错',['exam_id'=>$exam_id, 'file'=>$exe->getFile(), 'num'=>$exe->getLine(), 'message'=>$exe->getMessage()]);
         }
 
         return true;

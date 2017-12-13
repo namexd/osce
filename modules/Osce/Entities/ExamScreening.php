@@ -211,6 +211,7 @@ class ExamScreening extends CommonModel
                 ->where('status', '=', 1)       //等候考试
                 ->OrderBy('begin_dt', 'asc')
                 ->first();
+
             if(!is_null($result))
             {
                 Cache::put($key, $result, 1);
@@ -232,12 +233,16 @@ class ExamScreening extends CommonModel
      * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
 
-    public function getExamCheck()
+    public function getExamCheck($examId = null)
     {
         //取得考试实例
-        $exam = Exam::doingExam();
+        $exam = Exam::doingExam($examId);
         if (is_null($exam)) {
             throw new \Exception('没有找到考试');
+        }
+        // 考试已结束直接返回
+        if ($exam->status == 2) {
+            return;
         }
 
         //获取到当考试场次id
@@ -246,7 +251,7 @@ class ExamScreening extends CommonModel
             $ExamScreening = $this->getNearestScreening($exam->id);
 
         }
-        if(is_null($ExamScreening)){
+        if(is_null($ExamScreening)) {
             throw new \Exception('所有考试场次已结束，请进行下一场考试',-7);
         }
         //根据考试场次id查询计划表所有考试学生
@@ -283,6 +288,7 @@ class ExamScreening extends CommonModel
             }
             if ($exam->examScreening()->whereIn('status', [0,1])->count() == 0) {
                 $exam->status = 2;
+                // todo 清空所有腕表绑定
                 if (!$exam->save()) {
                     throw new \Exception('考试结束失败', -6);
                 }
