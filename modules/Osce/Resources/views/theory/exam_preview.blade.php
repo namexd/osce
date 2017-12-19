@@ -141,8 +141,23 @@
 				
 			
 		});
-		
-				
+
+		function setzhuguan(arr,str) {
+			console.log(arr)
+			for (var i = 0 ; i < arr.length; i++) {
+				str+=
+						'<div class="allSubject" _a="'+arr[i].answer+'" _ra="'+arr[i].answer+'">'
+						+setnamestr(arr[i],i)
+						+'<ul>'
+						+'<li class=""><p>'+(arr[i].type==4?'参考答案':'参考评分点')+'：</p><span class="form-control">'+arr[i].answer.replace(/\n/g,"<br/>")+'</span></li>'
+						+'<li class=""><p>学生答案：</p><span class="form-control">'+arr[i].answer.replace(/\n/g,"<br/>")+'</span></li>'
+						+'</ul>'
+						+'<input type="hidden" name="id[]" value="'+arr[i].cid+'" />'
+						+'<input type="hidden" name="isright[]" value="3" />'
+						+'</div>';
+			}
+			return str;
+		};
 		
 		
    </script>
