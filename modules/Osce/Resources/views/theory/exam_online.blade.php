@@ -48,6 +48,15 @@
 
    <script>
 		$(function () {
+			document.oncontextmenu = function () {
+				return false;
+			};
+			$(document).keydown(function (e) {
+				if (e.keyCode == 116) {
+					return false;
+				}
+			});
+			
 			var _json = {!! $question->toJson() !!};
 			
 			var end = {{$endtime}};
@@ -73,13 +82,15 @@
 				$('#second').html(addzero(end%60));
 			};
 			
-			
+			var randomarr = function(arr) {
+			    return arr.sort(function(){return Math.random() > 0.5});
+			};
 			
 
 			
 			console.log(_json)
 				for (var name in _json) {
-					var arr = _json[name];
+					var arr = randomarr(_json[name]);
 					var str = 
 							'<p>'
 								+'<label class="font20">'+title[name]+'</label>'
