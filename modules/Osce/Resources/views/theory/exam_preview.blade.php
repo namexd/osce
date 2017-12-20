@@ -11,7 +11,7 @@
 		
  .body
 {
-    float: left;
+    /*float: left;*/
     /*position: absolute;*/
     width: 95%;
     height: 95%;
