@@ -31,7 +31,8 @@ class HuaxiSmarty
      */
     public function ramdonId($stations)
     {
-        if ($stations->isEmpty()) {
+        if ($stations->isEmpty())
+        {
             throw new \Exception('当前数据有问题', -60);
         }
 
@@ -131,14 +132,13 @@ class HuaxiSmarty
      * @time 2016-05-07
      * @copyright 2013-2017 sulida.com Inc. All Rights Reserved
      */
-    public function  AbnormalStudent ($student, array $params){
-        
-     $studentData = $student->AbnormalStudent($params['exam_id'], $params['room_id'],$params['screenId']);
-     return $studentData ;
- }
+    public function AbnormalStudent($student, array $params)
+    {
 
+        $studentData = $student->AbnormalStudent($params['exam_id'], $params['room_id'], $params['screenId']);
+        return $studentData;
+    }
 
-    
 
     /**
      *从缓存中获取当前组
@@ -152,23 +152,19 @@ class HuaxiSmarty
      * @time 2016-05-07
      * @copyright 2013-2017 sulida.com Inc. All Rights Reserved
      */
-    public  function Examinee($examId,$roomId){
+    public function Examinee($examId, $roomId)
+    {
         //从缓存中 获取当前组考生队列
-        $key = 'current_room_id' . $roomId .'_exam_id'.$examId;
-        //从缓存中取出 当前组考生队列
-        $examQueue = \Cache::get($key);
-        \Log::debug('检查当前组有没有异常考生', [$examId, $roomId, $key, $examQueue]);
-        if(empty($examQueue) ||count($examQueue) == 0){
-            Common::updateRoomCache($examId, $roomId);
-        }
-        //从缓存中再取一次 当前组考生队列
-        $examQueue = \Cache::get($key);
+        $examQueue = Common::getRoomCurrentQueues($examId, $roomId);
         //检查是否有异常考生
         $AbnormalStudent = [];
-        if(!empty($examQueue) || count($examQueue)>0){
-            foreach ($examQueue as $item){
-                if($item->controlMark == 1 ||$item->controlMark ==2 || $item->controlMark ==3){
-                    $AbnormalStudent[] = $item ;
+        if (!empty($examQueue) || count($examQueue) > 0)
+        {
+            foreach ($examQueue as $item)
+            {
+                if ($item->controlMark == 1 || $item->controlMark == 2 || $item->controlMark == 3)
+                {
+                    $AbnormalStudent[] = $item;
                 }
             }
         }
@@ -188,40 +184,41 @@ class HuaxiSmarty
      * @copyright 2013-2017 sulida.com Inc. All Rights Reserved
      */
 
-    public function NextExaminee($examId ,$roomId){
+    public function NextExaminee($examId, $roomId)
+    {
         $abnormal = 1;
-        //从缓存中 获取当前组考生队列
-        $key = 'next_room_id' . $roomId .'_exam_id'.$examId;
-        //从缓存中取出 当前组考生队列
-        $NextExamQueue = \Cache::get($key);
+        //从缓存中 获取下一组考生队列
+        $nextExamQueues = Common::getRoomNextQueues($examId, $roomId);
         //检查是否有异常考生
-        if(!empty($NextExamQueue)){
-            foreach ($NextExamQueue as $item){
+        if (!empty($nextExamQueues))
+        {
+            foreach ($nextExamQueues as $item)
+            {
                 //如果有一个学生不是异常就跳出 反之就把这一组学生队列全部结束
-                if($item->controlMark == -1){
+                if ($item->controlMark == -1)
+                {
                     $abnormal = 2;
                     break;
                 }
             }
             //结束下一组所有队列
-            if($abnormal ==1){
-                foreach ($NextExamQueue as $value){
-                   $Queue =  $this->getObj($value->student_id, $value->exam_screening_id, $roomId);
-                    $Queue->status =3;
-                    if($Queue->save()){
-                       //创建成绩
+            if ($abnormal == 1)
+            {
+                foreach ($nextExamQueues as $value)
+                {
+                    $Queue = $this->getObj($value->student_id, $value->exam_screening_id, $roomId);
+                    $Queue->status = 3;
+                    if ($Queue->save())
+                    {
+                        //创建成绩
 
                     }
                 }
             }
         }
 
-        return $NextExamQueue;
+        return $nextExamQueues;
     }
-
-
-
-
 
 
 }

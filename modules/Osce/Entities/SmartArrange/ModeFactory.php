@@ -24,7 +24,6 @@ class ModeFactory
         try {
             switch ($exam->sequence_mode) {
                 case 1:
-
                     return new RoomMode();
                 case 2:
 

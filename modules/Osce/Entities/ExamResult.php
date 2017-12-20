@@ -408,12 +408,10 @@ class ExamResult extends CommonModel
 
     public function NextExaminee($examId,$screeningId,$roomId,$teacherId,$stationId,$abnormal = 1){
         //从缓存中 获取当前组考生队列
-        $key = 'next_room_id' . $roomId .'_exam_id'.$examId;
-        //从缓存中取出 当前组考生队列
-        $NextExamQueue = \Cache::get($key);
+        $nextExamQueues = osce_Common::getRoomNextQueues($examId, $roomId);
         //检查是否有异常考生
-        if(!empty($NextExamQueue)){
-            foreach ($NextExamQueue as $item){
+        if(!empty($nextExamQueues)){
+            foreach ($nextExamQueues as $item){
                 //如果有一个学生不是异常就跳出 反之就把这一组学生队列全部结束
                 if($item->controlMark == -1){
                     $abnormal = 2;
@@ -422,7 +420,7 @@ class ExamResult extends CommonModel
             }
             //结束下一组所有队列
             if($abnormal ==1){
-                foreach ($NextExamQueue as $value){
+                foreach ($nextExamQueues as $value){
                     $Queue =  ExamQueue::whereStudentId($value->student_id)
                         ->where('room_id', $roomId)
                         ->whereExamScreeningId($value->exam_screening_id)
@@ -445,7 +443,7 @@ class ExamResult extends CommonModel
                 osce_Common::updateAllCache($examId, $screeningId,$push =true);
             }
         }
-        return $NextExamQueue;
+        return $nextExamQueues;
     }
     
     

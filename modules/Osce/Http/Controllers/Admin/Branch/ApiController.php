@@ -846,9 +846,7 @@ class ApiController extends CommonController
                 //检查异常考生抽签
                 $abnormal =1;
                 //拿到异常考生
-                $key = 'current_room_id' . $ExamQueue->room_id . '_exam_id' . $examId;
-                //从缓存中取出 当前组考生队列
-                $examQueue = \Cache::get($key);
+                $examQueue = Common::getRoomCurrentQueues($examId, $ExamQueue->room_id);
                 if (!empty($examQueue) || count($examQueue) > 0) {
                     //1判断当前组是否全是异常考生
                     foreach ($examQueue as $item) {
@@ -922,9 +920,7 @@ class ApiController extends CommonController
         $roomId          = $request->input('room_id');
         $abnormal =1;
         //拿到异常考生
-        $key = 'current_room_id' . $roomId .'_exam_id'.$examId;
-        //从缓存中取出 当前组考生队列
-        $examQueue = \Cache::get($key);
+        $examQueue = Common::getRoomCurrentQueues($examId, $roomId);
         try{
             if(!empty($examQueue) || count($examQueue)>0){
                 //1判断当前组是否全是异常考生

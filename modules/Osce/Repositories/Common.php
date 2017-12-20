@@ -969,22 +969,50 @@ class Common
     public static function updateRoomCache($exam_id, $room_id)
     {
         \Log::info($room_id.'考场当前组下一组更新缓存获取到的考试id',[$exam_id]);
-        //当前组考生队列，添加缓存
-        $currKey   = 'current_room_id' . $room_id .'_exam_id'.$exam_id;
-        $nextKey   = 'next_room_id' . $room_id .'_exam_id'.$exam_id;
-        //获取当前考生队列
-        $ExamQueue = new ExamQueue();
-        $currQueue = $ExamQueue->getExamineeByRoom($exam_id, $room_id);
-        //更新当前组缓存
-        Cache::forever($currKey, $currQueue);       //当前组
-        $nextQueue = $ExamQueue->getNextExamineeByRoom($exam_id, $room_id);
-       //更新下一组缓存
-        Cache::forever($nextKey, $nextQueue);       //下一组
-        \Log::info($room_id.'考场当前组下一组更新缓存',['currQueue'=>\Cache::get($currKey)->toArray(), 'nextQueue'=>\Cache::get($nextKey)->toArray()]);
+        static::getRoomCurrentQueues($exam_id, $room_id, true);
+        static::getRoomNextQueues($exam_id, $room_id, true);
     }
 
 
+    /**
+     * 获取房间当前考生队列
+     * @param $exam_id
+     * @param $room_id
+     * @param bool $force 是否强制更新
+     * @return mixed
+     */
+    public static function getRoomCurrentQueues($exam_id, $room_id, $force = false) {
+        $key   = 'current_room_id' . $room_id .'_exam_id'.$exam_id;
+        //获取当前考生队列
+        if ($force) {
+            $examQueue = new ExamQueue();
+            $queues = $examQueue->getExamineeByRoom($exam_id, $room_id);
+            //更新当前组缓存
+            \Cache::forever($key, $queues);
+            \Log::info($room_id.'考场当前组下一组更新缓存',['currQueue'=> $queues->toArray()]);
+        }
+        return \Cache::get($key);
+    }
 
+    /**
+     * 获取房间下一组考生队列
+     * @param $exam_id
+     * @param $room_id
+     * @param bool $force 是否强制更新
+     * @return mixed
+     */
+    public static function getRoomNextQueues($exam_id, $room_id, $force = false) {
+        $key = 'next_room_id' . $room_id .'_exam_id'.$exam_id;
+        if ($force) {
+            $examQueue = new ExamQueue();
+            $queues = $examQueue->getNextExamineeByRoom($exam_id, $room_id);
+            //更新当前组缓存
+            \Cache::forever($key, $queues);
+            \Log::info($room_id.'考场当前组下一组更新缓存',['nextQueue'=> $queues->toArray()]);
+        }
+
+        return \Cache::get($key);
+    }
 
 
     /**
@@ -997,7 +1025,7 @@ class Common
      * @date   2016-06-28 17:55
      * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
-    public static  function updateAllCache($exam_id,$screen_id ,$push = false)
+    public static function updateAllCache($exam_id, $screen_id, $push = false)
     {
         //2、根据考场缓存当前组、下一组
         try{

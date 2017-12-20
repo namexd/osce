@@ -375,9 +375,9 @@ class IndexController extends CommonController
             $examScreeningId = intval($examScreening->id);       //获取场次ID
 
             //修改场次状态（场次开考）
-            $examScreening  ->status = 1;
+            $examScreening->status = 1;
             //场次开考（场次状态变为1）
-            if(!$examScreening -> save()){
+            if(!$examScreening->save()){
                 throw new \Exception('场次开考失败！');
             }
 

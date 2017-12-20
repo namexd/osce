@@ -8,13 +8,8 @@
 namespace Modules\Osce\Entities;
 
 use DB;
-use Doctrine\Common\Persistence\ObjectManager;
-use Modules\Osce\Entities\Exam;
 use Modules\Osce\Entities\QuestionBankEntities\ExamPaper;
-use Modules\Osce\Http\Controllers\CommonController;
 use Modules\Osce\Repositories\Common;
-use Symfony\Component\VarDumper\Dumper\DataDumperInterface;
-use Cache;
 
 class ExamQueue extends CommonModel
 {
@@ -337,6 +332,7 @@ class ExamQueue extends CommonModel
                 {
                     $data[]=    $item;
                 }
+//                \Log::info('查看当前组数据', [$room_id, $examId, $stations, $exam_screening_id]);
 
                 return collect($data);//$queueing->merge($temp);
             } else {
@@ -431,9 +427,7 @@ class ExamQueue extends CommonModel
 //                ->first();
 
             //获取当前组 缓存key 拿到当前组把下一组剔除当前组学生
-            $currKey   = 'current_room_id' . $room_id .'_exam_id'.$examId;
-            //从缓存中取出 当前组考生队列
-            $examQueue = \Cache::get($currKey);
+            $examQueue = Common::getRoomCurrentQueues($examId, $room_id);
             $studentIds = [];
             if(count($examQueue) > 0 ){
                 foreach ($examQueue as $item){
@@ -996,7 +990,7 @@ class ExamQueue extends CommonModel
 
     /**
      * 结束学生队列考试
-     * @param $studentId 学生id
+     * @param $studentId '学生id'
      * @param null $stationId 考站id
      * @param null $teacherId 教师id
      * @return Object 返回队列表对应的对象

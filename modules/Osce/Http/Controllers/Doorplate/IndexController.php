@@ -227,32 +227,8 @@ class IndexController extends CommonController
         $exam_id  = $request->get('exam_id');
 
         try{
-//            $ExamQueue = new ExamQueue();
-//            $examQueue = $ExamQueue->getExamineeByRoom($exam_id, $room_id, $stations);
-             //$this->ExamineRoomCache($exam_id,$room_id);
-            //获取当前组 缓存key
-            $currKey   = 'current_room_id' . $room_id .'_exam_id'.$exam_id;
-/*            for($i=1;$i<12;$i++){
-                for($j=$i+1;$j<12;$j++){
-                    $r1 = 'current_room_id' . $i .'_exam_id'.$exam_id;
-                    $r2 = 'current_room_id' . $j .'_exam_id'.$exam_id;
-                    $cr1 = \Cache::get($r1);
-                    $cr2 = \Cache::get($r2);
-                    if($cr1==$cr2){
-                        $this->ExamineRoomCache($exam_id,$room_id);
-                        break 2;
-                    }
-                }
-            }*/
-            //$c = \Cache::pull($currKey);
-            //dd($c);\Cache::flush();
             //从缓存中取出 当前组考生队列
-            $examQueue = \Cache::get($currKey);
-            if(count($examQueue) == 0){
-               if($this->ExamineRoomCache($exam_id,$room_id)){
-                   $examQueue = \Cache::get($currKey);
-               }
-            }
+            $examQueue = Common::getRoomCurrentQueues($exam_id, $room_id);
             \Log::info('电子门牌获取到的当前组',[$examQueue]);
             return $examQueue;
 
@@ -273,16 +249,10 @@ class IndexController extends CommonController
      */
     private  function ExamineRoomCache($examId,$roomId)
     {
-        //获取当前组 缓存key
-        $currKey   = 'current_room_id' . $roomId .'_exam_id'.$examId;
-
-        //获取下一组 缓存key
-        $nextKey   = 'next_room_id' . $roomId .'_exam_id'.$examId;
-
-        //从缓存中取出 下一组考生队列
-        $nextQueue = \Cache::get($nextKey);
         //从缓存中取出 当前组考生队列
-        $examQueue = \Cache::get($currKey);
+        $examQueue = Common::getRoomCurrentQueues($examId, $roomId);
+        //从缓存中取出 下一组考生队列
+        $nextQueue = Common::getRoomNextQueues($examId, $roomId);
 
         //2、获取场次
         $examScreening   = Common::getExamScreening($examId);
@@ -293,11 +263,11 @@ class IndexController extends CommonController
             $roomQueue = ExamQueue::where('exam_id','=',$examId)
                 ->where('room_id','=',$roomId)
                 ->whereIn('status',[0,1,2])->first();
-            if(!is_null($roomQueue)){
-                Common:: updateAllCache($examId,$examScreeningId);
+            if(!is_null($roomQueue)) {
+                Common::updateAllCache($examId,$examScreeningId);
             }
         }else{
-            Common:: updateAllCache($examId,$examScreeningId);
+            Common::updateAllCache($examId,$examScreeningId);
         }
         return true;
 
@@ -322,19 +292,8 @@ class IndexController extends CommonController
         $exam_id  = $request->get('exam_id');
 
         try{
-//            $ExamQueue = new ExamQueue();
-//            $examQueue = $ExamQueue->getNextExamineeByRoom($exam_id, $room_id, $stations);
-
-            //获取下一组 缓存key
-            $nextKey   = 'next_room_id' . $room_id .'_exam_id'.$exam_id;
-            //从缓存中取出 下一组考生队列
-            $nextQueue = \Cache::get($nextKey);
-            if(count($nextQueue)==0){
-                if($this->ExamineRoomCache($exam_id,$room_id)){
-                    $nextQueue = \Cache::get($nextKey);
-                }
-            }
-            
+            //获取下一组 缓存
+            $nextQueue = Common::getRoomNextQueues($exam_id, $room_id);
             \Log::info('电子门牌获取到的下一组',[$nextQueue]);
             return $nextQueue;
 

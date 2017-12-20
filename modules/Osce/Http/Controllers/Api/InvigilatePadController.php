@@ -45,7 +45,7 @@ use DB;
 use Modules\Osce\Repositories\WatchReminderRepositories;
 use Storage;
 use Auth;
-use Redis;
+use \Illuminate\Support\Facades\Redis;
 use Symfony\Component\HttpKernel\Tests\DataCollector\DumpDataCollectorTest;
 use Modules\Osce\Entities\QuestionBankEntities\ExamMonitor;
 use Modules\Osce\Repositories\Common as OsceCommon;
@@ -532,7 +532,7 @@ class InvigilatePadController extends CommonController
                                 ->where('student_id', '=', $studentId)->count();
 
             //获取该考生在该场考试所对应的所有场次id
-            $studentScreeningIds= ExamPlan::where('exam_id','=', $exam_id)
+            $studentScreeningIds = ExamPlan::where('exam_id','=', $exam_id)
                                 ->where('student_id', '=', $studentId)
                                 ->select('exam_screening_id')->get()->toArray();
 
@@ -1579,6 +1579,7 @@ class InvigilatePadController extends CommonController
                     $watchModel=new WatchLog();
                     $watchModel->unwrapRecord($data);
 
+                    OsceCommon::updateAllCache($exam_id, $examScreening->id, true);
 
                     //TODO:罗海华 2016-02-06 14:27     检查考试是否可以结束
                     $examScreening  =  new ExamScreening();
@@ -1622,6 +1623,8 @@ class InvigilatePadController extends CommonController
                             ExamQueue::where('student_id','=',$student_id)->where('exam_id','=',$exam_id)->update($dataArr);
                         }
                     }
+                    OsceCommon::updateAllCache($exam_id, $examScreening->id, true);
+
                     //TODO:罗海华 2016-02-06 14:27     检查考试是否可以结束
                     $examScreening   =   new ExamScreening();
                     $examScreening  ->getExamCheck();

@@ -409,7 +409,7 @@ class PadController extends  CommonController{
             $queue = ExamQueue::endStudentQueueExam($studentId, $stationId, $teacherId);
 
             //更新所有考试缓存
-            Common::updateAllCache($exam->id, $queue->exam_screening_id,$push =true);
+            Common::updateAllCache($exam->id, $queue->exam_screening_id, true);
 
             //检查是否有异常考生
             try{

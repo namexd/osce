@@ -259,12 +259,9 @@ class ExamControl extends Model
                             throw new \Exception(' 更新考试场次-学生关系表失败！',-104);
                         }
                     }
-                    //更新房间当前组
-                    Common::updateRoomCache($data['examId'],$val ->room_id);
                     //从缓存中 获取当前组考生队列
-                    $key = 'current_room_id' . $val ->room_id .'_exam_id'.$data['examId'];
-                    //从缓存中取出 当前组考生队列
-                    $cacheExamQueue = \Cache::get($key);
+                    $cacheExamQueue = Common::getRoomCurrentQueues($data['examId'], $val->room_id, true);
+
                     \Log::info('异常操作拿到当前组缓存',[$cacheExamQueue]);
                     //检查当前组是否全是替考或者弃考
                     if(count($cacheExamQueue)>0){
