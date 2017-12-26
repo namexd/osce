@@ -217,18 +217,17 @@ class SmartArrange
                         $entity->timer = 0;
                         $tempValues = $this->examPlanRecordIsOpenDoor($entity, $screen);
                         //将结束时间写在表内
+                        $ids = [];
                         foreach ($tempValues as $tempValue) {
                             if (!is_null($tempValue->end_dt)) {
                                 continue;
                             }
-
-                            $tempValue->end_dt = date('Y-m-d H:i:s', $i);
-                            if (!$tempValue->save()) {
-                                throw new \Exception('开门失败！', -10);
-                            } else {
-                                $this->doorStatus++;
-                            }
+                            $ids[] = $tempValue->id;
+                            $this->doorStatus++;
                         }
+                        ExamPlanRecord::query()
+                            ->where('id', 'in', $ids)
+                            ->update(['end_dt' => date('Y-m-d H:i:s', $i)]);
                     } else {
                         $entity->timer += $step;
                     }
