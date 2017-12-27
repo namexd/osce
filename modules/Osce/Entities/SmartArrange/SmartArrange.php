@@ -226,7 +226,7 @@ class SmartArrange
                             $this->doorStatus++;
                         }
                         ExamPlanRecord::query()
-                            ->where('id', 'in', $ids)
+                            ->whereIn('id', $ids)
                             ->update(['end_dt' => date('Y-m-d H:i:s', $i)]);
                     } else {
                         $entity->timer += $step;
