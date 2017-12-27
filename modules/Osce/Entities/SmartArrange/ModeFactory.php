@@ -26,7 +26,6 @@ class ModeFactory
                 case 1:
                     return new RoomMode();
                 case 2:
-
                     return new StationMode();
                 default:
                     throw new \Exception('Sequence Mode error!');

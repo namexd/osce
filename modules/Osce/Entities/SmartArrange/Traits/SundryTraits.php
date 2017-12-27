@@ -44,6 +44,7 @@ trait SundryTraits
                 $flowTime += $value->mins;
             }
         }
+
         return $flowTime;
     }
 
@@ -97,15 +98,44 @@ trait SundryTraits
      * @author ZouYuChao
      * @time 2016-04-11 11:05
      */
-    function orderBeginStudent($screen, $entity)
+//    function orderBeginStudent($screen, $entity)
+//    {
+//        try {
+//            $prevSerial = $this->prevSerial($screen, $entity->serialnumber);
+//
+//            $thisSerial = $this->thisSerial($screen, $entity->serialnumber);
+//            $temp = $this->thisNotSerial($screen, $entity->serialnumber);
+//            //求取差集
+//            return array_diff($prevSerial->toArray(), $thisSerial->toArray(), $temp->toArray());
+//        } catch (\Exception $ex) {
+//            throw $ex;
+//        }
+//    }
+
+    function orderBeginStudent($entity, $planSerialRecords, $noEndPlanSerialRecords)
     {
         try {
-            $prevSerial = $this->prevSerial($screen, $entity->serialnumber);
+            $prevSerial = [];
+            if (isset($planSerialRecords[$entity->serialnumber - 1])) {
+                foreach ($planSerialRecords[$entity->serialnumber - 1] as $record) {
+                    $prevSerial[] = $record['student_id'];
+                }
+            }
 
-            $thisSerial = $this->thisSerial($screen, $entity->serialnumber);
-            $temp = $this->thisNotSerial($screen, $entity->serialnumber);
+            $thisSerial = [];
+            if (isset($planSerialRecords[$entity->serialnumber])) {
+                foreach ($planSerialRecords[$entity->serialnumber] as $record) {
+                    $thisSerial[] = $record['student_id'];
+                }
+            }
+            $temp = [];
+            if (isset($noEndPlanSerialRecords[$entity->serialnumber])) {
+                foreach ($noEndPlanSerialRecords[$entity->serialnumber] as $record) {
+                    $temp[] = $record['student_id'];
+                }
+            }
             //求取差集
-            return array_diff($prevSerial->toArray(), $thisSerial->toArray(), $temp->toArray());
+            return array_diff($prevSerial, $thisSerial, $temp);
         } catch (\Exception $ex) {
             throw $ex;
         }

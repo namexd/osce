@@ -22,7 +22,7 @@ class Poll extends AbstractCate implements CateInterface
 
     private $serNum = 1;
 
-    function needStudents($entity, $screen, $exam)
+    function needStudents($entity, $screen, $exam, $planSerialRecords = [], $noEndPlanSerialRecords = [])
     {
         // TODO: Implement needStudents() method.
         $testStudents = $this->pollTestStudents($entity, $screen);

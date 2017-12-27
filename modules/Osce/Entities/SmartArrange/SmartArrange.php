@@ -12,6 +12,15 @@ namespace Modules\Osce\Entities\SmartArrange;
 use Modules\Osce\Entities\ExamPlanRecord;
 use Modules\Osce\Entities\ExamScreening;
 use Modules\Osce\Entities\ExamStationStatus;
+use Modules\Osce\Entities\SmartArrange\Cate\AbstractCate;
+use Modules\Osce\Entities\SmartArrange\Cate\CateInterface;
+use Modules\Osce\Entities\SmartArrange\Cate\Order;
+use Modules\Osce\Entities\SmartArrange\Cate\Poll;
+use Modules\Osce\Entities\SmartArrange\Cate\Random;
+use Modules\Osce\Entities\SmartArrange\Entity\AbstractEntity;
+use Modules\Osce\Entities\SmartArrange\Entity\EntityInterface;
+use Modules\Osce\Entities\SmartArrange\Entity\RoomMode;
+use Modules\Osce\Entities\SmartArrange\Entity\StationMode;
 use Modules\Osce\Entities\SmartArrange\Student\StudentInterface;
 use Modules\Osce\Entities\SmartArrange\Traits\SQLTraits;
 use Modules\Osce\Entities\SmartArrange\Traits\SundryTraits;
@@ -21,6 +30,12 @@ use Modules\Osce\Entities\ExamPlan;
 use Modules\Osce\Entities\ExamDraft;
 use Modules\Osce\Repositories\Common;
 
+/**
+ * @property Order|Random|Poll|AbstractCate|CateInterface $cate
+ * @property RoomMode|StationMode $mode
+ * Class SmartArrange
+ * @package Modules\Osce\Entities\SmartArrange
+ */
 class SmartArrange
 {
     use SQLTraits, SundryTraits;
@@ -203,41 +218,47 @@ class SmartArrange
         $i = $beginDt;
         $step = $mixCommonDivisor * 60; //为考试实体考试时间的秒数
 
+        $noEndPlanRecords = [];
+        $planRecords = [];
+        $endCount = 0;
+        $planSerialRecords = [];
+        $noEndPlanSerialRecords = [];
         //开始计时器
         while ($i <= $endDt) {
             //开门动作
             foreach ($this->_E as &$entity) {
                 if ($this->doorStatus > 0) {
-                    $tempBool = $this->checkStatus($entity, $screen);
+                    $tempBool = $this->newCheckStatus($entity, $noEndPlanRecords);
                 } else {
                     $tempBool = true;
                 }
                 if ($tempBool) { //反之，则是关门状态
                     if (($entity->timer >= $entity->mins * 60 + config('osce.sys_param.mins') * 60)) {
                         $entity->timer = 0;
-                        $tempValues = $this->examPlanRecordIsOpenDoor($entity, $screen);
+                        $tempValues = $this->getPlanRecord($entity, $noEndPlanRecords, true);
                         //将结束时间写在表内
-                        $ids = [];
                         foreach ($tempValues as $tempValue) {
-                            if (!is_null($tempValue->end_dt)) {
-                                continue;
+//                            if (isset($tempValue['end_dt']) && ) {
+//                                continue;
+//                            }
+                            $tempValue['end_dt'] = date('Y-m-d H:i:s', $i);
+                            $planRecords[] = $tempValue;
+                            if (!isset($planSerialRecords[$tempValue['serialnumber']])) {
+                                $planSerialRecords[$tempValue['serialnumber']] = [];
                             }
-                            $ids[] = $tempValue->id;
+                            $planSerialRecords[$tempValue['serialnumber']][] = $tempValue;
                             $this->doorStatus++;
+                            $endCount ++;
                         }
-                        ExamPlanRecord::query()
-                            ->whereIn('id', $ids)
-                            ->update(['end_dt' => date('Y-m-d H:i:s', $i)]);
                     } else {
                         $entity->timer += $step;
                     }
                 }
-
             }
             //关门动作
             foreach ($this->_E as &$entity) {
                 if ($this->doorStatus > 0) {
-                    $tempBool = $this->checkStatus($entity, $screen);
+                    $tempBool = $this->newCheckStatus($entity, $noEndPlanRecords);
                 } else {
                     $tempBool = true;
                 }
@@ -251,7 +272,7 @@ class SmartArrange
                     //将参数注入
                     $this->cate->setParams($params);
 
-                    $students = $this->cate->needStudents($entity, $screen, $this->exam);
+                    $students = $this->cate->needStudents($entity, $screen, $this->exam, $planSerialRecords, $noEndPlanSerialRecords);
                     $this->_S = $this->cate->getTotalStudent();
                     $this->_S_W = $this->cate->getWaitStudent();
                     if (count($students) == 0) {
@@ -268,60 +289,101 @@ class SmartArrange
                         $data['updated_at'] = date('Y-m-d H:i:s');
 
                         $insertData [] = $data;
+                        if ($data['station_id']) {
+                            if (!isset($noEndPlanRecords['stations'][$data['station_id']])) {
+                                $noEndPlanRecords['stations'][$data['station_id']] = [];
+                            }
+                            $noEndPlanRecords['stations'][$data['station_id']][] = $data;
+                        } else {
+                            if (!isset($noEndPlanRecords['rooms'][$data['room_id']])) {
+                                $noEndPlanRecords['rooms'][$data['room_id']] = [];
+                            }
+                            $noEndPlanRecords['rooms'][$data['room_id']][] = $data;
+                        }
+                        if (!isset($noEndPlanSerialRecords[$data['serialnumber']])) {
+                            $noEndPlanSerialRecords[$data['serialnumber']] = [];
+                        }
+                        $noEndPlanSerialRecords[$data['serialnumber']][] = $data;
                     }
-                    if ($result = ExamPlanRecord::insert($insertData)) {
-                        $this->doorStatus -= count($insertData);
-                        $entity->timer += $step;
-                    } else {
-                        throw new \Exception('关门失败！', -11);
-                    }
+
+//                    if ($result = ExamPlanRecord::insert($insertData)) {
+                    $this->doorStatus -= count($insertData);
+                    $entity->timer += $step;
+//                    } else {
+//                        throw new \Exception('关门失败！', -11);
+//                    }
                 }
             }
 
             $i += $step;
 
             //TODO 排完后终止循环的操作，待施工
-            if ($this->overStudentCount($screen->id) == $this->_S_Count * $this->flowNum) {
+            if ($endCount == $this->_S_Count * $this->flowNum) {
                 break;
             }
         }
+        ExamPlanRecord::insert($planRecords);
 
         //获取未走完流程的考生
-        $studentList = $this->testingStudentList($this->exam, $screen, $this->flowNum);
+//        $studentList = $this->testingStudentList($this->exam, $screen, $this->flowNum);
 
         //未考完的学生实例数组
         $undoneStudents = [];
-
-        if (count($studentList)) {
-            $studentNotOvers = $studentList->pluck('student_id');
-
-            //删除未走完流程的考生
-            if (!ExamPlanRecord::whereIn('student_id', $studentNotOvers->toArray())->where('gradation_order', $screen->gradation_order)->delete()) {
-                throw new \Exception('考试未完成学生移动失败', -21);
-            }
-
-            //将没有考完的考生放回到总的考生池里
-            foreach ($studentNotOvers as $studentNotOver) {
-                $undoneStudents[] = $studentNotOver;
+        foreach ($noEndPlanRecords as $types) {
+            foreach ($types as $records) {
+                foreach ($records as $record) {
+                    $undoneStudents[] = $record['student_id'];
+                }
             }
         }
-
-        //找到未考完的考生
-        $examPlanEntity = ExamPlanRecord::whereNull('end_dt')->get();
-        $undoneStudentsIds = $examPlanEntity->pluck('student_id');
-        foreach ($undoneStudentsIds as $undoneStudentsId) {
-            $undoneStudents[] = $undoneStudentsId;
-        }
-
-        //删除未考完学生记录
-        if (!$undoneStudentsIds->isEmpty()) {
-            if (!ExamPlanRecord::whereIn('student_id', $undoneStudentsIds)->where('gradation_order', $screen->gradation_order)->delete()) {
-                throw new \Exception('删除未考完考生记录失败！', -2101);
-            }
-        }
-
         //获取候考区学生清单,并将未考完的考生还入总清单
         $this->_S = $this->_S->merge($this->_S_W);
         $this->_S = $this->_S->merge(array_unique($undoneStudents));
+    }
+
+
+    public function newCheckStatus($entity, $data)
+    {
+        $examPlanRecord = $this->getPlanRecord($entity, $data);
+        //如果有，说明是关门状态
+        if (!count($examPlanRecord)) {
+            return false;  //开门状态
+        } else {
+            return true;   //关门状态
+        }
+    }
+
+    /**
+     * @param $entity
+     * @param $data
+     * @param bool $remove 获取完之后是否删除数据
+     * @return array
+     * @throws \Exception
+     */
+    public function getPlanRecord($entity, &$data, $remove = false)
+    {
+        if ($entity->type == 2) {
+            if (isset($data['stations'][$entity->station_id])) {
+                $records = $data['stations'][$entity->station_id];
+                if ($remove) {
+                    $data['stations'][$entity->station_id] = [];
+                }
+                return $records;
+            } else {
+                return [];
+            }
+        } elseif ($entity->type == 1) {
+            if (isset($data['rooms'][$entity->room_id])) {
+                $records = $data['rooms'][$entity->room_id];
+                if ($remove) {
+                    $data['rooms'][$entity->room_id] = [];
+                }
+                return $records;
+            } else {
+                return [];
+            }
+        } else {
+            throw new \Exception('没有选定的考试模式！', -2);
+        }
     }
 }

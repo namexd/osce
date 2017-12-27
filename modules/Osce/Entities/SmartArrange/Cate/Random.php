@@ -27,7 +27,7 @@ class Random extends AbstractCate implements CateInterface
      * @author ZouYuChao
      * @time 2016-04-11 10:18
      */
-    function needStudents($entity, $screen, $exam)
+    function needStudents($entity, $screen, $exam, $planSerialRecords = [], $noEndPlanSerialRecords = [])
     {
         // TODO: Implement needStudents() method.
         //拿到已经考过了的考生和正在考的考生
