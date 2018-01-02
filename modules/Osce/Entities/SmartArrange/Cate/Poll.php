@@ -25,7 +25,7 @@ class Poll extends AbstractCate implements CateInterface
     function needStudents($entity, $screen, $exam, $planSerialRecords = [], $noEndPlanSerialRecords = [])
     {
         // TODO: Implement needStudents() method.
-        $testStudents = $this->pollTestStudents($entity, $screen);
+        $testStudents = $this->pollTestStudents($entity, $planSerialRecords, $noEndPlanSerialRecords);
 
 
         /*
@@ -66,13 +66,12 @@ class Poll extends AbstractCate implements CateInterface
     /**
      * 返回轮询所需要的学生
      * @param $entity
-     * @param $screen
      * @return array
      * @throws \Exception
      * @author ZouYuChao
      * @time 2016-04-11 15:33
      */
-    protected function pollTestStudents($entity, $screen)
+    protected function pollTestStudents($entity, $planSerialRecords, $noEndPlanSerialRecords)
     {
         //声明变量
         $tempStudents = [];
@@ -84,7 +83,7 @@ class Poll extends AbstractCate implements CateInterface
 
         //如果学生属性置为空，那么就分配考生
         if (is_null($this->students)) {
-            $this->students = $this->pollStudents($screen, $entity, count($this->serialnumber));
+            $this->students = $this->pollStudents($entity, count($this->serialnumber), $planSerialRecords, $noEndPlanSerialRecords);
         }
 
         //循环，找到合适的学生
