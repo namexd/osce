@@ -38,6 +38,17 @@
             color:#ff0101; margin-right:5px;}
 	
 	.dafen,.defen { display: none;}
+	 
+	
+	
+	
+	.fullimg { width: 100%; height: 100%; overflow: auto; padding-top: 60px; position: fixed; left: 0; top: 0; background: rgba(255,255,255,0.8); z-index: 99;}
+	.fullimg img { display: block; margin: 0 auto; position: relative; top: -10px;}
+	.fullimg .btn,.fullimg .full-per { position: fixed; top: 8px; left: 50%; margin-left: -23px;}
+	.fullimg .btn.full-small { margin-left: -175px;}
+	.fullimg .btn.full-big { margin-left: -99px;}
+	.fullimg .btn.full-close { margin-left: 63px;}
+	.fullimg .full-per { line-height: 34px; width: 76px; text-align: center;}
 	</style>
 @stop
 
@@ -89,59 +100,107 @@
 
 			
 			console.log(_json)
-				for (var name in _json) {
-					var arr = randomarr(_json[name]);
-					var str = 
-							'<p>'
-								+'<label class="font20">'+title[name]+'</label>'
-								+'<span style="margin-left: 1em;">共<span>'+arr.length+'</span>题</span>'
-							+'</p>';
-					
-					if (name=='1'||name=='2') {
-						str = setdanxuanstr(arr,str);
-					}
-					if (name=='3') {
-						str = setpanduanstr(arr,str);	
-					}
-					if (name=='4') {
-						str = settiankongstr(arr,str);		
-					}
-					if (name=='5'||name=='6'||name=='7') {
-						str = setwendastr(arr,str);	
-					}				
-					
-					$('.step-content').append('<div class="question_type type_'+name+'">'+str+'</div>');	
-				}			
+			for (var name in _json) {
+				var arr = randomarr(_json[name]);
+				var str = 
+						'<p>'
+							+'<label class="font20">'+title[name]+'</label>'
+							+'<span style="margin-left: 1em;">共<span>'+arr.length+'</span>题</span>'
+						+'</p>';
 				
-		
+				if (name=='1'||name=='2') {
+					str = setdanxuanstr(arr,str);
+				}
+				if (name=='3') {
+					str = setpanduanstr(arr,str);	
+				}
+				if (name=='4') {
+					str = settiankongstr(arr,str);		
+				}
+				if (name=='5'||name=='6'||name=='7') {
+					str = setwendastr(arr,str);	
+				}				
 				
-
-				
-				
-				$('.type_1 li,.type_3 li').click(function () {
-					if ($(this).find('.radio_icon').hasClass('check')) {
-						$(this).find('.radio_icon').removeClass('check')
-					} else {
-						$(this).parent().find('li .radio_icon').removeClass('check');
-						$(this).find('.radio_icon').addClass('check');
-					}
-				});
-				$('.type_2 li').click(function () {
-					if ($(this).find('.radio_icon').hasClass('check')) {
-						$(this).find('.radio_icon').removeClass('check')
-					} else {
-						$(this).find('.radio_icon').addClass('check');
-					}
-				});
-				
-				$('#jiaojuan').click(function () {
-					uselayer(2,'请确认已答完所有题目，你确定交卷吗？',tojiaojuan);
-					return false;
-				});				
-				
-				
-				
+				$('.step-content').append('<div class="question_type type_'+name+'">'+str+'</div>');	
+			}			
 			
+	
+			
+
+			
+			
+			$('.type_1 li,.type_3 li').click(function () {
+				if ($(this).find('.radio_icon').hasClass('check')) {
+					$(this).find('.radio_icon').removeClass('check')
+				} else {
+					$(this).parent().find('li .radio_icon').removeClass('check');
+					$(this).find('.radio_icon').addClass('check');
+				}
+			});
+			$('.type_2 li').click(function () {
+				if ($(this).find('.radio_icon').hasClass('check')) {
+					$(this).find('.radio_icon').removeClass('check')
+				} else {
+					$(this).find('.radio_icon').addClass('check');
+				}
+			});
+			
+			$('#jiaojuan').click(function () {
+				uselayer(2,'请确认已答完所有题目，你确定交卷吗？',tojiaojuan);
+				return false;
+			});				
+			
+			var s = $(window).width()/$(window).height();
+			var wh = 'w';	
+			var d = 100;
+			
+			$('.allSubject img').click(function () {
+				d = 100;
+				wh ='w';
+				console.log($(this).width()/$(this).height(),s)
+				if ($(this).width()/$(this).height()<s) {
+					wh='h';
+				}
+				
+				$('.fullimg img').attr('src',$(this).attr('src'));
+				
+				setwh(wh,d);
+				
+				$('body').addClass('overflow');
+				$('.fullimg').removeClass('hide');
+			});
+			
+			$('.full-close').click(function () {
+				$('body').removeClass('overflow');
+				$('.fullimg').addClass('hide');
+				
+			});
+			$('.full-big').click(function () {
+				if (d>500) {
+					return false;
+				}
+				d+=50;
+				setwh(wh,d);
+			});
+			$('.full-small').click(function () {
+				if (d<100) {
+					return false;
+				}
+				d-=50;
+				setwh(wh,d);
+			});
+			
+			
+			function setwh(wh,d) {
+				var w = 'width';
+				if (wh=='h') {
+					w = 'height';
+				}
+				console.log(w)
+				$('.full-per').html(d+'%');
+				$('.fullimg img').attr(w,d+'%');
+			};
+				
 		});
 		
 		
@@ -153,6 +212,14 @@
 @stop
 
 @section('body')
+	<div class="fullimg hide">
+		<img src="" />
+		<button class="btn btn-sm btn-default2 full-small">缩小</button>
+		<button class="btn btn-sm btn-primary full-big">放大</button>
+		<span class="full-per"></span>
+		<button class="btn btn-sm btn-warning full-close">关闭</button>
+		
+	</div>
 	<div class="wrapper wrapper-content animated fadeInRight">
 	    <div class="row table-head-style1 ">
 	        <div class="col-xs-6">
