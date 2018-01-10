@@ -32,11 +32,11 @@ Route::group(['prefix' => "api/1.0/public",'middleware' => ['cors']], function()
         \Log::info('PAD端登陆参数', $request->all());
         try{
             $userEnter=Authorizer::issueAccessToken();
-            $flag=$request->input('watch');
-            if(empty($flag)) {//解决腕表与pad用户名相同
-                $redis = Redis::connection('message');
-                $redis->publish(md5($_SERVER['HTTP_HOST']).'pad_message', json_encode(['code' => 100, 'message' => '登录成功', 'data' => $userEnter]));
-            }
+            /*         $flag=$request->input('watch');
+                   if(empty($flag)) {//解决腕表与pad用户名相同
+                        $redis = Redis::connection('message');
+                        $redis->publish(md5($_SERVER['HTTP_HOST']).'pad_message', json_encode(['code' => 100, 'message' => '登录成功', 'data' => $userEnter]));
+                    }*/
              return $userEnter;
         }catch (\Exception $ex) {
             \Log::info('PAD端登陆失败', ['code'=>$ex->getCode(),'message'=>$ex->getMessage()]);
