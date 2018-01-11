@@ -92,16 +92,20 @@
 				$('#minute').html(addzero(m));
 				$('#second').html(addzero(end%60));
 			};
-			
-			var randomarr = function(arr) {
-			    return arr.sort(function(){return Math.random() > 0.5});
+						
+			var shuffle = function (arr) {
+			    for (var i = arr.length-1; i >=0; i--) {
+			        var randomIndex = Math.floor(Math.random()*(i+1));
+			        var itemAtIndex = arr[randomIndex];
+			        arr[randomIndex] = arr[i];
+			        arr[i] = itemAtIndex;
+			    }
+			    return arr;	
 			};
-			
-
 			
 			console.log(_json)
 			for (var name in _json) {
-				var arr = randomarr(_json[name]);
+				var arr = shuffle(_json[name]);
 				var str = 
 						'<p>'
 							+'<label class="font20">'+title[name]+'</label>'
