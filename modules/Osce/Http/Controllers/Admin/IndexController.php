@@ -11,6 +11,8 @@ namespace Modules\Osce\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use App\Repositories\Common as AppCommon;
 use Modules\Osce\Entities\Exam;
+use Modules\Osce\Entities\ExamQueue;
+use Modules\Osce\Entities\ExamScreeningStudent;
 use Modules\Osce\Entities\Student;
 use Modules\Osce\Http\Controllers\CommonController;
 use Modules\Osce\Repositories\Common;
@@ -47,6 +49,8 @@ class IndexController extends CommonController
      */
     public function getSetExam(Request $request)
     {
+        $connection = \DB::connection('osce_mis');
+        $connection->beginTransaction();
         try{
             $this->validate($request,[
                 'id'    => 'required|integer'
@@ -78,14 +82,37 @@ class IndexController extends CommonController
                         throw new \Exception('场次开考失败！');
                     }
                 }
+                $examScreeningId = $examScreening->id;
+                $time = date('Y-m-d H:i:s', time());
+                //todo 添加所有的学生到queue表
+                $students = Student::query()->where(['exam_id' => $exam_id])
+                    ->value('student_id')
+                    ->toArray();
+                $screeningStudentData = [];
+                $examQue = new ExamQueue();
+                foreach ($students as $s) {
+                    $screeningStudentData[] = [
+                        'student_id'        => $s,
+                        'signin_dt'         => $time,
+                        'exam_screening_id' => $examScreeningId,
+                        'is_signin'         => 1
+                    ];
+                    //创建考试队列
+                    $examQue ->createExamQueue($exam_id, $s, time(), $examScreeningId);
+                }
+                ExamScreeningStudent::insert($screeningStudentData);
+
+                // 更新全部缓存
+                Common::updateAllCache($exam_id, $examScreeningId);
+                $connection->commit();
                 //开考成功，返回首页
                 return redirect()->route('osce.admin.index.dashboard');
             }else
             {
                 throw new \Exception('开考失败！');
             }
-
         } catch(\Exception $ex){
+            $connection->rollback();
             return redirect()->back()->withErrors(['msg'=>$ex->getMessage()]);
         }
     }
