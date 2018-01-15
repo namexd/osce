@@ -759,7 +759,6 @@ class DrawlotsController extends CommonController
             $teacherId = $request->input('teacher_id');
             $redis = Redis::connection('message');
             //根据uid查到对应的腕表编号
-            /*
             $watch = Watch::where('code', $uid)->first();
             \Log::alert('抽签拿到的腕表id',[$watch->id]);
             if (is_null($watch)) {
@@ -770,17 +769,15 @@ class DrawlotsController extends CommonController
 //                $redis->publish(md5($_SERVER['HTTP_HOST']) . 'pad_message',
 //                    json_encode($this->success_data([], 3100, '没有找到对应的腕表信息!')));
                 throw new \Exception('没有找到对应的腕表信息！', 3100);
-            }*/
+            }
             $exam=Exam::doingExam();
             $exam_screening_id=$this->getexamScreeing($exam);
 
             \Log::alert('抽签拿到的场次id',[$exam_screening_id]);
 
             //获取腕表记录实例
-            $watchLog = ExamScreeningStudent::where('student_id', $uid)
-                ->where('exam_screening_id',$exam_screening_id)
-                ->where('is_end', 0)
-                ->orderBy('created_at', 'desc')->first();
+            $watchLog = ExamScreeningStudent::where('watch_id', $watch->id)->where('exam_screening_id',$exam_screening_id)->where('is_end', 0)->orderBy('created_at',
+                'desc')->first();
             if (!$watchLog) {
 
                 //推送 TODO: fandian
