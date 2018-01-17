@@ -11,6 +11,7 @@ namespace Modules\Osce\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use App\Repositories\Common as AppCommon;
 use Modules\Osce\Entities\Exam;
+use Modules\Osce\Entities\ExamPlan;
 use Modules\Osce\Entities\ExamQueue;
 use Modules\Osce\Entities\ExamScreeningStudent;
 use Modules\Osce\Entities\Student;
@@ -85,8 +86,15 @@ class IndexController extends CommonController
                 $examScreeningId = $examScreening->id;
                 $time = date('Y-m-d H:i:s', time());
                 //todo 添加所有的学生到queue表
-                $students = Student::query()->where(['exam_id' => $exam_id])
-                    ->value('student_id')
+//                $students = Student::query()->where(['exam_id' => $exam_id])
+//                    ->get()
+//                    ->pluck('id')
+//                    ->toArray();
+                $students = ExamPlan::query()
+                    ->where(['exam_id' => $exam_id, 'exam_screening_id' => $examScreeningId])
+                    ->get()
+                    ->groupBy('student_id')
+                    ->pluck('student_id')
                     ->toArray();
                 $screeningStudentData = [];
                 $examQue = new ExamQueue();

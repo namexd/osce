@@ -357,6 +357,7 @@ class DrawlotsController extends CommonController
             if(is_null($examQueue)){
                 $examQueue = [];
             }
+            \Log::info('缓存数据为', ['queue' => $examQueue]);
 
 //            //获取当前组考生队列
 //            $ExamQueue = new ExamQueue();
@@ -367,6 +368,7 @@ class DrawlotsController extends CommonController
 
         } catch (\Exception $ex)
         {
+            \Log::info('错误为', ['exception' => $ex]);
             return response()->json($this->fail($ex));
         }
     }
@@ -450,6 +452,7 @@ class DrawlotsController extends CommonController
             $key = 'next_teacher_id' . $user_id . '_exam_id' . $exam->id;
             //从缓存中取出 下一组考生队列
             $examQueue = \Cache::get($key);
+            \Log::info('下一组考生队列为', ['queue' => $examQueue]);
             if(is_null($examQueue)){
                 $examQueue = [];
             }
@@ -744,62 +747,15 @@ class DrawlotsController extends CommonController
         $connection->beginTransaction();
         //验证
         $this->validate($request, [
-            'uid' => 'required|string',
+//            'uid' => 'required|string',
+            'id_card' => 'required|string',
             'room_id' => 'required|integer',
             'teacher_id' => 'required|integer'
         ]);
 
-
         \Log::alert('抽签请求',$request->all());
         try {
             $examId = $request->input('exam_id', null);
-            //获取uid和room_id
-            $uid = $request->input('uid');
-            $roomId = $request->input('room_id');
-            $teacherId = $request->input('teacher_id');
-            $redis = Redis::connection('message');
-            //根据uid查到对应的腕表编号
-            $watch = Watch::where('code', $uid)->first();
-            \Log::alert('抽签拿到的腕表id',[$watch->id]);
-            if (is_null($watch)) {
-
-                //推送 TODO: fandian
-                Common::padPublish(md5($_SERVER['HTTP_HOST']) . 'pad_message', $this->success_data([], 3100, '没有找到对应的腕表信息'));
-
-//                $redis->publish(md5($_SERVER['HTTP_HOST']) . 'pad_message',
-//                    json_encode($this->success_data([], 3100, '没有找到对应的腕表信息!')));
-                throw new \Exception('没有找到对应的腕表信息！', 3100);
-            }
-            $exam=Exam::doingExam();
-            $exam_screening_id=$this->getexamScreeing($exam);
-
-            \Log::alert('抽签拿到的场次id',[$exam_screening_id]);
-
-            //获取腕表记录实例
-            $watchLog = ExamScreeningStudent::where('watch_id', $watch->id)->where('exam_screening_id',$exam_screening_id)->where('is_end', 0)->orderBy('created_at',
-                'desc')->first();
-            if (!$watchLog) {
-
-                //推送 TODO: fandian
-                Common::padPublish(md5($_SERVER['HTTP_HOST']) . 'pad_message', $this->success_data([], 3200, '没有找到学生对应的腕表信息'));
-
-//                $redis->publish(md5($_SERVER['HTTP_HOST']) . 'pad_message',
-//                    json_encode($this->success_data([], 3200, '没有找到学生对应的腕表信息!')));
-                throw new \Exception('没有找到学生对应的腕表信息！', 3200);
-            }
-
-            //获取腕表对应的学生实例
-            if (!$student = $watchLog->student) {
-
-                //推送 TODO: fandian
-                Common::padPublish(md5($_SERVER['HTTP_HOST']) . 'pad_message', $this->success_data([], 3300, '没有找到对应的学生信息'));
-
-//                $redis->publish(md5($_SERVER['HTTP_HOST']) . 'pad_message',
-//                    json_encode($this->success_data([], 3300, '没有找到对应的学生信息!')));
-                throw new \Exception('没有找到对应的学生信息！', 3300);
-            }
-
-//            //判断当前学生是否在当前小组中
             $exam = Exam::doingExam($examId);
             if (is_null($exam)) {
 
@@ -810,6 +766,52 @@ class DrawlotsController extends CommonController
 //                    json_encode($this->success_data([], 3000, '当前没有正在进行的考试!')));
                 throw new \Exception('当前没有正在进行的考试', 3000);
             }
+            //获取uid和room_id
+//            $uid = $request->input('uid');
+            $idCard = $request->input('id_card');
+            $roomId = $request->input('room_id');
+            $teacherId = $request->input('teacher_id');
+//            $redis = Redis::connection('message');
+            //根据uid查到对应的腕表编号
+//            $watch = Watch::where('code', $uid)->first();
+//            \Log::alert('抽签拿到的腕表id',[$watch->id]);
+//            if (is_null($watch)) {
+//
+//                //推送 TODO: fandian
+//                Common::padPublish(md5($_SERVER['HTTP_HOST']) . 'pad_message', $this->success_data([], 3100, '没有找到对应的腕表信息'));
+//
+////                $redis->publish(md5($_SERVER['HTTP_HOST']) . 'pad_message',
+////                    json_encode($this->success_data([], 3100, '没有找到对应的腕表信息!')));
+//                throw new \Exception('没有找到对应的腕表信息！', 3100);
+//            }
+            $exam_screening_id = $this->getexamScreeing($exam);
+            $student = Student::query()->where(['exam_id' => $exam->id, 'idcard' => $idCard])->first();
+            if (is_null($student)) {
+
+                //推送 TODO: fandian
+                Common::padPublish(md5($_SERVER['HTTP_HOST']) . 'pad_message', $this->success_data([], 3100, '没有找到对应的学生信息'));
+
+//                $redis->publish(md5($_SERVER['HTTP_HOST']) . 'pad_message',
+//                    json_encode($this->success_data([], 3100, '没有找到对应的腕表信息!')));
+                throw new \Exception('没有找到对应的学生信息！', 3100);
+            }
+
+            \Log::alert('抽签拿到的场次id',[$exam_screening_id]);
+
+            //获取腕表记录实例
+            $screeningStudent = ExamScreeningStudent::where('student_id', $student->id)->where('exam_screening_id',$exam_screening_id)->where('is_end', 0)->orderBy('created_at',
+                'desc')->first();
+            if (!$screeningStudent) {
+
+                //推送 TODO: fandian
+                Common::padPublish(md5($_SERVER['HTTP_HOST']) . 'pad_message', $this->success_data([], 3200, '没有找到学生信息'));
+
+//                $redis->publish(md5($_SERVER['HTTP_HOST']) . 'pad_message',
+//                    json_encode($this->success_data([], 3200, '没有找到学生对应的腕表信息!')));
+                throw new \Exception('没有找到学生信息！', 3200);
+            }
+
+//            //判断当前学生是否在当前小组中
             $examId = $exam->id;
             list($room_id, $stations) = $this->getRoomIdAndStation($teacherId, $exam);
 
@@ -823,7 +825,7 @@ class DrawlotsController extends CommonController
                 $examQueue = ExamQueue::examineeByRoomId($room_id, $examId,$stations, $exam_screening_id);
                 
                 
-                if (!in_array($watchLog->student_id, $examQueue->pluck('student_id')->toArray())) {
+                if (!in_array($student->id, $examQueue->pluck('student_id')->toArray())) {
 
                     //推送 TODO: fandian
                     Common::padPublish(md5($_SERVER['HTTP_HOST']) . 'pad_message', $this->success_data([], 7200, '该考生不在当前考生小组中'));
@@ -834,7 +836,7 @@ class DrawlotsController extends CommonController
                 }
             } elseif ($exam->sequence_mode == 2) {
                 $examQueue = ExamQueue::examineeByStationId($stationId, $examId, $exam_screening_id);
-                if (!in_array($watchLog->student_id, $examQueue->pluck('student_id')->toArray())) {
+                if (!in_array($student->id, $examQueue->pluck('student_id')->toArray())) {
 
                     //推送 TODO: fandian
                     Common::padPublish(md5($_SERVER['HTTP_HOST']) . 'pad_message', $this->success_data([], 7201, '该考生不在当前考生小组中'));
@@ -855,7 +857,7 @@ class DrawlotsController extends CommonController
 
             //如果考生走错了房间
             if (ExamQueue::where('room_id', '=', $roomId)
-                ->where('student_id', '=', $watchLog->student_id)
+                ->where('student_id', '=', $student->id)
                 ->where('exam_screening_id',$exam_screening_id)
                 ->where('exam_id', '=', $examId)->get()
                 ->isEmpty()
@@ -868,7 +870,7 @@ class DrawlotsController extends CommonController
 //                    json_encode($this->success_data([], 3400, '当前考生走错了考场!')));
                 throw new \Exception('当前考生走错了考场！', 3400);
             }
-            \Log::alert('抽签拿到的学生id',[$watchLog->student_id]);
+            \Log::alert('抽签拿到的学生id',[$student->id]);
             //使用抽签的方法进行抽签操作
             $result = $this->drawlots($student, $roomId, $teacherId, $exam);
 //            $model = new Drawlots($student, $teacherId, $exam, $roomId);
@@ -887,7 +889,7 @@ class DrawlotsController extends CommonController
 //            }
 
             //判断时间
-            $this->judgeTime($watchLog->student_id,$exam_screening_id);
+            $this->judgeTime($student->id,$exam_screening_id);
 
             $connection->commit();
 

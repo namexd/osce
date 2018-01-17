@@ -169,7 +169,6 @@ class WatchLog extends CommonModel{
      * @param $exam_id
      * @param $screening_id
      * @param $room_id
-     * @return array
      * @throws \Exception
      *
      * @author fandian <fandian@sulida.com>
@@ -193,18 +192,18 @@ class WatchLog extends CommonModel{
 
                 throw new \Exception('未查到相应考试队列信息', -2);
             }
-            $studentIds = $studentIds->pluck('student_id')->toArray();
-            //查询学生绑定的腕表信息
-            $watches = WatchLog::leftJoin('watch', 'watch_log.watch_id', '=', 'watch.id')
-                                ->whereIn('watch_log.student_id', $studentIds)
-                                ->where('watch.status', '=', 1)
-                                ->select(['watch.code'])->get();
+//            $studentIds = $studentIds->pluck('student_id')->toArray();
+//            //查询学生绑定的腕表信息
+//            $watches = WatchLog::leftJoin('watch', 'watch_log.watch_id', '=', 'watch.id')
+//                                ->whereIn('watch_log.student_id', $studentIds)
+//                                ->where('watch.status', '=', 1)
+//                                ->select(['watch.code'])->get();
+//
+//            if ($watches->isEmpty()) {
+//                throw new \Exception('未查到相应腕表信息', -3);
+//            }
 
-            if ($watches->isEmpty()) {
-                throw new \Exception('未查到相应腕表信息', -3);
-            }
-
-            return $watches;
+//            return $watches;
 
         }catch (\Exception $ex)
         {

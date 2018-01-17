@@ -162,9 +162,9 @@ class ExamController extends CommonController
         ]);
         //获取id
         $id = $request->input('id');  //id为分阶段考试id
-        $sid = $request->input('sid');  //id为总考试id
-        $exam->doStopFexam($id,$sid);
-        return redirect("osce/admin/exam/stopexam?id=$sid");
+        $examId = $request->input('sid');  //id为总考试id
+        $exam->stopExamScreen($examId, $id);
+        return redirect("osce/admin/exam/stopexam?id=$examId");
 
     }
     //强制结束考试(总)执行
