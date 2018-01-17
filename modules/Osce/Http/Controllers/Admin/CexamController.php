@@ -22,7 +22,7 @@ class CexamController extends CommonController
      * @method GET
      */
 
-    public function addaExame(Request $request)
+    public function addExame(Request $request)
     {
         $dataArray=$request->only('exam_id','tid','start','end','teacher','times','convert');
         $isExam = TestLog::where('exam_id',$dataArray['exam_id'])->first();
@@ -31,9 +31,12 @@ class CexamController extends CommonController
         }
         $isHas = TestLog::where('start','<',$dataArray['start'])
             ->where('end','>',$dataArray['start'])
-            ->orWhere(function ($query)use ( $dataArray ){
+            ->orWhere(function ($query)use ($dataArray){
                 $query->where('start', '<', $dataArray['end'])
                     ->where('end', '>', $dataArray['end']);
+            })->orWhere(function ($query)use ($dataArray){
+                $query->where('start', '>', $dataArray['start'])
+                    ->where('end', '<', $dataArray['end']);
             })->first();
         if(empty($isHas)){
             if($dataArray['convert'] < 1 || $dataArray['convert'] > 100){
@@ -55,17 +58,37 @@ class CexamController extends CommonController
             return redirect()->route('osce.theory.index')->withErrors('新增失败，当前考试时间与其他考试时间冲突');
         }
     }
-    /** 登入考试
+    /** 修改考试时间
      * @method GET
      */
-    public function cexamQuestion(Request $request)
+    public function editExam(Request $request)
     {
-
+        $id=$request->get('id');
+        $start=$request->get('start');
+        $end=$request->get('end');
+        //dd($request->all());
+        try {
+            $isHas = TestLog::where('start','<',$start)
+                ->where('end','>',$start)
+                ->orWhere(function ($query)use ($end ){
+                    $query->where('start', '<', $end)
+                        ->where('end', '>', $end);
+                })->orWhere(function ($query)use ($start,$end ){
+                    $query->where('start', '>', $start)
+                        ->where('end', '<', $end);
+                })->where('id','<>',$id)
+                ->first();
+            if(empty($isHas)){
+                TestLog::where('id',$id)->update(['start'=>$start,'end'=>$end]);
+                return redirect()->route('osce.theory.index')->withErrors('1修改成功');
+            }else{
+                return redirect()->route('osce.theory.index')->withErrors('修改失败，当前修改的考试时间与其他考试时间冲突');
+            }
+        } catch (\Exception $ex) {
+            dd($ex);
+            return response()->json($this->fail($ex));
+        }
     }
-
-
-
-
 
     /** 查询考试
      * @method GET

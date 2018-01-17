@@ -58,7 +58,8 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 	//考试管理
 	Route::group(['prefix' => "cexam", 'namespace' => 'Admin'], function()
 	{
-		Route::post('addexam', ['uses'=>'CexamController@addaExame','as'=>'osce.cexam.postAddExam'] );
+		Route::post('addexam', ['uses'=>'CexamController@addExame','as'=>'osce.cexam.postAddExam'] );
+		Route::post('editexam', ['uses'=>'CexamController@editExam','as'=>'osce.cexam.postEditExam'] );
 
 		Route::get('examinfo', ['uses'=>'CexamController@searchExameInfo','as'=>'osce.cexam.examinfo'])->middleware('theoryauth');
 
