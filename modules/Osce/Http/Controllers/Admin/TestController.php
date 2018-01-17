@@ -363,6 +363,36 @@ class TestController extends CommonController
         $data = TestStatistics::where('logid',$id)->paginate(10);
         return view('osce::theory.student_score',['data'=>$data]);
     }
+    public function studentscoreexport(Request $request){
+        $this->validate($request, [
+            'id'    => 'required|integer',
+        ], [
+            'id.required' => 'ID必传'
+        ]);
+        $id = $request->get('id');
+        $data = TestStatistics::where('logid',$id)->get();
+        $exam = TestLog::find($id);
+        $examName = $exam->exam->name.'的理论考试';
+        $teacherName = $exam->teacherdata->name;
+        $scoreList[]=['姓名','学号','考试名称','监考老师','客观题得分','主观题得分','考试总成绩'];
+        foreach($data as $k=>$v){
+            $scoreList[$k+1] = [
+                $v->student->name,
+                $v->student->code,
+                $examName,$teacherName,
+                $v->objective,
+                $v->subjective,
+                intval($v->objective)+intval($v->subjective),
+            ];
+        }
+        //dd($sheet);
+        Excel::create(iconv('UTF-8', 'GBK//ignore', $examName.'的理论成绩汇总'),function($excel) use ($scoreList){
+            $excel->sheet('score', function($sheet) use ($scoreList){
+                $sheet->rows($scoreList);
+            });
+        })->export('xls');
+        //return view('osce::theory.student_score',['data'=>$data]);
+    }
 
     public function studentmarking(Request $request){
         $this->validate($request, [

@@ -4,7 +4,13 @@
 	成绩管理
 @stop
 
-
+@section('head_css')
+    <style>
+        table tbody tr td:last-child{
+            width:auto;
+        }
+    </style>
+@stop
 @section('head_js')
    <script>
 		
@@ -45,6 +51,9 @@
                         <td>
                             <a class="state1 modal-control" href="{{route('osce.theory.studentscore',['id'=>$val->id])}}">
                                 <span class="read  state1 detail"><i class="fa fa-search fa-2x"></i>查看成绩</span>
+                            </a>
+                            <a class="state1 modal-control" href="{{route('osce.theory.studentscoreexport',['id'=>$val->id])}}">
+                                <span class="read  state3 detail"><i class="fa fa-search fa-download"></i>导出成绩</span>
                             </a>
 	                    </td>
                     </tr>
