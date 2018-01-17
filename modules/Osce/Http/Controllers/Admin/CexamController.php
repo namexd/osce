@@ -80,9 +80,11 @@ class CexamController extends CommonController
                 ->first();
             if(empty($isHas)){
                 TestLog::where('id',$id)->update(['start'=>$start,'end'=>$end]);
-                return redirect()->route('osce.theory.index')->withErrors('1修改成功');
+                return $this->success_data([],1,'修改成功');
+                //return redirect()->route('osce.theory.index')->withErrors('1修改成功');
             }else{
-                return redirect()->route('osce.theory.index')->withErrors('修改失败，当前修改的考试时间与其他考试时间冲突');
+                return $this->success_data([],0,'修改失败，当前修改的考试时间与其他考试时间冲突');
+                //return redirect()->route('osce.theory.index')->withErrors('修改失败，当前修改的考试时间与其他考试时间冲突');
             }
         } catch (\Exception $ex) {
             dd($ex);
