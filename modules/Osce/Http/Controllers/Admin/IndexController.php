@@ -93,9 +93,11 @@ class IndexController extends CommonController
                 $students = ExamPlan::query()
                     ->where(['exam_id' => $exam_id, 'exam_screening_id' => $examScreeningId])
                     ->get()
-                    ->groupBy('student_id')
+//                    ->groupBy('student_id')
                     ->pluck('student_id')
                     ->toArray();
+                $students = array_unique($students);
+
                 $screeningStudentData = [];
                 $examQue = new ExamQueue();
                 foreach ($students as $s) {
