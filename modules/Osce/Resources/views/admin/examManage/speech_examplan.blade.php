@@ -22,8 +22,8 @@
     .list-title h4 { padding: 0.2rem 0;}
     .list,.list-title { border-bottom: 1px solid #ccc; }
     .list li,.list-title { display: flex; }
-    .list li div,.list-title h4 { flex: 1; font-size: 0.25rem; text-align: center; line-height: 0.5rem; border-right: 1px solid #ccc; }   
-    .list li div:first-child,.list-title h4:first-child {flex: none;width: 12%; } 
+    .list li div,.list-title h4 { flex: 1; font-size: 0.35rem; text-align: center; line-height: 0.5rem; border-right: 1px solid #ccc; }   
+    .list li div:first-child,.list-title h4:first-child {flex: none;width: 15%; } 
     .list li div:last-child,.list-title h4:last-child { border-right: none;} 
     
     .list li:first-child div { padding-top: 0.2rem;}
