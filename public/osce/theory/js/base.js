@@ -135,10 +135,10 @@
 				layerindex = layer.confirm(str,layerfn);			
 				break;
 			case 3:
-				layerindex = layer.msg(str,layerfn,{time:2000,skin:'msg-error center',icon:1});			
+				layerindex = layer.msg(str,layerfn,{time:1000,skin:'msg-error center',icon:1});			
 				break;
 			case 31:
-				layerindex = layer.msg(str,layerfn,{time:2000,skin:'msg-success center',icon:1});			
+				layerindex = layer.msg(str,layerfn,{time:1000,skin:'msg-success center',icon:1});			
 				break;
 			default:
 				break;
@@ -149,6 +149,43 @@
 		};
 		return layerindex;
 	};
+	//layer弹出层	
+	w.uselayer2 = function (type,str,fn,title,obj) {
+		var data = {title:[(title?title:'信息'),'background-color:#16abff;color:#fff']};
+		if (type=='1') {
+			var ilayer = layer.alert(str,data,function () {
+					layer.close(ilayer);
+					fn&&fn();							
+			});		
+		} else if (type=='2') {
+			var ilayer = layer.confirm(str,data,function () {
+					layer.close(ilayer);
+					fn&&fn();
+				}
+			);
+		} else if (type=='3') {
+			
+			var ilayer = layer.msg(str,{skin:'msg-error center',icon:1,time:1500},function(){
+			  		fn&&fn();
+			});  		
+		} else if (type=='31') {
+			
+			var ilayer = layer.msg(str,{skin:'msg-success center',icon:1,time:1500},function(){
+			  		fn&&fn();
+			});  		
+		} else if (type=='4') {
+			data = {
+				type: 1,
+				title: data.title,
+				area: $(obj).width(),
+				content: $(obj)
+			};
+			var ilayer = layer.open(data);	
+		}
+		return ilayer;
+	};
+		
+	
 	//刷新页面
 	w.toReload = function () {
 		window.location.reload();
