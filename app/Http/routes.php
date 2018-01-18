@@ -51,7 +51,16 @@ Route::group(['prefix' => "api/1.0/public",'middleware' => ['cors']], function()
 Route::group(['prefix' => "commom"],function(){
     Route::post('upload-image','\App\Http\Controllers\V1\Msc\CommonController@postUploadImage');
 });
-
+Route::group(['prefix' => "common"],function(){
+    Route::get('get-redis-config', function () {
+        return Response::json([
+            'host' => config('config.external_redis_host'),
+            'port' => config('config.external_redis_port'),
+            'database' => config('database.redis.message.database'),
+            'password' => config('database.redis.message.password') ? config('database.redis.message.password'): '',
+        ]);
+    });
+});
 
 /**
  * password作用域

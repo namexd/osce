@@ -19,4 +19,6 @@ return [
 		'考试组织管理员',
 		'监巡考老师',
 	],
+    'external_redis_host' => env('EXTERNAL_REDIS_HOST', env('REDIS_HOST', 'redis.sz-sulead.com')),
+    'external_redis_port' => env('EXTERNAL_REDIS_PORT', env('REDIS_PORT', 60379)),
 ];
