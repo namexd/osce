@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">OSCE-3.10-Beta-4.6</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <!-- LoginActivity -->
+    <string name="login_activity_title_text_text">OSCE考试智能管理V3.10测试4.6</string>
+    <!-- LoginActivity -->
+
+    <string name="login_activity_username_edit_hint">账号</string>
+    <string name="login_activity_password_edit_hint">密码</string>
+    <string name="login_activity_login_button">登陆</string>
+    <!-- MainAactivity -->
+    <string name="main_activity_titile_testview_station">考站</string>
+    <string name="main_activity_titile_testview_time">时间</string>
+    <string name="str_recorder_normal">按住   说话</string>
+    <string name="str_recorder_recording">松开   结束</string>
+    <string name="str_recorder_want_cancel">滑动手指，取消录音</string>
+    <!-- GradeActivity -->
+    <string name="upload_score_success">上传成绩成功</string>
+    <string name="upload_score_false">上传成绩失败</string>
+    <!-- Dialog -->
+    <string name="dialog_default_title">提示</string>
+    <string name="dialog_ok">确定</string>
+    <string name="dialog_cancel">取消</string>
+    <string name="setting_basic">输入考试的网址</string>
+    <!-- Activity-Title -->
+    <string name="imagBtn_setting">网络地址设置</string>
+    <string name="text_video">实时视频</string>
+    <string name="button_point">打开评分标准</string>
+
+    <!-- FragmentReady -->
+    <string name="fragment_wait_tv_ready_complete">准备完成</string>
+    <string name="fragment_wait_tv_ready_tips">考站准备中...</string>
+    <string name="fragment_wait_tv_success">等待考生入场</string>
+    <!-- FragmentSuccess -->
+    <string name="text_begin_test">开始考试</string>
+    <string name="text_warning_test">替考警告</string>
+    <string name="close_media">关闭闹钟</string>
+    <string name="start_point">开始评分</string>
+
+    <!--  -->
+    <string name="next">下一个考生</string>
+    <string name="wait_to_draw">刷新</string>
+    <string name="fragment_grade_text_getScore">考生目前得分</string>
+    <!-- 评价碎片 -->
+    <string name="communication_skill">医患沟通技巧</string>
+    <string name="proficiency_of_the_operation">操作的熟练度</string>
+
+    <!-- FragmentGrade -->
+    <string name="upload_score">提交成绩</string>
+    <string name="pre_point">上一考点</string>
+    <string name="next_point">下一考点</string>
+
+</resources>

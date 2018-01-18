@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#f3f3f3"
+    android:padding="@dimen/y6" >
+
+    <RelativeLayout
+        android:id="@+id/relative_title"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/y19"
+        android:background="@drawable/btn_top_sahpe" >
+
+        <TextView
+            android:id="@+id/text_title"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="@dimen/y5"
+            android:gravity="center_vertical"
+            android:text="评价"
+            android:textSize="@dimen/simple_font_size" />
+
+        <TextView
+            android:id="@+id/text_name"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="@dimen/y7"
+            android:gravity="center_vertical"
+            android:text="姓名"
+            android:textSize="@dimen/simple_font_size" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_toLeftOf="@+id/text_name"
+            android:gravity="center_vertical"
+            android:text="考生:"
+            android:textSize="@dimen/simple_font_size" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/relative_edit"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/linear_star"
+        android:layout_below="@+id/relative_title"
+        android:background="#ffffff" >
+
+        <EditText
+            android:id="@+id/edit_evaluate"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentTop="true"
+            android:layout_marginBottom="@dimen/y9"
+            android:layout_marginLeft="@dimen/y5"
+            android:layout_marginRight="@dimen/y5"
+            android:layout_marginTop="@dimen/y9"
+            android:background="@drawable/evaluate_edit_shape"
+            android:gravity="top"
+            android:hint="请输入考核评价..."
+            android:padding="10dp"
+            android:textSize="@dimen/simple_font_size" />
+    </RelativeLayout>
+    <LinearLayout
+            android:id="@+id/linear_star"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/y5"
+            android:layout_above="@+id/linear_bottom"
+            android:orientation="horizontal" >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="vertical" >
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/y4"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:visibility="gone" >
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:text="操作的连贯性"
+                        android:textSize="@dimen/simple_font_size" />
+
+                    <RatingBar
+                        android:id="@+id/star_operate"
+                        style="@style/roomRatingBar"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/y15"
+                        android:numStars="5"
+                        android:rating="0"
+                        android:stepSize="1.0" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/y4"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:visibility="gone" >
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:text="工作的娴熟度"
+                        android:textSize="@dimen/simple_font_size" />
+
+                    <RatingBar
+                        android:id="@+id/star_proficiency"
+                        style="@style/roomRatingBar"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/y15"
+                        android:numStars="5"
+                        android:rating="0"
+                        android:stepSize="1.0" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/y4"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal" >
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:text="@string/proficiency_of_the_operation"
+                        android:textSize="@dimen/simple_font_size" />
+
+                    <RatingBar
+                        android:id="@+id/star_care"
+                        style="@style/roomRatingBar"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/y15"
+                        android:numStars="5"
+                        android:rating="0"
+                        android:stepSize="1.0" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/y4"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal" >
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:text="@string/communication_skill"
+                        android:textSize="@dimen/simple_font_size" />
+
+                    <RatingBar
+                        android:id="@+id/star_communicate"
+                        style="@style/roomRatingBar"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/y15"
+                        android:numStars="5"
+                        android:rating="0"
+                        android:stepSize="1.0" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:orientation="vertical" >
+            </LinearLayout>
+        </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linear_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="@dimen/y5"
+        android:layout_marginRight="@dimen/y5"
+        android:layout_marginTop="@dimen/y5"
+        android:gravity="center_vertical"
+        android:orientation="horizontal" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:text="考试总成绩："
+                android:textSize="@dimen/simple_font_size" />
+
+            <TextView
+                android:id="@+id/text_score"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/y8"
+                android:gravity="center_vertical"
+                android:text="00"
+                android:textColor="#f8ac59"
+                android:textSize="@dimen/text_size_35" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="horizontal" >
+
+            <Button
+                android:id="@+id/btn_score_preview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="@dimen/y4"
+                android:layout_weight="1"
+                android:background="@drawable/other_btn_selector"
+                android:padding="@dimen/y4"
+                android:text="评分预览"
+                android:textSize="@dimen/simple_font_size"
+                android:visibility="visible" />
+
+            <Button
+                android:id="@+id/btn_check"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="@dimen/y4"
+                android:layout_weight="1"
+                android:background="@drawable/other_btn_selector"
+                android:padding="@dimen/y4"
+                android:text="修改评分"
+                android:textSize="@dimen/simple_font_size"
+                android:visibility="visible" />
+
+            <Button
+                android:id="@+id/btn_commit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="@dimen/y4"
+                android:layout_weight="1"
+                android:background="@drawable/other_btn_selector"
+                android:padding="@dimen/y4"
+                android:text="确认提交"
+                android:textSize="@dimen/simple_font_size" />
+        </LinearLayout>
+    </LinearLayout>
+
+</RelativeLayout>
