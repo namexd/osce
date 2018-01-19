@@ -188,10 +188,10 @@ return [
             'password' => '4f38ad'
         ],
         'message' => [
-            'host' => 'redis.sz-sulead.com',
-            'port' => 60379,
-            'database' => 3,
-            'password' => '4f38ad'
+            'host' => env('REDIS_HOST', 'redis.sz-sulead.com'),
+            'port' => env('REDIS_PORT', 60379),
+            'database' => env('REDIS_MESSAGE_DATABASE', 3),
+            'password' => env('REDIS_PASSWORD', '4f38ad')
         ]
     ],
 
