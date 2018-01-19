@@ -15,6 +15,7 @@ use Modules\Osce\Entities\ExamDraft;
 use Modules\Osce\Entities\ExamArrange\ExamArrangeRepository;
 use Modules\Osce\Entities\QuestionBankEntities\ExamMonitor;
 use Modules\Osce\Http\Controllers\Admin\CourseController;
+use Modules\Osce\Repositories\Common;
 
 class Exam extends CommonModel
 {
@@ -340,6 +341,62 @@ class Exam extends CommonModel
         $arr = $this::where('id', $id)->first();
         return $arr;
     }
+
+    public function stopExamScreen($examId, $examScreenId) {
+        $connection = \DB::connection('osce_mis');
+        $connection->beginTransaction();
+
+        try {
+            $examScreen = ExamScreening::query()
+                ->where(['exam_id' => $examId, 'id' => $examScreenId])
+                ->first();
+            if ($examScreen && $examScreen->status != 2) {
+                $examScreen->status = 2;
+                $examScreen->save();
+                // 查看是否有下一场考次
+                $nextExamScreen = ExamScreening::query()
+                    ->where(['exam_id' => $examId])
+                    ->where('begin_dt', '>=', $examScreen->end_dt)
+                    ->orderBy('begin_dt', 'asc')
+                    ->first();
+                if ($nextExamScreen) {
+                    $nextExamScreeningId = $nextExamScreen->id;
+                    $nextExamScreen->status = 1;
+                    $nextExamScreen->save();
+                    $time = date('Y-m-d H:i:s', time());
+                    //todo 添加所有的学生到queue表
+                    $students = ExamPlan::query()
+                        ->where(['exam_id' => $examId, 'exam_screening_id' => $nextExamScreeningId])
+                        ->get()
+//                        ->groupBy('student_id')
+                        ->pluck('student_id')
+                        ->toArray();
+                    $students = array_unique($students);
+                    $screeningStudentData = [];
+                    $examQue = new ExamQueue();
+                    foreach ($students as $s) {
+                        $screeningStudentData[] = [
+                            'student_id'        => $s,
+                            'signin_dt'         => $time,
+                            'exam_screening_id' => $nextExamScreeningId,
+                            'is_signin'         => 1
+                        ];
+                        //创建考试队列
+                        $examQue ->createExamQueue($examId, $s, time(), $nextExamScreeningId);
+                    }
+                    ExamScreeningStudent::insert($screeningStudentData);
+                    // 更新缓存
+                    Common::updateAllCache($examId, $nextExamScreeningId);
+                }
+                $connection->commit();
+            }
+        }
+        catch (\Exception $e) {
+            $connection->rollBack();
+            throw $e;
+        }
+    }
+
     public function doStopFexam($id,$sid){
         ExamScreening::where('id', $id)
             ->update(['status' => 2]);
