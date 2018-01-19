@@ -359,6 +359,7 @@ class IndexController extends CommonController
         $code    = trim($request->get('code'));         //腕表code
         $id_card = trim($request->get('id_card'));      //身份证号
         $exam_id = intval($request->get('exam_id'));    //考试id
+        $flag = $request->get('flag', false);
 
         try{
             //1、考试处理
@@ -440,6 +441,10 @@ class IndexController extends CommonController
                 'context'    => array('time' => $updated_at, 'status' => 1),
                 'student_id' => $student_id
             ];
+            // 有flag时为后台添加
+            if ($flag) {
+                $data['context']['flag'] = 1;
+            }
             $watchLogModel = new WatchLog();
             //添加腕表使用记录、创建考试队列
             $watchLogModel ->historyRecord($data, $student_id, $exam_id, $examScreeningId);    //腕表插入使用记录

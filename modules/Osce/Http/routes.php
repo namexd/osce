@@ -18,7 +18,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		//修改密码(临时)
 		Route::get('update/index',['uses'=>'UpdateController@getIndex','as' => 'osce.admin.getUpdate']);
 		Route::post('update/index',['uses'=>'UpdateController@postIndex','as'=>'osce.admin.postUpdate']);
-		Route::get('test/index',['uses'=>'TestController@getIndex','as'=>'osce.admin.test']);
+//		Route::get('test/index',['uses'=>'TestController@getIndex','as'=>'osce.admin.test']);
 		Route::get('showlog/index',['uses'=>'ShowLogController@ShowLog','as'=>'osce.admin.showLog']);
 		Route::get('checkdatabase',['uses'=>'ShowLogController@CheckDatabase','as'=>'osce.admin.checkdatabase']);
 
@@ -538,8 +538,7 @@ Route::group(['prefix' => "api/1.0/private/osce", 'namespace' => 'Modules\Osce\H
 //		});
 	});
 
-
-			Route::get('wait-student',['uses'=>'PadController@getWaitStudent']); //大屏幕候考接口
+//    Route::get('wait-student',['uses'=>'PadController@getWaitStudent']); //大屏幕候考接口
 
 });
 
