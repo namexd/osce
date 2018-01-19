@@ -51,7 +51,6 @@
                     <td value="{{$item->id}}">
                         @if($item->status ==0)
                             @if(count($item->examPlan) > 0)
-
                                 <a href="{{route('osce.admin.index.getSetExam',['id'=>$item->id])}}">
                                     <input class="btn btn-primary" type="button" value="开始考试"/>
                                 </a>
@@ -62,6 +61,9 @@
                             @endif
                         @elseif($item->status==1)
                             正在考试
+                            <a href="{{route('osce.admin.index.getSetExam',['id'=>$item->id])}}">
+                                <input class="btn btn-primary" type="button" value="异常操作"/>
+                            </a>
                         @else
                             考试已结束   
                         @endif
