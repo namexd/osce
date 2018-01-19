@@ -503,7 +503,7 @@ Route::group(['prefix' => "api/1.0/private/osce", 'namespace' => 'Modules\Osce\H
 	Route::group(['prefix'=>'watch','namespace'=>'Api'],function(){
 
 		Route::get('watch-status',	['uses'=>'IndexController@getWatchStatus']); //查询腕表是否绑定
-		Route::get('bound-watch',	['uses'=>'IndexController@getBoundWatch']);   //绑定腕表
+		Route::get('bound-watch',	['uses'=>'IndexController@getBoundWatch','as'=>'osce.api.watch.bound']);   //绑定腕表
 		Route::get('unwrap-watch',	['uses'=>'IndexController@getUnwrapWatch']); //解绑腕表
 		Route::get('student-details', 	['uses'=>'IndexController@getStudentDetails']);
 		Route::get('student-list', 	['uses'=>'IndexController@getStudentList']);
