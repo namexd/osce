@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:customseekbar="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#f3f3f3" >
+
+    <include layout="@layout/acticity_title" />
+
+    <LinearLayout
+        android:layout_width="@dimen/x212"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerInParent="true"
+        android:background="#ffffff"
+        android:gravity="center"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/title_text"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/y19"
+            android:background="@drawable/btn_top_sahpe"
+            android:gravity="center"
+            android:text="@string/login_activity_title_text_text"
+            android:textSize="@dimen/login_activity_text_size" />
+
+        <EditText
+            android:id="@+id/username_edit"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/y19"
+            android:layout_margin="@dimen/y6"
+            android:layout_marginTop="@dimen/y8"
+            android:background="@drawable/evaluate_edit_shape"
+            android:gravity="center|left"
+            android:hint="@string/login_activity_username_edit_hint"
+            android:imeOptions="flagNoExtractUi"
+            android:inputType="text"
+            android:paddingLeft="@dimen/y4"
+            android:singleLine="true"
+            android:textSize="@dimen/login_activity_text_size" />
+
+        <!-- 密码 text -->
+
+        <EditText
+            android:id="@+id/password_edit"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/y19"
+            android:layout_margin="@dimen/y6"
+            android:background="@drawable/evaluate_edit_shape"
+            android:hint="@string/login_activity_password_edit_hint"
+            android:imeOptions="flagNoExtractUi"
+            android:inputType="textPassword"
+            android:padding="@dimen/y4"
+            android:singleLine="true"
+            android:textSize="@dimen/login_activity_text_size" />
+
+        <!-- 登录button -->
+
+        <Button
+            android:id="@+id/button_login"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/y19"
+            android:layout_margin="@dimen/y6"
+            android:background="@drawable/fragment_draw_detail_textview_begin_test"
+            android:gravity="center"
+            android:text="登录"
+            android:textColor="#ffffff"
+            android:textSize="@dimen/login_activity_text_size" />
+    </LinearLayout>
+
+</RelativeLayout>

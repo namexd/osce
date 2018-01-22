@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:fillViewport="true"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/y20"
+        android:background="#16beb0" >
+
+        <ImageButton
+            android:id="@+id/btn_close"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/y4"
+            android:background="@drawable/fragment_draw_detail_textview_begin_test"
+            android:padding="10dp"
+            android:src="@drawable/arrow" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="@string/login_activity_title_text_text"
+            android:textColor="#ffffff"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/tv_vdieo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/y2"
+            android:layout_toLeftOf="@+id/btn_point"
+            android:background="@drawable/fragment_draw_detail_textview_begin_test"
+            android:drawableLeft="@drawable/icon_video_white"
+            android:drawablePadding="@dimen/y4"
+            android:padding="@dimen/y4"
+            android:text="实时视屏"
+            android:textColor="#ffffff"
+            android:visibility="gone" />
+
+        <ImageView
+            android:id="@+id/image_line"
+            android:layout_width="1px"
+            android:layout_height="@dimen/y11"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/btn_point"
+            android:background="#ffffff"
+            android:visibility="gone" />
+
+        <Button
+            android:id="@+id/btn_point"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/y7"
+            android:background="@drawable/fragment_draw_detail_textview_begin_test"
+            android:padding="@dimen/y4"
+            android:text="打开评分标准"
+            android:textColor="#ffffff"
+            android:visibility="gone" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/widget_Play"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:focusable="true"
+        android:focusableInTouchMode="true" >
+
+        <SurfaceView
+            android:id="@+id/Sur_Player"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent" />
+    </RelativeLayout>
+
+</LinearLayout>

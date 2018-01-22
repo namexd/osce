@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/timeLayout"
+    android:layout_width="800dip"
+    android:layout_height="fill_parent"
+    android:background="@drawable/shape_btn" >
+
+    <RelativeLayout
+        android:id="@+id/linearLayout2"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="#eeeeee"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dip"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="评分详情"
+            android:padding="5dip"
+            android:textColor="#000000"
+            android:textSize="28sp" />
+
+        <ImageView
+            android:id="@+id/close_window"
+            android:layout_width="30dip"
+            android:layout_height="30dip"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/close"
+            android:contentDescription="@string/app_name"
+            android:scaleType="fitCenter" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout1"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/linearLayout2"
+        android:background="#ffffff"
+        android:padding="10dip" >
+
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="left"
+            android:text="序号"
+            android:textColor="#000000"
+            android:textSize="25sp" />
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:maxWidth="200dip"
+            android:minWidth="200dip"
+            android:text="考核内容"
+            android:textColor="#000000"
+            android:textSize="25sp" />
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:paddingLeft="100dip"
+            android:text="满分"
+            android:textColor="#000000"
+            android:textSize="25sp" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="得分"
+            android:textColor="#000000"
+            android:textSize="25sp" />
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/score_pre_listView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/Bottom"
+        android:layout_alignLeft="@+id/linearLayout1"
+        android:layout_below="@+id/linearLayout1"
+        android:listSelector="@drawable/timer_list_selector"
+        android:padding="10dip"
+        android:scrollbars="none" >
+    </ListView>
+
+    <RelativeLayout
+        android:id="@+id/Bottom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="10dip"
+        android:padding="10dip" >
+
+        <LinearLayout
+            android:layout_width="300dip"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:text="考试总成绩："
+                android:textSize="@dimen/simple_font_size" />
+
+            <TextView
+                android:id="@+id/text_score"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/y8"
+                android:gravity="center_vertical"
+                android:text="00"
+                android:textColor="#f8ac59"
+                android:textSize="@dimen/text_size_35" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btn_commit"
+            android:layout_width="100dip"
+            android:layout_height="40dip"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:background="@drawable/other_btn_selector"
+            android:text="提交评分"
+            android:textSize="@dimen/simple_font_size" />
+
+        <Button
+            android:id="@+id/btn_check"
+            android:layout_width="100dip"
+            android:layout_height="40dip"
+            android:layout_alignParentTop="true"
+            android:layout_marginRight="22dp"
+            android:layout_toLeftOf="@+id/btn_commit"
+            android:background="@drawable/other_btn_selector"
+            android:text="修改评分"
+            android:textSize="@dimen/simple_font_size"
+            android:visibility="visible" />
+    </RelativeLayout>
+
+</RelativeLayout>

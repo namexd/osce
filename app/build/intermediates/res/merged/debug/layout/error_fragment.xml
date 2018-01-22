@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <Button
+        android:id="@+id/mBtnRefrash"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textErrorTips"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="40dp"
+        android:background="@drawable/blue_button_background"
+        android:padding="10dp"
+        android:text="点击重新加载"
+        android:textColor="#ffffff"
+        android:textSize="@dimen/simple_font_size" />
+
+    <ImageView
+        android:id="@+id/imagNetError"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/textErrorTips"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="40dp"
+        android:src="@drawable/net_error"
+        android:textSize="@dimen/simple_font_size" />
+
+    <TextView
+        android:id="@+id/textErrorTips"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:text="网络加载失败，请重试~"
+        android:textSize="@dimen/simple_font_size" >
+    </TextView>
+
+</RelativeLayout>

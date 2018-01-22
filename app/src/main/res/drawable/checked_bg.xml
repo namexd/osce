@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <solid android:color="@color/barprocess_color_green" />
+
+    <corners android:radius="30px" />
+
+    <!--
+         <stroke
+        android:width="2dp"
+        android:color="#c416ff" />
+    -->
+
+    <padding
+        android:bottom="16px"
+        android:left="38px"
+        android:right="38px"
+        android:top="16px" />
+
+</shape>

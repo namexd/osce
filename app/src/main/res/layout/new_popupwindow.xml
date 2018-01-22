@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <ImageButton
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="#ffffff"
+            android:contentDescription="photo"
+            android:padding="10dp"
+            android:src="@drawable/image_camera_selector"
+            android:text="@string/action_settings" />
+
+        <View
+            android:layout_width="1px"
+            android:layout_height="match_parent"
+            android:background="#efefef" />
+
+        <ImageButton
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="#ffffff"
+            android:contentDescription="photo"
+            android:padding="10dp"
+            android:src="@drawable/image_mark_selector"
+            android:text="@string/action_settings" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="#d1d1d1" />
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="2" />
+
+    <com.mx.osce.audio.AudioRecorderButton
+        android:id="@+id/recorderButton"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/y19"
+        android:layout_marginBottom="@dimen/y4"
+        android:layout_marginLeft="@dimen/y23"
+        android:layout_marginRight="@dimen/y23"
+        android:layout_marginTop="@dimen/y4"
+        android:background="@drawable/btn_recorder_normal"
+        android:gravity="center"
+        android:minHeight="0dp"
+        android:padding="10dp"
+        android:text="@string/str_recorder_normal"
+        android:textColor="#727272"
+        android:visibility="visible" />
+
+</LinearLayout>

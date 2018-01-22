@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.mx.osce"
+    android:versionCode="1"
+    android:versionName="1.0" >
+
+    <uses-sdk
+        android:minSdkVersion="16"
+        android:targetSdkVersion="21" />
+
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+
+    <application
+        android:name="com.mx.osce.MyApplicaton"
+        android:allowBackup="true"
+        android:configChanges="orientation|keyboardHidden|touchscreen|locale|keyboard|navigation|screenSize|layoutDirection"
+        android:icon="@drawable/app_icon"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme" >
+        <activity
+            android:name="com.mx.osce.LoginActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="landscape"
+            android:theme="@android:style/Theme.Light.NoTitleBar"
+            android:windowSoftInputMode="adjustPan" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.mx.osce.MainActivity"
+            android:configChanges="orientation|keyboardHidden|touchscreen|locale|keyboard|navigation|screenSize|layoutDirection"
+            android:screenOrientation="landscape"
+            android:theme="@android:style/Theme.Light.NoTitleBar" >
+        </activity>
+        <activity
+            android:name="com.mx.osce.VideoActivity"
+            android:screenOrientation="landscape"
+            android:theme="@android:style/Theme.Light.NoTitleBar" >
+        </activity>
+        <activity
+            android:name="com.mx.osce.GradeActivity"
+            android:screenOrientation="landscape"
+            android:theme="@android:style/Theme.Light.NoTitleBar" >
+        </activity>
+        <activity
+            android:name="com.mx.osce.DemoActivity"
+            android:theme="@android:style/Theme.Light.NoTitleBar" >
+        </activity>
+
+        <receiver android:name="com.mx.osce.broadcast.ForceBroadReciver" >
+            <intent-filter>
+                <action android:name="com.mx.osce.broadcast.Force_Warn_End_Exam" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="com.mx.osce.broadcast.Force_Off_Line" />
+            </intent-filter>
+        </receiver>
+        <receiver android:name="com.mx.osce.broadcast.SubscriberReciver" >
+            <intent-filter>
+                <action android:name="com.mx.osce.broadcast.SubscriberReciver" />
+            </intent-filter>
+        </receiver>
+
+        <service android:name="com.mx.osce.service.TimeService" >
+            <intent-filter>
+                <action android:name="com.mx.osce.service.TimeService" />
+            </intent-filter>
+        </service>
+        <service android:name="com.mx.osce.service.SubscriberService" >
+            <intent-filter>
+                <action android:name="com.mx.osce.service.SubscriberService" />
+            </intent-filter>
+        </service>
+        <service android:name="com.mx.osce.service.UploadScroeService" >
+            <intent-filter>
+                <action android:name="com.mx.osce.service.UploadScroeService" />
+            </intent-filter>
+        </service>
+    </application>
+
+</manifest>

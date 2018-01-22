@@ -1,0 +1,81 @@
+ECLIPSE ANDROID PROJECT IMPORT SUMMARY
+======================================
+
+Ignored Files:
+--------------
+The following files were *not* copied into the new Gradle project; you
+should evaluate whether these are still needed in your project and if
+so manually move them:
+
+* .DS_Store
+* ic_launcher-web.png
+* proguard-project.txt
+
+Replaced Jars with Dependencies:
+--------------------------------
+The importer recognized the following .jar files as third party
+libraries and replaced them with Gradle dependencies instead. This has
+the advantage that more explicit version information is known, and the
+libraries can be updated automatically. However, it is possible that
+the .jar file in your project was of an older version than the
+dependency we picked, which could render the project not compileable.
+You can disable the jar replacement in the import wizard and try again:
+
+android-support-v4.jar => com.android.support:support-v4:21.0.3
+gson-2.3.1.jar => com.google.code.gson:gson:2.3.1
+
+Moved Files:
+------------
+Android Gradle projects use a different directory structure than ADT
+Eclipse projects. Here's how the projects were restructured:
+
+* AndroidManifest.xml => app/src/main/AndroidManifest.xml
+* assets/ => app/src/main/assets/
+* libs/AudioEngineSDK.jar => app/libs/AudioEngineSDK.jar
+* libs/HCNetSDK.jar => app/libs/HCNetSDK.jar
+* libs/PinnedHeaderList.jar => app/libs/PinnedHeaderList.jar
+* libs/PlayerSDK.jar => app/libs/PlayerSDK.jar
+* libs/Volley.jar => app/libs/Volley.jar
+* libs/acsaj-1.0.0.jar => app/libs/acsaj-1.0.0.jar
+* libs/android-support-v7-recyclerview.jar => app/libs/android-support-v7-recyclerview.jar
+* libs/armeabi/libAudioEngine.so => app/src/main/jniLibs/armeabi/libAudioEngine.so
+* libs/armeabi/libCpuFeatures.so => app/src/main/jniLibs/armeabi/libCpuFeatures.so
+* libs/armeabi/libHCAlarm.so => app/src/main/jniLibs/armeabi/libHCAlarm.so
+* libs/armeabi/libHCCore.so => app/src/main/jniLibs/armeabi/libHCCore.so
+* libs/armeabi/libHCCoreDevCfg.so => app/src/main/jniLibs/armeabi/libHCCoreDevCfg.so
+* libs/armeabi/libHCDisplay.so => app/src/main/jniLibs/armeabi/libHCDisplay.so
+* libs/armeabi/libHCGeneralCfgMgr.so => app/src/main/jniLibs/armeabi/libHCGeneralCfgMgr.so
+* libs/armeabi/libHCIndustry.so => app/src/main/jniLibs/armeabi/libHCIndustry.so
+* libs/armeabi/libHCPlayBack.so => app/src/main/jniLibs/armeabi/libHCPlayBack.so
+* libs/armeabi/libHCPreview.so => app/src/main/jniLibs/armeabi/libHCPreview.so
+* libs/armeabi/libHCVoiceTalk.so => app/src/main/jniLibs/armeabi/libHCVoiceTalk.so
+* libs/armeabi/libPlayCtrl.so => app/src/main/jniLibs/armeabi/libPlayCtrl.so
+* libs/armeabi/libPlayCtrl_v5.so => app/src/main/jniLibs/armeabi/libPlayCtrl_v5.so
+* libs/armeabi/libPlayCtrl_v7.so => app/src/main/jniLibs/armeabi/libPlayCtrl_v7.so
+* libs/armeabi/libSystemTransform.so => app/src/main/jniLibs/armeabi/libSystemTransform.so
+* libs/armeabi/libcrypto.so => app/src/main/jniLibs/armeabi/libcrypto.so
+* libs/armeabi/libhcnetsdk.so => app/src/main/jniLibs/armeabi/libhcnetsdk.so
+* libs/armeabi/libssl.so => app/src/main/jniLibs/armeabi/libssl.so
+* libs/commons-io-2.0.jar => app/libs/commons-io-2.0.jar
+* libs/commons-pool-1.6.jar => app/libs/commons-pool-1.6.jar
+* libs/httpmime-4.3.5.jar => app/libs/httpmime-4.3.5.jar
+* libs/jedis-2.0.0.jar => app/libs/jedis-2.0.0.jar
+* libs/redisson-2.1.1.jar => app/libs/redisson-2.1.1.jar
+* libs/xUtils-2.6.14.jar => app/libs/xUtils-2.6.14.jar
+* res/ => app/src/main/res/
+* src/ => app/src/main/java/
+
+Next Steps:
+-----------
+You can now build the project. The Gradle project needs network
+connectivity to download dependencies.
+
+Bugs:
+-----
+If for some reason your project does not build, and you determine that
+it is due to a bug or limitation of the Eclipse to Gradle importer,
+please file a bug at http://b.android.com with category
+Component-Tools.
+
+(This import summary is for your information only, and can be deleted
+after import once you are satisfied with the results.)

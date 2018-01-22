@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="activity_backgroud">#16beb0</color>
+    <color name="bar_backgroud">#dae4eb</color>
+    <color name="bar_color_init">#dae4e8</color>
+    <color name="bar_progress">#16beb0</color>
+    <color name="barprocess_color_green">#16beb0</color>
+    <color name="barprocess_color_orange">#f8ac59</color>
+    <color name="bg_lin_95">#000000</color>
+    <color name="black">#000000</color>
+    <color name="blue">#58ACFA</color>
+    <color name="blue_btn_bg_color">#AEDEF4</color>
+    <color name="blue_btn_bg_pressed_color">#96BFD2</color>
+    <color name="button_text_color">#FFFFFF</color>
+    <color name="color_card_seleted">#16beb0</color>
+    <color name="color_card_storke">#e7eaec</color>
+    <color name="color_content_section">#fafafb</color>
+    <color name="color_contnte_one">#16beb0</color>
+    <color name="content_item_title">#97D0C7</color>
+    <color name="error_stroke_color">#F27474</color>
+    <color name="float_transparent">#66000000</color>
+    <color name="fragment_wait_tv_success">#16c0b1</color>
+    <color name="fragmnet_wait_tv_tips_complete_color">#a93531</color>
+    <color name="get_score_yellow">#f8ac59</color>
+    <color name="gray_btn_bg_color">#D0D0D0</color>
+    <color name="gray_btn_bg_pressed_color">#B6B6B6</color>
+    <color name="green">#74DF00</color>
+    <color name="grey">#6E6E6E</color>
+    <color name="menu_list_line">#A6A6A6</color>
+    <color name="menu_seld_color">#f8ac59</color>
+    <color name="red">#FA5858</color>
+    <color name="red_btn_bg_color">#DD6B55</color>
+    <color name="red_btn_bg_pressed_color">#CD5B55</color>
+    <color name="red_listtext">#ed5565</color>
+    <color name="second_grey">#902C14</color>
+    <color name="success_stroke_color">#A5DC86</color>
+    <color name="sweet_dialog_bg_color">#FFFFFF</color>
+    <color name="trans_success_stroke_color">#33A5DC86</color>
+    <color name="warning_stroke_color">#F8BB86</color>
+    <color name="white">#ffffff</color>
+    <color name="yellow">#D7DF01</color>
+    <declare-styleable name="CircleProgressBar"><attr format="dimension" name="mlpb_inner_radius"/><attr format="color" name="mlpb_background_color"/><attr format="color" name="mlpb_progress_color"/><attr format="dimension" name="mlpb_progress_stoke_width"/><attr format="boolean" name="mlpb_show_arrow"/><attr format="boolean" name="mlpb_enable_circle_background"/><attr format="dimension" name="mlpb_arrow_width"/><attr format="dimension" name="mlpb_arrow_height"/><attr format="integer" name="mlpb_progress"/><attr format="integer" name="mlpb_max"/><attr format="dimension" name="mlpb_progress_text_size"/><attr format="color" name="mlpb_progress_text_color"/><attr format="enum" name="mlpb_progress_text_visibility">
+            <enum name="visible" value="0"/>
+            <enum name="invisible" value="1"/>
+        </attr></declare-styleable>
+    <declare-styleable name="CustomSeekBar"><attr format="integer" name="markItemNum"/><attr format="integer" name="min"/><attr format="integer" name="max"/><attr format="color" name="backgroundColor"/><attr format="color" name="selectedColor"/><attr format="reference|string" name="markDescArray"/><attr format="reference|dimension" name="markTextSize"/><attr format="color" name="markTextColor"/><attr format="reference" name="progressDrawable"/><attr format="reference" name="thumbDrawable"/><attr format="reference" name="markDrawable"/><attr format="dimension" name="progressDrawableHeight"/><attr format="dimension" name="progressHeight"/><attr format="dimension" name="thumbHeight"/><attr format="dimension" name="popupWidth"/><attr format="dimension" name="yOffset"/><attr format="boolean" name="isShowPopup"/></declare-styleable>
+    <declare-styleable name="CustomTextView"><attr format="string" name="customFont"/></declare-styleable>
+    <declare-styleable name="PercentLayout_Layout"><attr format="string" name="layout_widthPercent"/><attr format="string" name="layout_heightPercent"/><attr format="string" name="layout_marginPercent"/><attr format="string" name="layout_marginLeftPercent"/><attr format="string" name="layout_marginTopPercent"/><attr format="string" name="layout_marginRightPercent"/><attr format="string" name="layout_marginBottomPercent"/><attr format="string" name="layout_marginStartPercent"/><attr format="string" name="layout_marginEndPercent"/><attr format="string" name="layout_textSizePercent"/><attr format="string" name="layout_maxWidthPercent"/><attr format="string" name="layout_maxHeightPercent"/><attr format="string" name="layout_minWidthPercent"/><attr format="string" name="layout_minHeightPercent"/><attr format="string" name="layout_paddingPercent"/><attr format="string" name="layout_paddingTopPercent"/><attr format="string" name="layout_paddingBottomPercent"/><attr format="string" name="layout_paddingLeftPercent"/><attr format="string" name="layout_paddingRightPercent"/></declare-styleable>
+    <declare-styleable name="Rotate3dAnimation"><attr format="enum" name="rollType">
+            <enum name="x" value="0"/>
+            <enum name="y" value="1"/>
+            <enum name="z" value="2"/>
+        </attr><attr format="float" name="fromDeg"/><attr format="float" name="toDeg"/><attr format="fraction" name="pivotX"/><attr format="fraction" name="pivotY"/></declare-styleable>
+    <declare-styleable name="TagFlowLayout"><attr format="boolean" name="auto_select_effect"/><attr format="integer" name="max_select"/><attr name="gravity">
+            <enum name="left" value="-1"/>
+            <enum name="center" value="0"/>
+            <enum name="right" value="1"/>
+        </attr></declare-styleable>
+    <declare-styleable name="xlhStep"><attr format="integer" name="stepCount"/><attr format="integer" name="currentStep"/><attr format="dimension" name="barHeight"/><attr format="color" name="barColor"/><attr format="color" name="stepSelectedColor"/><attr format="color" name="stepNormalColor"/><attr format="color" name="progressColor"/><attr format="dimension" name="stepRadius"/><attr format="boolean" name="canDrag"/></declare-styleable>
+    <dimen name="activity_horizontal_margin">8dp</dimen>
+    <dimen name="activity_vertical_margin">8dp</dimen>
+    <dimen name="btn_radius">10sp</dimen>
+    <dimen name="listview_item_textsize">25sp</dimen>
+    <dimen name="login_activity_margin">20dp</dimen>
+    <dimen name="login_activity_text_size">18sp</dimen>
+    <dimen name="main_activity_title_textview">16sp</dimen>
+    <dimen name="main_activity_title_textview_margin">20dp</dimen>
+    <dimen name="main_activity_title_textview_width">0dp</dimen>
+    <dimen name="padding_all">5dp</dimen>
+    <dimen name="simple_font_size">23sp</dimen>
+    <dimen name="sp_dialog_tips_size">25sp</dimen>
+    <dimen name="text_size_12">12sp</dimen>
+    <dimen name="text_size_14">14sp</dimen>
+    <dimen name="text_size_16">16sp</dimen>
+    <dimen name="text_size_18">18sp</dimen>
+    <dimen name="text_size_20">20sp</dimen>
+    <dimen name="text_size_35">33sp</dimen>
+    <dimen name="text_size_normal">20sp</dimen>
+    <item name="transparent" type="drawable">#00000000</item>
+    <string name="action_settings">Settings</string>
+    <string name="app_name">OSCE-3.10-Beta-4.6</string>
+    <string name="button_point">打开评分标准</string>
+    <string name="close_media">关闭闹钟</string>
+    <string name="communication_skill">医患沟通技巧</string>
+    <string name="dialog_cancel">取消</string>
+    <string name="dialog_default_title">提示</string>
+    <string name="dialog_ok">确定</string>
+    <string name="fragment_grade_text_getScore">考生目前得分</string>
+    <string name="fragment_wait_tv_ready_complete">准备完成</string>
+    <string name="fragment_wait_tv_ready_tips">考站准备中...</string>
+    <string name="fragment_wait_tv_success">等待考生入场</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="imagBtn_setting">网络地址设置</string>
+    <string name="login_activity_cancel_button">注销</string>
+    <string name="login_activity_login_button">登录</string>
+    <string name="login_activity_password_edit_hint">密码</string>
+    <string name="login_activity_title_text_text">OSCE考试智能管理</string>
+    <string name="login_activity_username_edit_hint">账号</string>
+    <string name="main_activity_titile_testview_station">考站</string>
+    <string name="main_activity_titile_testview_time">时间</string>
+    <string name="next">下一个考生</string>
+    <string name="next_point">下一考点</string>
+    <string name="pre_point">上一考点</string>
+    <string name="proficiency_of_the_operation">操作的熟练度</string>
+    <string name="setting_basic">输入考试的网址</string>
+    <string name="start_point">开始评分</string>
+    <string name="str_recorder_normal">按住   说话</string>
+    <string name="str_recorder_recording">松开   结束</string>
+    <string name="str_recorder_want_cancel">滑动手指，取消录音</string>
+    <string name="text_begin_test">开始考试</string>
+    <string name="text_video">实时视频</string>
+    <string name="text_warning_test">替考警告</string>
+    <string name="upload_score">提交成绩</string>
+    <string name="upload_score_false">上传成绩失败</string>
+    <string name="upload_score_success">上传成绩成功</string>
+    <string name="wait_to_draw">刷新</string>
+    <style name="AppBaseTheme" parent="android:Theme.Light">
+        
+    </style>
+    <style name="AppTheme" parent="AppBaseTheme">
+        
+    </style>
+    <style name="CustomWindowTitleBackground">
+        <item name="android:background">#5cacee</item>
+    </style>
+    <style name="MyDialogStyle" parent="android:Theme">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowAnimationStyle">@android:style/Animation.Dialog</item>
+        <item name="android:backgroundDimEnabled">true</item>
+    </style>
+    <style name="Theme_AudioDialog" parent="@android:style/Theme.Dialog">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:backgroundDimEnabled">false</item>
+    </style>
+    <style name="activity_grade_textview_style">
+        <item name="android:layout_width">120dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@drawable/grade_textview_selector</item>
+        <item name="android:gravity">center</item>
+        <item name="android:padding">@dimen/y4</item>
+        <item name="android:textSize">@dimen/simple_font_size</item>
+        <item name="android:layout_marginRight">@dimen/y7</item>
+    </style>
+    <style name="activity_top_LL_image_style">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:adjustViewBounds">true</item>
+    </style>
+    <style name="activity_top_LL_style">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/y19</item>
+        <item name="android:layout_marginTop">@dimen/y4</item>
+        <item name="android:layout_marginLeft">@dimen/y4</item>
+        <item name="android:layout_marginRight">@dimen/y4</item>
+        <item name="android:orientation">horizontal</item>
+    </style>
+    <style name="activity_top_LL_textView_style">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:background">#ffffff</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:paddingLeft">@dimen/y6</item>
+        <item name="android:textSize">@dimen/simple_font_size</item>
+    </style>
+    <style name="activity_top_textview_style">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/y19</item>
+        <item name="android:background">@drawable/btn_top_sahpe</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:paddingLeft">@dimen/y6</item>
+        <item name="android:textSize">@dimen/simple_font_size</item>
+    </style>
+    <style name="alert_dialog" parent="@android:Theme.Dialog">
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowFullscreen">false</item>
+        <item name="android:windowBackground">@color/float_transparent</item>
+        <item name="android:windowAnimationStyle">@null</item>
+    </style>
+    <style name="custom_title" parent="AppBaseTheme">
+        <item name="android:windowTitleSize">54dp</item>
+        <item name="android:windowFrame">@null</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:windowTitleBackgroundStyle">@style/CustomWindowTitleBackground</item>
+    </style>
+    <style name="dialog" parent="@android:style/Theme.Dialog">
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowIsTranslucent">false</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:backgroundDimEnabled">true</item>
+    </style>
+    <style name="dialog_blue_button" parent="@android:Widget.Button">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">31dp</item>
+        <item name="android:background">@drawable/blue_button_background</item>
+        <item name="android:textSize">19sp</item>
+        <item name="android:paddingLeft">21dp</item>
+        <item name="android:paddingRight">21dp</item>
+        <item name="android:textColor">@color/button_text_color</item>
+    </style>
+    <style name="fragment_grade_textview_style">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginLeft">@dimen/y8</item>
+        <item name="android:layout_marginTop">@dimen/y8</item>
+        <item name="android:textSize">@dimen/simple_font_size</item>
+        <item name="android:layout_weight">1</item>
+    </style>
+    <style name="popup_animation">
+        <item name="@android:windowEnterAnimation">@anim/popup_show</item>
+        <item name="@android:windowExitAnimation">@anim/popup_hide</item>
+    </style>
+    <style name="progress_horizontal_custom">
+        <item name="android:indeterminateOnly">false</item>
+        <item name="android:progressDrawable">@drawable/progress_horizontal_custom</item>
+        <item name="android:indeterminateDrawable">@color/grey</item>
+        <item name="android:minHeight">4dip</item>
+        <item name="android:maxHeight">4dip</item>
+    </style>
+    <style name="roomRatingBar" parent="@android:style/Widget.RatingBar">
+        <item name="android:progressDrawable">@drawable/room_rating_bar</item>
+        <item name="android:minHeight">32dip</item>
+        <item name="android:maxHeight">32dip</item>
+    </style>
+</resources>

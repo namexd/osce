@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        is-multidex="true"
+        jar="/Users/dan/Work/sulead/osce_pad/OSCE_ORIGIN/app/libs/httpmime-4.3.5.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.0"
+        sha1="1dd0d38df9c6d21e893f2e52403f1cd99e91cd81">
+        <dex dex="/Users/dan/Work/sulead/osce_pad/OSCE_ORIGIN/app/build/intermediates/transforms/dex/debug/folders/1000/2/httpmime-4.3.5_3b44d73b9acc81a3aacff7c7cb75b094f8300307/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/dan/Work/sulead/osce_pad/OSCE_ORIGIN/app/build/intermediates/exploded-aar/com.android.support/support-core-utils/25.0.1/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.0"
+        sha1="00d4c8eebf2b681073c72a26bd0849549e51c7cb">
+        <dex dex="/Users/dan/Work/sulead/osce_pad/OSCE_ORIGIN/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-support-core-utils-25.0.1_f64f7d536b7c2a9a6122cad82a286fc9a7b8d655/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/dan/Work/sulead/osce_pad/OSCE_ORIGIN/app/libs/commons-io-2.0.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.0"
+        sha1="7de4f542c8ef0327bd0fb09da3dc4623853a0434">
+        <dex dex="/Users/dan/Work/sulead/osce_pad/OSCE_ORIGIN/app/build/intermediates/transforms/dex/debug/folders/1000/2/commons-io-2.0_acdfe35fe601eab2e3c145036457a06a409093a7/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/dan/Work/sulead/osce_pad/OSCE_ORIGIN/app/build/intermediates/exploded-aar/com.android.support/support-fragment/25.0.1/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.0"
+        sha1="26c6eef571592c91f29e56fda0bac73321de0c92">
+        <dex dex="/Users/dan/Work/sulead/osce_pad/OSCE_ORIGIN/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-support-fragment-25.0.1_8c410935994ce38efe3c574eb9913076ae716cd4/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/dan/Work/sulead/osce_pad/OSCE_ORIGIN/app/libs/PlayerSDK.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.0"
+        sha1="54fc04d01eef3b5fd51f8306e7c57ac21a3cffb7">
+        <dex dex="/Users/dan/Work/sulead/osce_pad/OSCE_ORIGIN/app/build/intermediates/transforms/dex/debug/folders/1000/2/PlayerSDK_1c4dbc4fb14cc7dc1ee2b09b926f1b39d41f05bb/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/dan/Work/sulead/osce_pad/OSCE_ORIGIN/app/build/intermediates/exploded-aar/com.android.support/support-v4/25.0.1/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.0"
+        sha1="d7c42c80f6509b9ea4db28ca7859ffae08ec5741">
+        <dex dex="/Users/dan/Work/sulead/osce_pad/OSCE_ORIGIN/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-support-v4-25.0.1_974f237d383fa9abe5f35fc6d552722a697a7fb5/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/dan/Work/sulead/osce_pad/OSCE_ORIGIN/app/libs/android-support-v7-recyclerview.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.0"
+        sha1="f554453546792627806850749b21b87a89771428">
+        <dex dex="/Users/dan/Work/sulead/osce_pad/OSCE_ORIGIN/app/build/intermediates/transforms/dex/debug/folders/1000/2/android-support-v7-recyclerview_41d730dccc95e97d239201a7ad2124067309331d/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/dan/Work/sulead/osce_pad/OSCE_ORIGIN/app/build/intermediates/exploded-aar/com.android.support/support-compat/25.0.1/jars/libs/internal_impl-25.0.1.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.0"
+        sha1="3af8cc51ef7088e56f132780da8c0bd858b6a6ad">
+        <dex dex="/Users/dan/Work/sulead/osce_pad/OSCE_ORIGIN/app/build/intermediates/transforms/dex/debug/folders/1000/10/internal_impl-25.0.1_7406392fabf3c690869fa4aa5bd2d8a5e75d8143/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/dan/Work/sulead/osce_pad/OSCE_ORIGIN/app/libs/commons-pool-1.6.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.0"
+        sha1="4572d589699f09d866a226a14b7f4323c6d8f040">
+        <dex dex="/Users/dan/Work/sulead/osce_pad/OSCE_ORIGIN/app/build/intermediates/transforms/dex/debug/folders/1000/2/commons-pool-1.6_d9f8b2bc8dc6a3dad17ca77f6e17c96ace36b48a/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/dan/Work/sulead/osce_pad/OSCE_ORIGIN/app/build/intermediates/incremental-runtime-classes/debug/instant-run.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.0"
+        sha1="37c3055ab901674e98b5660141aef9a7d7613857">
+        <dex dex="/Users/dan/Work/sulead/osce_pad/OSCE_ORIGIN/app/build/intermediates/transforms/dex/debug/folders/1000/10/instant-run_a0c64f03b11cd22c7f1c8784c90aefcbf10f87a2/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/dan/Work/sulead/osce_pad/OSCE_ORIGIN/app/build/intermediates/exploded-aar/com.android.support/support-core-ui/25.0.1/jars/libs/internal_impl-25.0.1.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.0"
+        sha1="e5343c9d19cb19ff55f6b268c7f3fe8c9d224f6f">
+        <dex dex="/Users/dan/Work/sulead/osce_pad/OSCE_ORIGIN/app/build/intermediates/transforms/dex/debug/folders/1000/10/internal_impl-25.0.1_adb6916f514d1d159ad238f123ad821098d2a74a/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/dan/Work/sulead/osce_pad/OSCE_ORIGIN/app/build/intermediates/exploded-aar/com.android.support/support-core-ui/25.0.1/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.0"
+        sha1="bc7e99e8d0fc279a05aa91378530f467ad62d443">
+        <dex dex="/Users/dan/Work/sulead/osce_pad/OSCE_ORIGIN/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-support-core-ui-25.0.1_ff1ebf816108ed1f98cd2ec270084cd697ac0d6d/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/dan/Library/Android/sdk/extras/android/m2repository/com/android/support/support-annotations/25.0.1/support-annotations-25.0.1.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.0"
+        sha1="a09194311f8f89c3e6db09d79f50897a889d615e">
+        <dex dex="/Users/dan/Work/sulead/osce_pad/OSCE_ORIGIN/app/build/intermediates/transforms/dex/debug/folders/1000/10/support-annotations-25.0.1_cba6508adaadf1df37585f4ca8a304a9ee8c9303/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/dan/Work/sulead/osce_pad/OSCE_ORIGIN/app/libs/AudioEngineSDK.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.0"
+        sha1="9e3c679a1d7d0a4eb9d6fbec94c98158b686f1f0">
+        <dex dex="/Users/dan/Work/sulead/osce_pad/OSCE_ORIGIN/app/build/intermediates/transforms/dex/debug/folders/1000/2/AudioEngineSDK_54c2dfca4108c426041da202588783c03ef57945/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/dan/Work/sulead/osce_pad/OSCE_ORIGIN/app/build/intermediates/exploded-aar/com.android.support/support-core-utils/25.0.1/jars/libs/internal_impl-25.0.1.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.0"
+        sha1="c5b7145fb34779b6639147b8f2f8dd77c0db771b">
+        <dex dex="/Users/dan/Work/sulead/osce_pad/OSCE_ORIGIN/app/build/intermediates/transforms/dex/debug/folders/1000/10/internal_impl-25.0.1_a324c1310e5c7c83f6349c8794f416e7d0546f42/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/dan/Work/sulead/osce_pad/OSCE_ORIGIN/app/libs/xUtils-2.6.14.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.0"
+        sha1="f10c51f3e0732fdeefe6e104279a58e275879b6c">
+        <dex dex="/Users/dan/Work/sulead/osce_pad/OSCE_ORIGIN/app/build/intermediates/transforms/dex/debug/folders/1000/2/xUtils-2.6.14_5c180c32c302113805163cf8d6017b151c12ec5b/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/dan/Work/sulead/osce_pad/OSCE_ORIGIN/app/build/intermediates/exploded-aar/com.android.support/support-media-compat/25.0.1/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.0"
+        sha1="6a1479afe9f1b3645e1cd9a87318976893472818">
+        <dex dex="/Users/dan/Work/sulead/osce_pad/OSCE_ORIGIN/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-support-media-compat-25.0.1_698b4aa86692b5a7f5404ad8aad85243196b9706/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/dan/.gradle/caches/modules-2/files-2.1/org.apache.httpcomponents/httpcore/4.3.3/f91b7a4aadc5cf486df6e4634748d7dd7a73f06d/httpcore-4.3.3.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.0"
+        sha1="f91b7a4aadc5cf486df6e4634748d7dd7a73f06d">
+        <dex dex="/Users/dan/Work/sulead/osce_pad/OSCE_ORIGIN/app/build/intermediates/transforms/dex/debug/folders/1000/10/httpcore-4.3.3_0c094acaffab380c2d566a750469afd1a9a279a3/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/dan/Work/sulead/osce_pad/OSCE_ORIGIN/app/libs/HCNetSDK.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.0"
+        sha1="8c80011eb8e460c3aa3c5c15a75b0983f335af21">
+        <dex dex="/Users/dan/Work/sulead/osce_pad/OSCE_ORIGIN/app/build/intermediates/transforms/dex/debug/folders/1000/2/HCNetSDK_78b23eaa39ac7929c3fb0a61b1bb1174d74687f0/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/dan/Work/sulead/osce_pad/OSCE_ORIGIN/app/libs/jedis-2.0.0.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.0"
+        sha1="83fd129417dab44c09d85f8e125fe8007ee52bc7">
+        <dex dex="/Users/dan/Work/sulead/osce_pad/OSCE_ORIGIN/app/build/intermediates/transforms/dex/debug/folders/1000/2/jedis-2.0.0_d245d7e8fa52cb70c84f3c99d1b93d7c3d8b42ca/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/dan/Work/sulead/osce_pad/OSCE_ORIGIN/app/build/intermediates/exploded-aar/com.android.support/support-media-compat/25.0.1/jars/libs/internal_impl-25.0.1.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.0"
+        sha1="f83b00041ecfba705603fec40363416c7de69719">
+        <dex dex="/Users/dan/Work/sulead/osce_pad/OSCE_ORIGIN/app/build/intermediates/transforms/dex/debug/folders/1000/10/internal_impl-25.0.1_ab49e89eef85b09176c5b525e796a985766ead94/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/dan/Work/sulead/osce_pad/OSCE_ORIGIN/app/libs/Volley.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.0"
+        sha1="375ccfe912d323e483abd1b2e2004db185dde97a">
+        <dex dex="/Users/dan/Work/sulead/osce_pad/OSCE_ORIGIN/app/build/intermediates/transforms/dex/debug/folders/1000/2/Volley_9925178afe52cb7a486838b455f31886416d171c/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/dan/.gradle/caches/modules-2/files-2.1/com.google.code.gson/gson/2.3.1/ecb6e1f8e4b0e84c4b886c2f14a1500caf309757/gson-2.3.1.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.0"
+        sha1="ecb6e1f8e4b0e84c4b886c2f14a1500caf309757">
+        <dex dex="/Users/dan/Work/sulead/osce_pad/OSCE_ORIGIN/app/build/intermediates/transforms/dex/debug/folders/1000/10/gson-2.3.1_176b84589913feb9988568e0631501d3403cc218/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/dan/Work/sulead/osce_pad/OSCE_ORIGIN/app/build/intermediates/exploded-aar/com.android.support/support-fragment/25.0.1/jars/libs/internal_impl-25.0.1.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.0"
+        sha1="c0bd6ffb002a85b5e7cad29f8558d1cc59539679">
+        <dex dex="/Users/dan/Work/sulead/osce_pad/OSCE_ORIGIN/app/build/intermediates/transforms/dex/debug/folders/1000/10/internal_impl-25.0.1_779dc04ae42f9f9a21b439d6afca71cb85c7186d/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/dan/Work/sulead/osce_pad/OSCE_ORIGIN/app/build/intermediates/incremental-classes/debug/instant-run-bootstrap.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.0"
+        sha1="9d7883d488b0cde27af14f87b56c321e91b5f989">
+        <dex dex="/Users/dan/Work/sulead/osce_pad/OSCE_ORIGIN/app/build/intermediates/transforms/dex/debug/folders/1000/10/instant-run-bootstrap_b5d682cd453d2d229d9debd69cfac525b235bc15/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/dan/Work/sulead/osce_pad/OSCE_ORIGIN/app/libs/PinnedHeaderList.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.0"
+        sha1="21c6e721d0c1827698601a81cb01d7753fa03372">
+        <dex dex="/Users/dan/Work/sulead/osce_pad/OSCE_ORIGIN/app/build/intermediates/transforms/dex/debug/folders/1000/2/PinnedHeaderList_edbaf36ced42fc5d01054633f6e9bbcafa9f5ee0/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/dan/Work/sulead/osce_pad/OSCE_ORIGIN/app/libs/redisson-2.1.1.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.0"
+        sha1="fb21e543a055a4f27a0ff0388bda620c720cdfb8">
+        <dex dex="/Users/dan/Work/sulead/osce_pad/OSCE_ORIGIN/app/build/intermediates/transforms/dex/debug/folders/1000/2/redisson-2.1.1_f76a82882842fb900324fc07b32f95d75d4d48de/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/dan/Work/sulead/osce_pad/OSCE_ORIGIN/app/libs/acsaj-1.0.0.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.0"
+        sha1="6a4b671719d47f492836e304168194feff743dbe">
+        <dex dex="/Users/dan/Work/sulead/osce_pad/OSCE_ORIGIN/app/build/intermediates/transforms/dex/debug/folders/1000/2/acsaj-1.0.0_b5aab009187b77811ecb6a0cd03a0a8ed41467d4/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/dan/Work/sulead/osce_pad/OSCE_ORIGIN/app/build/intermediates/exploded-aar/com.android.support/support-compat/25.0.1/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.0"
+        sha1="51eba4a4dd73044f90a9d58dd7ca34adbebfcf4e">
+        <dex dex="/Users/dan/Work/sulead/osce_pad/OSCE_ORIGIN/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-support-compat-25.0.1_bc8c78b72a041499172046b08579c5d59d205e7f/classes.dex" />
+    </item>
+
+</items>

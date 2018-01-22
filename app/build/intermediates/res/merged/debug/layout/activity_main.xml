@@ -1,0 +1,163 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#f1f1f1" >
+
+    <include
+        android:id="@+id/actionBar"
+        layout="@layout/acticity_title" />
+
+    <LinearLayout
+        android:id="@+id/main_activity_station_LL"
+        style="@style/activity_top_LL_style"
+        android:layout_below="@+id/actionBar" >
+
+        <ImageView
+            style="@style/activity_top_LL_image_style"
+            android:src="@drawable/pad_" />
+
+        <TextView
+            android:id="@+id/textView_testStation"
+            style="@style/activity_top_LL_textView_style"
+            android:layout_marginRight="20dp"
+            android:layout_weight="5"
+            android:text="考站" />
+
+        <ImageView
+            style="@style/activity_top_LL_image_style"
+            android:src="@drawable/pad_time" />
+
+        <TextView
+            android:id="@+id/textView_testTime"
+            style="@style/activity_top_LL_textView_style"
+            android:layout_weight="3"
+            android:text="" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/main_activity_station_LL"
+        android:orientation="vertical" >
+
+        <!-- 考试组 -->
+
+        <LinearLayout
+            android:id="@+id/main_activity_group_LL"
+            style="@style/activity_top_LL_style"
+            android:layout_below="@+id/main_activity_station_LL" >
+
+            <ImageView
+                style="@style/activity_top_LL_image_style"
+                android:src="@drawable/pad_next" />
+
+            <TextView
+                android:id="@+id/texiView_nextGroup"
+                style="@style/activity_top_LL_textView_style"
+                android:layout_weight="5"
+                android:text="下一组考生：没有考生" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/main_activity_group_LL"
+            android:layout_marginBottom="@dimen/y4"
+            android:layout_marginLeft="@dimen/y4"
+            android:layout_marginRight="@dimen/y4"
+            android:layout_marginTop="@dimen/y4"
+            android:orientation="horizontal" >
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginRight="@dimen/y4"
+                android:layout_weight="3"
+                android:background="#ffffff"
+                android:orientation="vertical" >
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/y19"
+                    android:background="@drawable/btn_top_sahpe" >
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="@dimen/y6"
+                        android:gravity="center_vertical"
+                        android:text="本组考生"
+                        android:textSize="@dimen/simple_font_size" />
+
+                    <TextView
+                        android:id="@+id/refrushCourrentGroup"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_alignParentRight="true"
+                        android:layout_margin="@dimen/y2"
+                        android:background="@drawable/blue_button_background"
+                        android:gravity="center_vertical"
+                        android:paddingLeft="@dimen/y2"
+                        android:paddingRight="@dimen/y2"
+                        android:text="刷新考生"
+                        android:textColor="#ffffff"
+                        android:textSize="@dimen/simple_font_size" />
+                </RelativeLayout>
+
+                <GridView
+                    android:id="@+id/gridView_currentGroup"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="#ffffff"
+                    android:fastScrollEnabled="true"
+                    android:numColumns="2"
+                    android:scrollingCache="false" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="5"
+                android:background="#ffffff"
+                android:orientation="vertical" >
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/y19"
+                    android:background="@drawable/btn_top_sahpe" >
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="@dimen/y6"
+                        android:gravity="center_vertical"
+                        android:text="我的考生"
+                        android:textSize="@dimen/simple_font_size" />
+
+                    <TextView
+                        android:id="@+id/refrushStudent"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_alignParentRight="true"
+                        android:layout_margin="@dimen/y2"
+                        android:background="@drawable/blue_button_background"
+                        android:gravity="center_vertical"
+                        android:paddingLeft="@dimen/y2"
+                        android:paddingRight="@dimen/y2"
+                        android:text="刷新考生"
+                        android:textColor="#ffffff"
+                        android:textSize="@dimen/simple_font_size" />
+                </RelativeLayout>
+
+                <FrameLayout
+                    android:id="@+id/fragment_draw"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="visible" >
+                </FrameLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+</RelativeLayout>
