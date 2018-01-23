@@ -13,5 +13,5 @@ use Modules\Osce\Entities\SmartArrange\Post;
 
 interface CateInterface
 {
-    function needStudents($entity, $screen, $exam);
+    function needStudents($entity, $screen, $exam, $planSerialRecords = [], $noEndPlanSerialRecords = []);
 }
