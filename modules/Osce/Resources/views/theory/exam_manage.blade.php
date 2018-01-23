@@ -81,6 +81,15 @@
 				return false;
 			});
 			
+			$('#exam_id').change(function () {
+				if ($(this).val()=='0') {
+					$('.exam_name').removeClass('hide');
+				} else {
+					$('.exam_name').addClass('hide');
+				}
+			});
+			
+			
 		});
 
 	</script>
@@ -116,13 +125,20 @@
 	                    <div class="col-sm-5">
 							<select name="exam_id" id="exam_id" class="form-control" placeholder="请选择所属考试">
 								<option value="">请选择所属考试</option>
+								<option value="0">无所属考试</option>
 								@foreach($data['chooseexam'] as $val)
 									<option value="{{$val->id}}">{{$val->name}}</option>
 								@endforeach
 							</select>
 	                    </div>
 	                </div>
-	                <div class="hr-line-dashed"></div>	
+	                <div class="form-group exam_name hide">
+	                    <label for="exam_name" class="col-sm-2 control-label">考试名称：<i></i></label>
+	                    <div class="col-sm-5">
+							<input type="text" name="exam_name" id="exam_name"  placeholder="请填写考试名称" class="form-control" />
+	                    </div>
+	                </div>
+	                <div class="hr-line-dashed"></div>
 	                <div class="form-group">
 	                    <label for="rate_choose" class="col-sm-2 control-label">折算方式：</label>
 						<div class="col-sm-5">
