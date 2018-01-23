@@ -10,7 +10,9 @@ namespace Modules\Osce\Entities\Billboard;
 
 
 use Modules\Osce\Entities\ExamDraft;
+use Modules\Osce\Entities\ExamPlan;
 use Modules\Osce\Entities\ExamQueue;
+use Modules\Osce\Entities\ExamScreening;
 
 class Billboard
 {
@@ -71,7 +73,7 @@ class Billboard
     public function getNextRoom($examId, $studentId, $room_id)
     {
 
-        //拿到当前房间的时间
+/*        //拿到当前房间的时间
         $currentRoom = ExamQueue::where('exam_queue.student_id', '=', $studentId)
             ->where('exam_queue.exam_id', '=', $examId)
             ->where('exam_queue.room_id', $room_id)
@@ -97,7 +99,21 @@ class Billboard
                 'student.name as student_name',
             ])  
             ->orderBy('exam_queue.begin_dt', 'asc')
-            ->first();
+            ->first();*/
+        //通过得到的exam_id查exam_screeing
+        $examscreening = ExamScreening::where('exam_id',$examId)->where('status',1)->first();
+        $exam_screening_id = $examscreening->id;
+
+        $NextQueue = ExamPlan::leftjoin('student', 'exam_plan.student_id', '=', 'student.id')
+            ->leftjoin('room','exam_plan.room_id','=','room.id')
+            ->select('exam_plan.id as planid','room.id as room_id','room.name as room_name','student.id as student_id','student.name as student_name')
+            ->where('exam_plan.exam_id',$examId)
+            ->where('exam_plan.exam_screening_id',$exam_screening_id)
+            ->where('exam_plan.student_id',$studentId)
+            ->where('exam_plan.status',0)
+            ->orderBy('exam_plan.begin_dt','asc')
+            ->frist();
+
         return $NextQueue;
     }
 }
