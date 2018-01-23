@@ -44,6 +44,7 @@ class CexamController extends CommonController
             }
             $addArray = [
                 'exam_id'=>$dataArray['exam_id'],
+                'name'=>$dataArray['name'],
                 'tid' =>$dataArray['tid'],
                 'start' =>$dataArray['start'],
                 'end' =>$dataArray['end'],
