@@ -17,7 +17,7 @@ class TestLog extends Model
     protected $table 		= 	'g_test_log';
     public $incrementing	=	true;
     public $timestamps	    =	false;
-    protected $fillable 	=   ['id','exam_id','tid','teacher','times','start','end','convert','status','ifshow'];
+    protected $fillable 	=   ['id','exam_id','name','tid','teacher','times','start','end','convert','status','ifshow'];
     protected $hidden = [];
 
 
@@ -32,6 +32,16 @@ class TestLog extends Model
     }
     public function teacherdata(){
         return $this->hasOne('\Modules\Osce\Entities\Teacher','id','teacher');
+    }
+
+    /**
+     *  考生关联
+     * @access public
+     *
+     */
+    public function students()
+    {
+        return $this->hasMany('\Modules\Osce\Entities\Student', 'test_id', 'id');
     }
 
 }
