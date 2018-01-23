@@ -623,32 +623,43 @@ class ExamController extends CommonController
         //考生数据(姓名,性别,身份证号,手机号,学号,邮箱,备注,准考证号,班级,班主任姓名)
         $data = $request->only('name','idcard','mobile','code','description','exam_sequence','grade_class','teacher_name');
         $data['avator'] = $images[0];  //照片
+        $examId = $request->get('exam_id');
 
         try{
             if($student) {
                 //查询学号是否存在
-                $code = Student::where('code', $data['code'])->where('user_id','<>',$student->user_id)->first();
-                if(!empty($code)){
-                    throw new \Exception('该学号已经有别人使用！');
-                }
+//                $code = Student::where('code', $data['code'])->where('exam_id', $examId)->where('user_id','<>',$student->user_id)->first();
+//                if(!empty($code)){
+//                    throw new \Exception('该学号已经有别人使用！');
+//                }
                 //查询手机号码是否已经被别人使用
                 $mobile = User::where(['mobile' => $data['mobile']])->where('id','<>',$student->user_id)->first();
                 if(!empty($mobile)){
                     throw new \Exception('手机号已经存在，请输入新的手机号');
                 }
-                foreach($data as $feild => $value) {
+                //查询身份证是否已经被别人使用
+                $f = User::where(['idcard' => $data['idcard']])->where('id','<>',$student->user_id)->first();
+                if(!empty($f)){
+                    throw new \Exception('身份证已经存在，请输入新的身份证');
+                }
+                foreach($data as $field => $value) {
                     if(!empty($value)){
-                        $student->  $feild  =   $value;
+                        $student->$field = $value;
                     }
                 }
 
                 if($student->save()) {
                     $user   =   $student->userInfo;
-                    $user   ->  email  = $request->get('email');
-                    $user   ->  gender = $request->get('gender');
-                    $user   ->  avatar = $data['avator'];
+                    $user->email  = $request->get('email');
+                    $user->gender = $request->get('gender');
+                    $user->avatar = $data['avator'];
+                    $user->mobile = $data['mobile'];
+                    $user->idcard = $data['idcard'];
                     if(!$user->save()) {
                         throw new \Exception('用户信息修改失败');
+                    }
+                    if ($request->get('flag') == 1) {
+                        return redirect()->route('osce.admin.exam.getStudentQuery');
                     }
                     return redirect()->route('osce.admin.exam.getExamineeManage',['id'=>$student->exam_id]);
                 } else {
@@ -1930,6 +1941,17 @@ class ExamController extends CommonController
         return view('osce::admin.examManage.examinee_query_detail', ['item' => $student]);
     }
 
+    public function getEditStudent(Request $request) {
+        $this   ->  validate($request,[
+            'id'            =>  'required',
+        ]);
+
+        $id =   $request    ->  get('id');
+        $student    =   Student::find($id);
+
+        return view('osce::admin.examManage.examinee_manage_edit', ['item' => $student, 'flag' => 1]);
+    }
+
     /**
      * 判断准考证号是否已经存在
      * @url POST /osce/admin/exam/exam-sequence-unique
@@ -1953,27 +1975,25 @@ class ExamController extends CommonController
         $studentId   = $request->input('id');
         //根据条件判断
         if(!empty($mobile)){
-            $userU = User::where('username','=',$mobile)->first();
-            if (is_null($userU)){
-                $userM = User::where('mobile','=',$mobile)->first();
-                if (!is_null($userM)){
-                    return json_encode(['valid' =>false]);
-                }
-            }
-            $where = ['exam_id'=>$examId, 'mobile' => $mobile];
+//            $userU = User::where('username','=',$mobile)->first();
+//            if (is_null($userU)){
+//                $userM = User::where('mobile','=',$mobile)->first();
+//                if (!is_null($userM)){
+//                    return json_encode(['valid' =>false]);
+//                }
+//            }
+            $where = ['mobile' => $mobile];
         }elseif(!empty($idcard)){
-            $where = ['exam_id'=>$examId, 'idcard' => $idcard];
-        }elseif(!empty($code)){
-            $where = ['exam_id'=>$examId, 'code' => $code];
-        }elseif(!empty($examSequence)){
-            $where = ['exam_id'=>$examId, 'exam_sequence' => $examSequence];
+            $where = ['idcard' => $idcard];
         }else{
             return json_encode(['valid' =>false]);
         }
         if(empty($studentId)){
-            $result = Student::where($where)->first();
+            $result = Student::where($where)->where('exam_id', $examId)->first();
         }else{
-            $result = Student::where($where)->where('id', '<>', $studentId)->first();
+            $student = Student::query()->find($studentId);
+            $result = User::query()->where($where)->where('id', '!=', $student->user_id)->first();
+//            $result = Student::where($where)->where('id', '<>', $studentId)->first();
         }
         //是否已存在
         if($result){

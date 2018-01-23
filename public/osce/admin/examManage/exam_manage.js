@@ -4120,20 +4120,6 @@ function examinee_manage_add(){
             },
             code: {
                 validators: {
-                    threshold :  1 , //有6字符以上才发送ajax请求，（input中输入一个字符，插件会向服务器发送一次，设置限制，6字符以上才开始）
-                    remote: {//ajax验证。server result:{"valid",true or false} 向服务发送当前input name值，获得一个json数据。例表示正确：{"valid",true}
-                        url: pars.code,//验证地址
-                        message: '学号已经存在',//提示消息
-                        delay :  2000,//每输入一个字符，就发ajax请求，服务器压力还是太大，设置2秒发送一次ajax（默认输入一个字符，提交一次，服务器压力太大）
-                        type: 'POST',//请求方式
-                        /*自定义提交数据，默认值提交当前input value*/
-                        data: function(validator) {
-                            return {
-                                exam_id: $("#exam_id").val(),
-                                code: $('[name="whateverNameAttributeInYourForm"]').val()
-                            };
-                        }
-                    },
                     notEmpty: {/*非空提示*/
                         message: '学号不能为空'
                     },
@@ -4171,19 +4157,6 @@ function examinee_manage_add(){
             exam_sequence:{
                 validators: {
                     threshold :  1 , //有6字符以上才发送ajax请求，（input中输入一个字符，插件会向服务器发送一次，设置限制，6字符以上才开始）
-                    remote: {//ajax验证。server result:{"valid",true or false} 向服务发送当前input name值，获得一个json数据。例表示正确：{"valid",true}
-                        url: pars.exam_sequence,//验证地址
-                        message: '准考证号已经存在',//提示消息
-                        delay :  2000,//每输入一个字符，就发ajax请求，服务器压力还是太大，设置2秒发送一次ajax（默认输入一个字符，提交一次，服务器压力太大）
-                        type: 'POST',//请求方式
-                        /*自定义提交数据，默认值提交当前input value*/
-                        data: function(validator) {
-                            return {
-                                exam_id:$("#exam_id").val(),
-                                exam_sequence: $('[name="whateverNameAttributeInYourForm"]').val()
-                            };
-                        }
-                    },
                     notEmpty: {/*非空提示*/
                         message: '准考证号不能为空'
                     }
@@ -4331,21 +4304,6 @@ function examinee_manage_edit() {
             },
             code: {
                 validators: {
-                    threshold :  1 , //有6字符以上才发送ajax请求，（input中输入一个字符，插件会向服务器发送一次，设置限制，6字符以上才开始）
-                    remote: {//ajax验证。server result:{"valid",true or false} 向服务发送当前input name值，获得一个json数据。例表示正确：{"valid",true}
-                        url: pars.code,//验证地址
-                        message: '学号已经存在',//提示消息
-                        delay :  2000,//每输入一个字符，就发ajax请求，服务器压力还是太大，设置2秒发送一次ajax（默认输入一个字符，提交一次，服务器压力太大）
-                        type: 'POST',//请求方式
-                        /*自定义提交数据，默认值提交当前input value*/
-                        data: function(validator) {
-                            return {
-                                id: pars.id,
-                                exam_id: pars.exam_id,
-                                code:  $('[name="whateverNameAttributeInYourForm"]').val()
-                            };
-                        }
-                    },
                     notEmpty: {/*非空提示*/
                         message: '学号不能为空'
                     },
@@ -4414,21 +4372,6 @@ function examinee_manage_edit() {
             },
             exam_sequence:{
                 validators: {
-                    threshold :  1 , //有6字符以上才发送ajax请求，（input中输入一个字符，插件会向服务器发送一次，设置限制，6字符以上才开始）
-                    remote: {//ajax验证。server result:{"valid",true or false} 向服务发送当前input name值，获得一个json数据。例表示正确：{"valid",true}
-                        url: pars.exam_sequence,//验证地址
-                        message: '准考证号已经存在',//提示消息
-                        delay :  2000,//每输入一个字符，就发ajax请求，服务器压力还是太大，设置2秒发送一次ajax（默认输入一个字符，提交一次，服务器压力太大）
-                        type: 'POST',//请求方式
-                        /*自定义提交数据，默认值提交当前input value*/
-                        data: function(validator) {
-                            return {
-                                id: pars.id,
-                                exam_id: pars.exam_id,
-                                exam_sequence: $('[name="whateverNameAttributeInYourForm"]').val()
-                            };
-                        }
-                    },
                     notEmpty: {/*非空提示*/
                         message: '准考证号不能为空'
                     }
