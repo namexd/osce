@@ -45,6 +45,9 @@
                     <form method="post" class="form-horizontal" id="sourceForm" action="{{route('osce.admin.exam.postEditExaminee')}}">
                         <input type="hidden" name="exam_id" value="{{$item->exam_id}}"/>
                         <input type="hidden" name="id" value="{{$item->id}}"/>
+                        @if(isset($flag))
+                            <input type='hidden' name='flag' value='{{ $flag }}'/>
+                        @endif
                         <input type="hidden" name="resources_type" id="resources_type" value="TOOLS"/>
 
                         <div class="col-md-3 col-sm-3">

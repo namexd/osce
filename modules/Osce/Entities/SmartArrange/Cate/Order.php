@@ -17,7 +17,7 @@ class Order extends AbstractCate implements CateInterface
 {
     use SQLTraits, SundryTraits;
 
-    function needStudents($entity, $screen, $exam)
+    function needStudents($entity, $screen, $exam, $planSerialRecords = [], $noEndPlanSerialRecords = [])
     {
         // TODO: Implement needStudents() method.
         $result = [];
@@ -37,7 +37,7 @@ class Order extends AbstractCate implements CateInterface
             }
             return $result;
         } else {
-            $testStudent = $this->orderTestStudent($entity, $screen);
+            $testStudent = $this->orderTestStudent($entity, $planSerialRecords, $noEndPlanSerialRecords);
             if (count($testStudent) <= $entity->needNum) {
                 return $testStudent;
             } else {
@@ -52,13 +52,11 @@ class Order extends AbstractCate implements CateInterface
     /**
      * 寻找循序模式需要的考生
      * @param $entity
-     * @param $screen
+     * @param $planSerialRecords
+     * @param $noEndPlanSerialRecords
      * @return array
-     * @throws \Exception
-     * @author ZouYuChao
-     * @time 2016-04-11 11:30
      */
-    protected function orderTestStudent($entity, $screen)
+    protected function orderTestStudent($entity, $planSerialRecords, $noEndPlanSerialRecords)
     {
         /**
          * 需要查当前的实例是不是第一个
@@ -66,7 +64,7 @@ class Order extends AbstractCate implements CateInterface
          * 如果不是，就说明前面有流程了
          */
         if ($entity->serialnumber != 1) {
-            $tempArrays = $this->orderBeginStudent($screen, $entity);
+            $tempArrays = $this->orderBeginStudent($entity, $planSerialRecords, $noEndPlanSerialRecords);
             return $tempArrays;
         } else {
             return [];

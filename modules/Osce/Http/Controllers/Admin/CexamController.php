@@ -24,7 +24,7 @@ class CexamController extends CommonController
 
     public function addExame(Request $request)
     {
-        $dataArray=$request->only('exam_id','tid','start','end','teacher','times','convert');
+        $dataArray=$request->only('exam_id','name','tid','start','end','teacher','times','convert');
         $isExam = TestLog::where('exam_id',$dataArray['exam_id'])->first();
         if($isExam){
             return redirect()->back()->withErrors('本场技能考试已存在一场理论考试！');
@@ -44,6 +44,7 @@ class CexamController extends CommonController
             }
             $addArray = [
                 'exam_id'=>$dataArray['exam_id'],
+                'name'=>$dataArray['name'],
                 'tid' =>$dataArray['tid'],
                 'start' =>$dataArray['start'],
                 'end' =>$dataArray['end'],

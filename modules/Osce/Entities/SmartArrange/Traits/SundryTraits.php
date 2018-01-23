@@ -97,15 +97,29 @@ trait SundryTraits
      * @author ZouYuChao
      * @time 2016-04-11 11:05
      */
-    function orderBeginStudent($screen, $entity)
+//    function orderBeginStudent($screen, $entity)
+//    {
+//        try {
+//            $prevSerial = $this->prevSerial($screen, $entity->serialnumber);
+//
+//            $thisSerial = $this->thisSerial($screen, $entity->serialnumber);
+//            $temp = $this->thisNotSerial($screen, $entity->serialnumber);
+//            //求取差集
+//            return array_diff($prevSerial->toArray(), $thisSerial->toArray(), $temp->toArray());
+//        } catch (\Exception $ex) {
+//            throw $ex;
+//        }
+//    }
+
+    function orderBeginStudent($entity, $planSerialRecords, $noEndPlanSerialRecords)
     {
         try {
-            $prevSerial = $this->prevSerial($screen, $entity->serialnumber);
+            $prevSerial = $this->getSerialStudents($entity->serialnumber - 1, $planSerialRecords);
 
-            $thisSerial = $this->thisSerial($screen, $entity->serialnumber);
-            $temp = $this->thisNotSerial($screen, $entity->serialnumber);
+            $thisSerial = $this->getSerialStudents($entity->serialnumber, $planSerialRecords);
+            $temp = $this->getSerialStudents($entity->serialnumber, $noEndPlanSerialRecords);
             //求取差集
-            return array_diff($prevSerial->toArray(), $thisSerial->toArray(), $temp->toArray());
+            return array_diff($prevSerial, $thisSerial, $temp);
         } catch (\Exception $ex) {
             throw $ex;
         }
@@ -120,20 +134,50 @@ trait SundryTraits
      * @author ZouYuChao
      * @time 2016-04-26 20:24
      */
-    function pollStudents($screen, $entity, $last)
+//    function pollStudents($screen, $entity, $last, $planSerialRecords, $noEndPlanSerialRecords)
+//    {
+//        if ($entity->serialnumber - 1 <= 0) {
+//            $prevSerial = $this->thisSerial($screen, $last);
+//            $thisSerial = $this->thisSerial($screen, $entity->serialnumber);
+//            $thisNotSerial = $this->thisNotSerial($screen, $entity->serialnumber);
+//            $a = array_diff(array_unique($prevSerial->toArray()), array_unique($thisSerial->toArray()), array_unique($thisNotSerial->toArray()));
+//            return $a;
+//        } else {
+//            $prevSerial = $this->prevSerial($screen, $entity->serialnumber);
+//            $thisSerial = $this->thisSerial($screen, $entity->serialnumber);
+//            //求取差集
+//            return array_diff(array_unique($prevSerial->toArray()), array_unique($thisSerial->toArray()));
+//        }
+//    }
+
+    function pollStudents($entity, $last, $planSerialRecords, $noEndPlanSerialRecords)
     {
         if ($entity->serialnumber - 1 <= 0) {
-            $prevSerial = $this->thisSerial($screen, $last);
-            $thisSerial = $this->thisSerial($screen, $entity->serialnumber);
-            $thisNotSerial = $this->thisNotSerial($screen, $entity->serialnumber);
-            $a = array_diff(array_unique($prevSerial->toArray()), array_unique($thisSerial->toArray()), array_unique($thisNotSerial->toArray()));
+            $prevSerial = $this->getSerialStudents($last, $planSerialRecords);
+            $thisSerial = $this->getSerialStudents($entity->serialnumber, $planSerialRecords);
+            $thisNotSerial = $this->getSerialStudents($entity->serialnumber, $noEndPlanSerialRecords);
+
+            $a = array_diff(array_unique($prevSerial), array_unique($thisSerial), array_unique($thisNotSerial));
             return $a;
         } else {
-            $prevSerial = $this->prevSerial($screen, $entity->serialnumber);
-            $thisSerial = $this->thisSerial($screen, $entity->serialnumber);
+            $prevSerial = $this->getSerialStudents($entity->serialnumber - 1, $planSerialRecords);
+            $thisSerial = $this->getSerialStudents($entity->serialnumber, $planSerialRecords);
+
             //求取差集
-            return array_diff(array_unique($prevSerial->toArray()), array_unique($thisSerial->toArray()));
+            return array_diff(array_unique($prevSerial), array_unique($thisSerial));
         }
+    }
+
+    function getSerialStudents($serialNumber, $records)
+    {
+        $serial = [];
+        if (isset($records[$serialNumber])) {
+            // 排序
+            foreach ($records[$serialNumber] as $record) {
+                $serial[] = $record['student_id'];
+            }
+        }
+        return $serial;
     }
 
     /**
