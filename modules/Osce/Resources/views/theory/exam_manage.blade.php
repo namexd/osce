@@ -133,9 +133,9 @@
 	                    </div>
 	                </div>
 	                <div class="form-group exam_name hide">
-	                    <label for="exam_name" class="col-sm-2 control-label">考试名称：<i></i></label>
+	                    <label for="name" class="col-sm-2 control-label">考试名称：<i></i></label>
 	                    <div class="col-sm-5">
-							<input type="text" name="exam_name" id="exam_name"  placeholder="请填写考试名称" class="form-control" />
+							<input type="text" name="name" id="name"  placeholder="请填写考试名称" class="form-control" />
 	                    </div>
 	                </div>
 	                <div class="hr-line-dashed"></div>
