@@ -76,6 +76,10 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::get('addStudent', ['uses'=>'CexamController@addStudent',  'as' => 'osce.theory.addStudent']);
 		//新增单个考生提交
 		Route::post('postAddStudent', ['uses'=>'CexamController@postAddStudent',  'as' => 'osce.theory.postAddStudent']);
+		//新增单个考生视图
+		Route::get('getEidtStudent', ['uses'=>'CexamController@getEidtStudent',  'as' => 'osce.theory.getEidtStudent']);
+		//新增单个考生提交
+		Route::post('postEditStudent', ['uses'=>'CexamController@postEditStudent',  'as' => 'osce.theory.postEditStudent']);
 
 	});
 	//---新加理论考试系统end

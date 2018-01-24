@@ -482,10 +482,98 @@ class CexamController extends CommonController
             return redirect()->back()->withErrors($ex->getMessage());
         }
     }
+    public function getEidtStudent(Request $request){
+        $this   ->  validate($request,[
+            'id'  =>  'required',
+        ]);
 
+        $id =   $request    ->  get('id');
+        $student    =   Student::findOrFail($id);
+
+        return view('osce::admin.examManage.examinee_manage_edit', ['item' => $student]);
+    }
+    public function postEditStudent(Request $request){
+        $this   ->  validate($request,[
+            'id'            =>  'required',
+            'name'          =>  'required',
+            'idcard'        =>  'required',
+            'code'          =>  'sometimes',
+            'gender'        =>  'required',
+            'mobile'        =>  'required',
+            'description'   =>  'sometimes',
+            'images_path'   =>  'required',
+            'exam_sequence' =>  'required',
+            'grade_class'   =>  'required',
+            'teacher_name'  =>  'required'
+        ],[
+            'name.required'         =>  '姓名必填',
+            'idcard.required'       =>  '身份证号必填',
+            'mobile.required'       =>  '手机号必填',
+            'images_path.required'  =>  '请上传照片',
+            'exam_sequence.required'=>  '准考证号必填',
+            'grade_class.required'  =>  '班级必填',
+            'teacher_name.required' =>  '班主任姓名必填'
+        ]);
+        $id         =   $request->get('id');
+        $student    =   Student::find($id);
+        $images     =   $request->get('images_path');   //照片
+        //考生数据(姓名,性别,身份证号,手机号,学号,邮箱,备注,准考证号,班级,班主任姓名)
+        $data = $request->only('name','idcard','mobile','code','description','exam_sequence','grade_class','teacher_name');
+        $data['avator'] = $images[0];  //照片
+        $examId = $request->get('exam_id');
+
+        try{
+            if($student) {
+                //查询学号是否存在
+//                $code = Student::where('code', $data['code'])->where('exam_id', $examId)->where('user_id','<>',$student->user_id)->first();
+//                if(!empty($code)){
+//                    throw new \Exception('该学号已经有别人使用！');
+//                }
+                //查询手机号码是否已经被别人使用
+                $mobile = User::where(['mobile' => $data['mobile']])->where('id','<>',$student->user_id)->first();
+                if(!empty($mobile)){
+                    throw new \Exception('手机号已经存在，请输入新的手机号');
+                }
+                //查询身份证是否已经被别人使用
+                $f = User::where(['idcard' => $data['idcard']])->where('id','<>',$student->user_id)->first();
+                if(!empty($f)){
+                    throw new \Exception('身份证已经存在，请输入新的身份证');
+                }
+                foreach($data as $field => $value) {
+                    if(!empty($value)){
+                        $student->$field = $value;
+                    }
+                }
+
+                if($student->save()) {
+                    $user   =   $student->userInfo;
+                    $user->email  = $request->get('email');
+                    $user->gender = $request->get('gender');
+                    $user->avatar = $data['avator'];
+                    $user->mobile = $data['mobile'];
+                    $user->idcard = $data['idcard'];
+                    if(!$user->save()) {
+                        throw new \Exception('用户信息修改失败');
+                    }
+                    /*if ($request->get('flag') == 1) {
+                        return redirect()->route('osce.admin.exam.getStudentQuery');
+                    }*/
+                    return redirect()->route('osce.theory.studentList',['test_id'=>$student->test_id]);
+                } else {
+                    throw new \Exception('考生信息修改失败');
+                }
+
+            } else {
+                throw new \Exception('没有找到该考生');
+            }
+
+        } catch(\Exception $ex) {
+            return redirect()->back()->withErrors($ex->getMessage());
+        }
+    }
     //导入考生
     public function importStudents(Request $request){
-        
+
         try {
             //
             $testId = $request->get('test_id');
