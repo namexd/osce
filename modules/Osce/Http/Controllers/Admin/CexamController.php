@@ -484,8 +484,8 @@ class CexamController extends CommonController
     }
 
     //导入考生
-    public function importStudents(Request $request,$testId){
-        
+    public function importStudents(Request $request){
+
         try {
             //
             $testId = $request->get('test_id');
@@ -514,6 +514,7 @@ class CexamController extends CommonController
                 $studentData['idcard'] = strtoupper(str_replace(' ', '', $studentData['idcard']));
                 //查询用户是否已经参加考试
                 $user = User::where('username', $studentData['mobile'])->select('id')->first();
+                //dd($user->id);
                 if ($user) {
                     $student = Student::where('user_id', $user->id)->where('test_id', $testId)->first();
                 } else {
@@ -553,7 +554,7 @@ class CexamController extends CommonController
                 ];
 
                 $studentArray['test_id'] = $testId;
-                $studentArray['user_id'] = 1;//$userData->id;
+                $studentArray['user_id'] = $userData->id;
                 $studentArray['create_user_id'] = \Auth::id();
 
                 //拼装一个二维数组
