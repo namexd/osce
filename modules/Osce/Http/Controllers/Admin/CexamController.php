@@ -386,6 +386,107 @@ class CexamController extends CommonController
         }
 
     }
+    //新增考生
+    public function addStudent(Request $request){
+
+        try {
+            $testId = $request->get('test_id');
+            return view('osce::theory.addstudent',['test_id'=>$testId]);
+        } catch (\Exception $ex) {
+            dd($ex);
+            return response()->json($this->fail($ex));
+        }
+
+    }
+    //考生新增提交
+    public function postAddStudent(Request $request){
+
+        $this   ->  validate($request,[
+            'test_id'       =>  'required',
+            'name'          =>  'required',
+            'idcard'        =>  'required',
+            'mobile'        =>  'required',
+            'code'          =>  'required',
+            //'images_path'   =>  'required',
+            'exam_sequence' =>  'required',
+            'grade_class'   =>  'required',
+            'teacher_name'  =>  'required'
+        ],[
+            'name.required'         =>  '姓名必填',
+            'idcard.required'       =>  '身份证号必填',
+            'mobile.required'       =>  '手机号必填',
+            'code.required'         =>  '学号必填',
+            //'images_path.required'  =>  '请上传照片',
+            'exam_sequence.required'=>  '准考证号必填',
+            'grade_class.required'  =>  '班级必填',
+            'teacher_name.required' =>  '班主任姓名必填'
+        ]);
+
+        //考生角色ID
+        $role_id = config('osce.studentRoleId', 2);
+        //考试id
+        $exam_id = $request->get('exam_id');
+        $images  = $request->get('images_path')?$request->get('images_path'):'/images/head.png';  //照片
+        //用户数据(姓名,性别,身份证号,手机号,学号,邮箱,照片)
+        $userData = $request->only('name','gender','idcard','mobile','code','email');
+        $userData['avatar'] = $images[0];      //照片
+        //考生数据(姓名,性别,身份证号,手机号,学号,邮箱,备注,准考证号,班级,班主任姓名)
+        $examineeData = $request->only('name','idcard','mobile','code','description','exam_sequence','grade_class','teacher_name');
+        $examineeData['avator'] = $images[0];  //照片
+
+        try{
+            //$connection->beginTransaction();
+
+            $testId = $request->get('test_id');
+            DB::transaction(function () use($userData,$examineeData,$testId){
+
+                $operator = Auth::user();
+                if (empty($operator)) {
+                    throw new \Exception('未找到当前操作人信息');
+                }
+
+                //身份证号验证
+                Common::checkIdCard($testId, $userData,false);
+
+                //处理考生用户信息（基本信息、角色分配）
+                //考生角色ID
+                $role_id = config('osce.studentRoleId', 2);
+                $user = Common::handleUser($userData, $role_id);
+                //$user = $this->handleUser($userData);
+
+                //查询学号是否存在
+                $code = $this->where('code', $examineeData['code'])->where('user_id', '<>', $user->id)->first();
+
+                if (!empty($code)) {
+                    throw new \Exception((empty($key) ? '' : ('第' . $key . '行')) . '该学号已经有别人使用！');
+                }
+                //根据用户ID和考试号查找考生
+                $student = $this->where('user_id', $user->id)->where('test_id', $testId)->first();
+
+                //存在考生信息,则提示已添加, 否则新增
+                if ($student) {
+                    throw new \Exception((empty($key) ? '' : ('第' . $key . '行')) . '该考生已经存在，不能再次添加！');
+
+                } else {
+
+                    $examineeData['test_id'] = $testId;
+                    $examineeData['user_id'] = $user->id;
+                    $examineeData['create_user_id'] = $operator->id;
+                    //新增考试对应的考生
+                    $student = $this->create($examineeData);
+                    if (!$student) {
+                        throw new \Exception('新增考生失败！');
+                    }
+                }
+            });
+            //$connection->commit();
+            return redirect()->route('osce.admin.exam.getExamineeManage', ['id' => $exam_id]);
+        }catch(\Exception $ex)
+        {
+            return redirect()->back()->withErrors($ex->getMessage());
+        }
+    }
+
     //导入考生
     public function importStudents(Request $request){
         try {
