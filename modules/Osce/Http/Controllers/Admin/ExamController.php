@@ -652,6 +652,7 @@ class ExamController extends CommonController
                     $user   =   $student->userInfo;
                     $user->email  = $request->get('email');
                     $user->gender = $request->get('gender');
+                    $user->name = $request->get('name');
                     $user->avatar = $data['avator'];
                     $user->mobile = $data['mobile'];
                     $user->idcard = $data['idcard'];
