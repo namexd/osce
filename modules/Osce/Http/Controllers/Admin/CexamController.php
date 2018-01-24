@@ -8,13 +8,18 @@
 
 namespace Modules\Osce\Http\Controllers\Admin;
 
+use App\Entities\User;
 use DB;
 use Illuminate\Http\Request;
+use Modules\Osce\Entities\Student;
 use Modules\Osce\Entities\TestLog;
 use Modules\Osce\Entities\TestStatistics;
 use Modules\Osce\Http\Controllers\CommonController;
 use Modules\Osce\Repositories\Common;
 use Modules\Osce\Entities\Cexam;
+use App\Repositories\Common as importUser;
+use Modules\Osce\Entities\AddAllExaminee\AddAllExaminee;
+
 class CexamController extends CommonController
 {
 
@@ -295,10 +300,6 @@ class CexamController extends CommonController
     }
 
 
-
-
-
-
     /**查询学生成绩
      * @method GET
      * @url   fatherdepart
@@ -372,9 +373,135 @@ class CexamController extends CommonController
 
         return $info;
     }
+    //考生管理
+    public function studentList(Request $request){
 
+        try {
+            $testId = $request->get('test_id');
+            $list = Student::where('test_id',$testId)->paginate(10);
+            return view('osce::theory.studentList',['data'=>$list]);
+        } catch (\Exception $ex) {
+            dd($ex);
+            return response()->json($this->fail($ex));
+        }
 
-// 成绩列表
+    }
+    //导入考生
+    public function importStudents(Request $request){
+        try {
+            $sucNum = 0;$exiNum=0;
+            $studentArrays=[];
+            $testId = $request->get('test_id');
+            $data   =  importUser::getExclData($request, 'student');
+
+            //dd($studentList);
+//            //判断模板 列数、表头是否有误
+//            //将中文表头转为英文
+//            $examineeData = Common::arrayChTOEn($studentList);
+
+            $data = array_shift($data);
+            $checkUser = new AddAllExaminee;
+            $data = $checkUser->judgeTemplate($data);
+            $data = $checkUser->fieldsChTOEn($data);
+            //dd($data);
+            foreach ($data as $key => $studentData){
+                //1、数据验证
+                //姓名不能为空，为空的跳过
+                if (empty(trim($studentData['name']))) {
+                    if (!empty($studentData['idcard']) && !empty($studentData['mobile'])) {
+                        throw new \Exception('第' .($key+2). '行的姓名不能为空！');
+                    }
+                    continue;
+                }
+                //性别处理
+                $studentData['gender'] = $studentData['gender']=='男'?1:2;
+                //证件类型处理（将中文转换为对应的数字）
+                $studentData['idcard_type'] = $checkUser->handleIdcardType($studentData['idcard_type'], $key+2);
+                //去掉证件号码中的空格 //小x强转大X
+                $studentData['idcard'] = strtoupper(str_replace(' ', '', $studentData['idcard']));
+                //查询用户是否已经参加考试
+                $user = User::where('username', $studentData['mobile'])->select('id')->first();
+                if ($user) {
+                    $student = Student::where('user_id', $user->id)->where('test_id', $testId)->first();
+                } else {
+                    $student = null;
+                }
+                //考生存在就跳过
+                if (!is_null($student)) {
+                    $exiNum++;
+                    continue;
+                }
+                //用户数据
+                $userData = [
+                    'name'          => $studentData['name'],
+                    'gender'        => $studentData['gender'],
+                    'idcard_type'   => intval($studentData['idcard_type']),
+                    'idcard'        => trim($studentData['idcard']),
+                    'mobile'        => trim($studentData['mobile']),
+                    'code'          => trim($studentData['code']),
+                    'avatar'        => $studentData['avator'],
+                    'email'         => $studentData['email']
+                ];
+                //处理用户数据 TODO：fandian 2016-06-03 18:06
+                $role_id  = config('osce.studentRoleId');
+                $userData = Common::handleUser($userData, $role_id);
+
+                //考生数据
+                $studentArray = [
+                    'name'          => $studentData['name'],
+                    'idcard'        => trim($studentData['idcard']),
+                    'mobile'        => trim($studentData['mobile']),
+                    'code'          => trim($studentData['code']),
+                    'avator'        => $studentData['avator'],
+                    'description'   => $studentData['description'],
+                    'exam_sequence' => $studentData['exam_sequence'],
+                    'grade_class'   => $studentData['grade_class'],
+                    'teacher_name'  => $studentData['teacher_name']
+                ];
+
+                $studentArray['test_id'] = $testId;
+                $studentArray['user_id'] = 1;//$userData->id;
+                $studentArray['create_user_id'] = \Auth::id();
+
+                //拼装一个二维数组
+                $studentArrays[] = $studentArray;
+
+                //成功的考生数加1
+                $sucNum++;
+            }//循环结束
+            //更新考试的人数
+            $total = Student::where('test_id',$testId)->count();
+            //$exam->total = $sucNum + $exam->total;
+            $total = $sucNum + $total;
+
+            //将拼装好的$studentArrays一次性插入student表
+            if (count($studentArrays) != 0) {
+                if (!Student::insert($studentArrays)) {
+                    throw new \Exception('保存学生时出错！');
+                }
+            }
+
+            //返回信息
+            $message = "成功导入{$sucNum}个学生";
+            if ($exiNum) {
+                $message .= "，有{$exiNum}个学生已存在";
+            }
+            if ($exiNum) {
+                //throw new \Exception(trim($message, '，'));
+                return $this->success_data([],0,trim($message, '，'));
+            }
+            unset($userData);
+//            $connection->commit();
+            return $this->success_data([],1,$message);//返回导入成功的个数
+
+        } catch (\Exception $ex) {
+            if ($ex->getCode() == 23000) {
+                //throw new \Exception((empty($key) ? '' : ('第' . $key . '行')) . '该手机号码已经使用，请输入新的手机号');
+                return $this->success_data([],0,(empty($key) ? '' : ('第' . $key . '行')) . '该手机号码已经使用，请输入新的手机号');
+            }
+            throw $ex;
+        }
+    }
 
 
 

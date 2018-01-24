@@ -185,13 +185,14 @@ class Common{
                 }, 'UTF-8')->get();
             }
             $ExclData = [];
-            $sheet = [];
+            $sheet=[];
             foreach ($data as $row => $items) {
                 //判断是否为中文表头
                 if ($cnHeader) {
                     $itemsInfo = $items->first();
                     //var_dump($itemsInfo);
                     if(is_object($itemsInfo)){
+                        $sheet=[];
                         //多个表单
                         if (count($itemsInfo) <= 0) {
                             throw new \Exception('没有找到首行');
@@ -232,7 +233,7 @@ class Common{
                                 }
                                 continue;
                             }
-                            if((!empty($items[1]) ||!empty($items[2])) && $itemsK<5)
+                            if(!empty($items[1]) || !empty($items[2]))
                                 $rowData[$data[0][$itemsK]] =$itemsVal;
                         }
                         if(!empty($rowData)) {

@@ -21,8 +21,7 @@ Route::get('yell', ['uses'=>'Modules\Osce\Http\Controllers\Admin\ExamController@
 
 Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'], function () {
 	//---新加理论考试系统start
-	//考试管理
-
+	//试卷管理
 	Route::group(['prefix' => "theory",'namespace' => 'Admin'], function()
 	{
 		Route::get('add', ['uses'=>'TestController@add', 'as' => 'osce.theory.add']);//添加考试
@@ -69,6 +68,9 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::post('addstudentresult', ['uses'=>'CexamController@addExameResult','as'=>'osce.cexam.addstudentresult'])->middleware('theoryauth');
 		Route::post('modifyresult', ['uses'=>'CexamController@modifyExamResult','as'=>'osce.cexam.modifyresult']);//老师批卷提交
 
+		//新增导入考生
+		Route::get('studentList', ['uses'=>'CexamController@studentList',  'as' => 'osce.theory.studentList']);
+		Route::post('importStudents', ['uses'=>'CexamController@importStudents',  'as' => 'osce.theory.importStudents']);
 
 	});
 	//---新加理论考试系统end
