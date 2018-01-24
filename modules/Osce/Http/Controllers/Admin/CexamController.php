@@ -484,7 +484,7 @@ class CexamController extends CommonController
     }
 
     //导入考生
-    public function importStudents(Request $request,$testId){
+    public function importStudents(Request $request){
         
         try {
             //
