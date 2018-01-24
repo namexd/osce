@@ -67,8 +67,14 @@ class TestController extends CommonController
             'id.required'   => '试卷ID必传'
         ]);
         $id =$request->get('id');
-        $data =Test::find($id);
-        return view('osce::theory.exam_edit')->with('data',$data);
+
+        $testlog = TestLog::where('tid',$id)->get();
+        if(empty($testlog)){
+            $data =Test::find($id);
+            return view('osce::theory.exam_edit')->with('data',$data);
+        }else{
+            return redirect()->back()->withErrors('修改失败，已存在考试引入此试题');
+        }
     }
     //试卷预览
     public function autoexampreview(Request $request){
