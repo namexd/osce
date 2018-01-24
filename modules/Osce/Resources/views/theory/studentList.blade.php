@@ -34,7 +34,11 @@
 					fn:function (res) {
 						res = JSON.parse(res);
 						console.log(res);
-						uselayer2(1,res.message,toReload);
+						uselayer2(1,res.message,function(){
+							if (res.code==1) {
+								toReload();
+							}
+						});
 					},
 					error:function () {
 						uselayer2(1,'导入失败！请重试',toReload);
@@ -66,7 +70,7 @@
 	        		<input type="file" name="file" onchange="upload()" class="import" accept="application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" />
 	        		<a  href="javascript:;" class="btn btn-primary mar0">&nbsp;导入考生&nbsp;</a>
 	        	</div>
-	        	<a  href="{{route('osce.theory.autoquestion')}}" class="btn btn-primary" style=" margin-right: 20px; float: right;">&nbsp;新增考生&nbsp;</a>
+	        	<a  href="{{route('osce.theory.addStudent',['test_id'=>request()->get('test_id')])}}" class="btn btn-primary" style=" margin-right: 20px; float: right;">&nbsp;新增考生&nbsp;</a>
 	        </div>
 	    </div>
    		<div class="container-fluid ibox-content" id="list_form">
