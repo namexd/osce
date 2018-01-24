@@ -488,11 +488,10 @@ class CexamController extends CommonController
     }
 
     //导入考生
-    public function importStudents(Request $request){
+    public function importStudents(Request $request,$testId){
         try {
             $sucNum = 0;$exiNum=0;
             $studentArrays=[];
-            $testId = $request->get('test_id');
             $data   =  importUser::getExclData($request, 'student');
 
             //dd($studentList);

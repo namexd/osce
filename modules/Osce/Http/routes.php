@@ -71,7 +71,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		//考生列表
 		Route::get('studentList', ['uses'=>'CexamController@studentList',  'as' => 'osce.theory.studentList']);
 		//新增导入考生
-		Route::post('importStudents', ['uses'=>'CexamController@importStudents',  'as' => 'osce.theory.importStudents']);
+		Route::post('importStudents/{testId?}', ['uses'=>'CexamController@importStudents',  'as' => 'osce.theory.importStudents']);
 		//新增单个考生视图
 		Route::get('addStudent', ['uses'=>'CexamController@addStudent',  'as' => 'osce.theory.addStudent']);
 		//新增单个考生提交
