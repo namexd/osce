@@ -661,7 +661,7 @@ class ExamController extends CommonController
                     if ($request->get('flag') == 1) {
                         return redirect()->route('osce.admin.exam.getStudentQuery');
                     }
-                    if(empty($student->exam_id)){
+                    if($student->exam_id){
                         return redirect()->route('osce.admin.exam.getExamineeManage',['id'=>$student->exam_id]);
                     }else{
                         return redirect()->route('osce.theory.studentList',['test_id'=>$student->test_id]);
