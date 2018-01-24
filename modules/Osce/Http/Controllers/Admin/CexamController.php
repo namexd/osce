@@ -422,10 +422,6 @@ class CexamController extends CommonController
             'teacher_name.required' =>  '班主任姓名必填'
         ]);
 
-        //考生角色ID
-        $role_id = config('osce.studentRoleId', 2);
-        //考试id
-        $exam_id = $request->get('exam_id');
         $images  = $request->get('images_path')?$request->get('images_path'):'/images/head.png';  //照片
         //用户数据(姓名,性别,身份证号,手机号,学号,邮箱,照片)
         $userData = $request->only('name','gender','idcard','mobile','code','email');
@@ -436,7 +432,7 @@ class CexamController extends CommonController
 
         try{
             //$connection->beginTransaction();
-
+            //考试id
             $testId = $request->get('test_id');
             DB::transaction(function () use($userData,$examineeData,$testId){
 
@@ -473,14 +469,14 @@ class CexamController extends CommonController
                     $examineeData['user_id'] = $user->id;
                     $examineeData['create_user_id'] = $operator->id;
                     //新增考试对应的考生
-                    $student = $this->create($examineeData);
+                    $student = Student::create($examineeData);
                     if (!$student) {
                         throw new \Exception('新增考生失败！');
                     }
                 }
             });
             //$connection->commit();
-            return redirect()->route('osce.admin.exam.getExamineeManage', ['id' => $exam_id]);
+            return redirect()->route('osce.theory.studentList', ['test_id' => $testId]);
         }catch(\Exception $ex)
         {
             return redirect()->back()->withErrors($ex->getMessage());
@@ -489,16 +485,13 @@ class CexamController extends CommonController
 
     //导入考生
     public function importStudents(Request $request,$testId){
+        
         try {
+            //
+            $testId = $request->get('test_id');
             $sucNum = 0;$exiNum=0;
             $studentArrays=[];
             $data   =  importUser::getExclData($request, 'student');
-
-            //dd($studentList);
-//            //判断模板 列数、表头是否有误
-//            //将中文表头转为英文
-//            $examineeData = Common::arrayChTOEn($studentList);
-
             $data = array_shift($data);
             $checkUser = new AddAllExaminee;
             $data = $checkUser->judgeTemplate($data);
