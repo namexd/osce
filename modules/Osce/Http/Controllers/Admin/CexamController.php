@@ -482,7 +482,7 @@ class CexamController extends CommonController
             return redirect()->back()->withErrors($ex->getMessage());
         }
     }
-    public function getEidtStudent(Request $request){
+    /*public function getEidtStudent(Request $request){
         $this   ->  validate($request,[
             'id'  =>  'required',
         ]);
@@ -557,7 +557,7 @@ class CexamController extends CommonController
                     }
                     /*if ($request->get('flag') == 1) {
                         return redirect()->route('osce.admin.exam.getStudentQuery');
-                    }*/
+                    }/
                     return redirect()->route('osce.theory.studentList',['test_id'=>$student->test_id]);
                 } else {
                     throw new \Exception('考生信息修改失败');
@@ -570,7 +570,7 @@ class CexamController extends CommonController
         } catch(\Exception $ex) {
             return redirect()->back()->withErrors($ex->getMessage());
         }
-    }
+    }*/
     //导入考生
     public function importStudents(Request $request){
 
