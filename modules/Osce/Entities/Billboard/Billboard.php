@@ -87,47 +87,25 @@ class Billboard
      */
     public function getNextRoom($examId, $studentId)
     {
-
-/*        //拿到当前房间的时间
-        $currentRoom = ExamQueue::where('exam_queue.student_id', '=', $studentId)
-            ->where('exam_queue.exam_id', '=', $examId)
-            ->where('exam_queue.room_id', $room_id)
-            ->where('exam_queue.status', '=', 2)
-            ->first();
-        if(is_null($currentRoom)){
-            throw new \Exception('获取当前考场信息失败',-1001);
-        }
-        $roomTime = $currentRoom->begin_dt;
-        \Log::debug('电子门牌当前考场时间',[$roomTime]);
-        //时间要大于当前考场的
-        $NextQueue = ExamQueue::leftjoin('room', 'room.id', '=', 'exam_queue.room_id')
-            ->leftjoin('student', 'student.id', '=', 'exam_queue.student_id')
-            ->where('exam_queue.student_id', '=', $studentId)
-            ->where('exam_queue.exam_id', '=', $examId)
-            ->whereNotIn('exam_queue.room_id', [$room_id])
-            ->where('exam_queue.status', '=', 0)
-            ->whereRaw("UNIX_TIMESTAMP(begin_dt) > UNIX_TIMESTAMP('$roomTime')")
-            ->select([
-                'room.id as room_id',
-                'room.name as room_name',
-                'student.id as student_id',
-                'student.name as student_name',
-            ])  
-            ->orderBy('exam_queue.begin_dt', 'asc')
-            ->first();*/
         //通过得到的exam_id查exam_screeing
         $examscreening = ExamScreening::where('exam_id',$examId)->where('status',1)->first();
         $exam_screening_id = $examscreening->id;
 
-        $NextQueue = ExamPlan::leftjoin('student', 'exam_plan.student_id', '=', 'student.id')
+        $data = ExamPlan::leftjoin('student', 'exam_plan.student_id', '=', 'student.id')
             ->leftjoin('room','exam_plan.room_id','=','room.id')
             ->select('exam_plan.id as planid','room.id as room_id','room.name as room_name','exam_plan.student_id as student_id','student.name as student_name')
             ->where('exam_plan.exam_id',$examId)
             ->where('exam_plan.exam_screening_id',$exam_screening_id)
             ->where('exam_plan.student_id',$studentId)
-            ->where('exam_plan.status',0)
+            ->where('exam_plan.status','<',2)
             ->orderBy('exam_plan.begin_dt','asc')
-            ->first();
+            ->get();
+        $examarr = $data->toarray();
+        if(array_key_exists(1, $examarr)){
+            $NextQueue = $data[1];
+        }else{
+            $NextQueue = '';
+        }
 
         return $NextQueue;
     }

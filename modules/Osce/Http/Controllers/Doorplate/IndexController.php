@@ -101,18 +101,19 @@ class IndexController extends CommonController
             $current   = $this->getExaminee($request);
             // 获取到下一组
             $nextGroup = $this->getNextExaminee($request);
-
             if(empty($current) || count($current)==0){
                 $RoomName = '';
             }else{
-                $studentId = $current->first()->student_id;
+                $studentId = $current->stuid;
                 //获取下一个考场
-                $nextRoom =  $billboardRepository->getRoomData($exam_id, $studentId, $room_id);
+                $nextRoom =  $billboardRepository->getRoomData($exam_id, $studentId);
+
                 if(is_null($nextRoom)){
                     $RoomName = '';
                 }else{
                     $RoomName = $nextRoom->room_name;
                 }
+
             }
 
             return view('osce::doorplate.doorplate_msg ', [
@@ -318,7 +319,7 @@ class IndexController extends CommonController
                 ->get();
              $dataarr = $data->toarray();
 
-            if($dataarr){
+            if(array_key_exists(1, $dataarr)){
                 $nextQueue = $data[1];
             }else{
                 $nextQueue = '';
