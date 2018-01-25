@@ -10,6 +10,7 @@ namespace Modules\Osce\Http\Controllers\Admin;
 
 use App\Entities\User;
 use DB;
+use Auth;
 use Illuminate\Http\Request;
 use Modules\Osce\Entities\Student;
 use Modules\Osce\Entities\TestLog;
@@ -85,7 +86,7 @@ class CexamController extends CommonController
                         ->where('end', '<', $end);
                 })->where('id','<>',$id)
                 ->first();
-            if(empty($isHas)){
+            if(!$isHas){
                 TestLog::where('id',$id)->update(['start'=>$start,'end'=>$end]);
                 return $this->success_data([],1,'修改成功');
                 //return redirect()->route('osce.theory.index')->withErrors('1修改成功');
@@ -379,8 +380,19 @@ class CexamController extends CommonController
 
         try {
             $testId = $request->get('test_id');
-            $list = Student::where('test_id',$testId)->paginate(10);
-            return view('osce::theory.studentList',['data'=>$list]);
+            $test = TestLog::find($testId);
+            $students = Student::where('test_id',$testId);
+            if($request->has('keywords')){
+                $keywords = '%'.$request->get('keywords').'%';
+                $students->where(function ($query) use($keywords) {
+                    $query->orWhere('name', 'like',$keywords)
+                        ->orWhere('mobile','like', $keywords)
+                        ->orWhere('idcard','like', $keywords)
+                        ->orWhere('code', 'like',$keywords);
+                });
+            }
+            $list = $students->paginate(10);
+            return view('osce::theory.studentList',['data'=>$list,'test'=>$test]);
         } catch (\Exception $ex) {
             dd($ex);
             return response()->json($this->fail($ex));
@@ -452,13 +464,13 @@ class CexamController extends CommonController
                 //$user = $this->handleUser($userData);
 
                 //查询学号是否存在
-                $code = $this->where('code', $examineeData['code'])->where('user_id', '<>', $user->id)->first();
+                $code = Student::where('code', $examineeData['code'])->where('user_id', '<>', $user->id)->first();
 
                 if (!empty($code)) {
                     throw new \Exception((empty($key) ? '' : ('第' . $key . '行')) . '该学号已经有别人使用！');
                 }
                 //根据用户ID和考试号查找考生
-                $student = $this->where('user_id', $user->id)->where('test_id', $testId)->first();
+                $student = Student::where('user_id', $user->id)->where('test_id', $testId)->first();
 
                 //存在考生信息,则提示已添加, 否则新增
                 if ($student) {
@@ -480,6 +492,7 @@ class CexamController extends CommonController
             return redirect()->route('osce.theory.studentList', ['test_id' => $testId]);
         }catch(\Exception $ex)
         {
+            dd($ex);
             return redirect()->back()->withErrors($ex->getMessage());
         }
     }
