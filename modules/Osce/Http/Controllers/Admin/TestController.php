@@ -366,8 +366,9 @@ class TestController extends CommonController
             'id.required' => 'ID必传'
         ]);
         $id = $request->get('id');
+        $test = TestLog::find($id);
         $data = TestStatistics::where('logid',$id)->paginate(10);
-        return view('osce::theory.student_score',['data'=>$data]);
+        return view('osce::theory.student_score',['data'=>$data,'test'=>$test]);
     }
     public function studentscoreexport(Request $request){
         $this->validate($request, [
@@ -407,8 +408,9 @@ class TestController extends CommonController
             'id.required' => 'ID必传'
         ]);
         $id = $request->get('id');
+        $test = TestLog::find($id);
         $data = TestStatistics::where('logid',$id)->paginate(10);
-        return view('osce::theory.student_marking',['data'=>$data]);
+        return view('osce::theory.student_marking',['data'=>$data,'test'=>$test]);
     }
 
 

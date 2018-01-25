@@ -60,7 +60,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::post('addexam', ['uses'=>'CexamController@addExame','as'=>'osce.cexam.postAddExam'] );
 		Route::post('editexam', ['uses'=>'CexamController@editExam','as'=>'osce.cexam.postEditExam'] );
 
-		Route::get('examinfo', ['uses'=>'CexamController@searchExameInfo','as'=>'osce.cexam.examinfo'])->middleware('theoryauth');
+		Route::get('examinfo', ['uses'=>'CexamController@searchExameInfo','as'=>'osce.cexam.examinfo'])->middleware('theoryauth');//在线考生
 
 		Route::get('searchexamdetail', ['uses'=>'CexamController@searchExamResult','as'=>'osce.cexam.searchexamdetail']);//查学学生成绩详细信息
 		Route::get('modifystudentexam', ['uses'=>'CexamController@MarkingExamResult','as'=>'osce.cexam.modifystudentexam']);//老师批卷

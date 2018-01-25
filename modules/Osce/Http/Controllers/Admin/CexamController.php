@@ -247,8 +247,9 @@ class CexamController extends CommonController
 
         $result= $exam->searchExamDetail($dataArray['logid'],$dataArray['userid']);
 
+        $test = TestLog::find($dataArray['logid']);
 
-        return view('osce::theory.searchexamdetail',['data'=>$result]);
+        return view('osce::theory.searchexamdetail',['data'=>$result,'test'=>$test]);
 
 
     }
@@ -260,9 +261,9 @@ class CexamController extends CommonController
         $exam = new Cexam();
 
         $result= $exam->searchExamDetail($dataArray['logid'],$dataArray['userid']);
+        $test = TestLog::find($dataArray['logid']);
 
-
-        return view('osce::theory.modifystudentexam',['data'=>$result]);
+        return view('osce::theory.modifystudentexam',['data'=>$result,'test'=>$test]);
 
 
     }
