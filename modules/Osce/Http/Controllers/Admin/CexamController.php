@@ -380,8 +380,9 @@ class CexamController extends CommonController
 
         try {
             $testId = $request->get('test_id');
+            $test = TestLog::find($testId);
             $list = Student::where('test_id',$testId)->paginate(10);
-            return view('osce::theory.studentList',['data'=>$list]);
+            return view('osce::theory.studentList',['data'=>$list,'test'=>$test]);
         } catch (\Exception $ex) {
             dd($ex);
             return response()->json($this->fail($ex));
