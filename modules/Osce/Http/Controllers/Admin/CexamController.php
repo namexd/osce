@@ -453,13 +453,13 @@ class CexamController extends CommonController
                 //$user = $this->handleUser($userData);
 
                 //查询学号是否存在
-                $code = $this->where('code', $examineeData['code'])->where('user_id', '<>', $user->id)->first();
+                $code = Student::where('code', $examineeData['code'])->where('user_id', '<>', $user->id)->first();
 
                 if (!empty($code)) {
                     throw new \Exception((empty($key) ? '' : ('第' . $key . '行')) . '该学号已经有别人使用！');
                 }
                 //根据用户ID和考试号查找考生
-                $student = $this->where('user_id', $user->id)->where('test_id', $testId)->first();
+                $student = Student::where('user_id', $user->id)->where('test_id', $testId)->first();
 
                 //存在考生信息,则提示已添加, 否则新增
                 if ($student) {
@@ -481,6 +481,7 @@ class CexamController extends CommonController
             return redirect()->route('osce.theory.studentList', ['test_id' => $testId]);
         }catch(\Exception $ex)
         {
+            dd($ex);
             return redirect()->back()->withErrors($ex->getMessage());
         }
     }
