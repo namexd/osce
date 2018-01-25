@@ -180,12 +180,9 @@ if(!empty($errorsInfo)){
                     url: "{{route('osce.doorplate.getexaminee')}}",
                     data: {'room_id':{{$room_id}},'exam_id':{{$exam_id}},'data':{{count($data)}},'screen_id':{{$screen_id}}},
                     success: function(msg){
+                        if(msg){
+                                    opstr += '<span>'+msg.stuname+'</span>　';
 
-                        if(msg[0]){
-                            $(msg).each(function(i,k){
-                                if(k.student_name)
-                                    opstr += '<span>'+k.student_name+'</span>　';
-                            });
                             $('.current-set').html(opstr);
                         }else{
                             $('.current-set').html('<span>暂时没有考生</span>');
@@ -198,33 +195,15 @@ if(!empty($errorsInfo)){
                     url: "{{route('osce.doorplate.getnextexaminee')}}",
                     data: {'room_id':{{$room_id}},'exam_id':{{$exam_id}},'data':{{count($data)}},'screen_id':{{$screen_id}}},
                     success: function(msg){
-                        if(msg[0]){
-                            $(msg).each(function(i,k){
-                                if(k.student_name)
-                                    opst += '<span>'+k.student_name+'</span>　';
-                            });
+                        if(msg){
+                                    opst += '<span>'+msg.stuname+'</span>　';
                             $('.next-set').html(opst);
                         }else{
                             $('.next-set').html('<span>暂时没有考生</span>');
                         }
                     }
                 });
-                //状态
-                $.ajax({
-                    type: "GET",
-                    url: "{{route('osce.doorplate.getstatusstatus')}}",
-                    data: {'room_id':{{$room_id}},'exam_id':{{$exam_id}},'screen_id':{{$screen_id}}},
-                    success: function(e){
-                        if(e==1){
-                            $('#status_box').html('<div class="status fl green"></div> <div class="fl m5" style="font-family: 黑体;color:green ">准备完成 </div>');
 
-                        }else if(e==2){
-                            $('#status_box').html('<div class="status fl red"></div> <div class="fl m5" style="font-family: 黑体;color: red ">考试中 </div>');
-                        }else if(e==3){
-                            $('#status_box').html('<div class="status fl blue"></div> <div class="fl m5" style="font-family: 黑体;color: deepskyblue "> 考试完成</div>');
-                        }
-                    }
-                });
             }catch (e){
 
             }
