@@ -86,7 +86,7 @@ class CexamController extends CommonController
                         ->where('end', '<', $end);
                 })->where('id','<>',$id)
                 ->first();
-            if(empty($isHas)){
+            if(!$isHas){
                 TestLog::where('id',$id)->update(['start'=>$start,'end'=>$end]);
                 return $this->success_data([],1,'修改成功');
                 //return redirect()->route('osce.theory.index')->withErrors('1修改成功');
@@ -381,7 +381,17 @@ class CexamController extends CommonController
         try {
             $testId = $request->get('test_id');
             $test = TestLog::find($testId);
-            $list = Student::where('test_id',$testId)->paginate(10);
+            $students = Student::where('test_id',$testId);
+            if($request->has('keywords')){
+                $keywords = '%'.$request->get('keywords').'%';
+                $students->where(function ($query) use($keywords) {
+                    $query->orWhere('name', 'like',$keywords)
+                        ->orWhere('mobile','like', $keywords)
+                        ->orWhere('idcard','like', $keywords)
+                        ->orWhere('code', 'like',$keywords);
+                });
+            }
+            $list = $students->paginate(10);
             return view('osce::theory.studentList',['data'=>$list,'test'=>$test]);
         } catch (\Exception $ex) {
             dd($ex);
