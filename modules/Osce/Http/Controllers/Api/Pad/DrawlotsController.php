@@ -658,7 +658,8 @@ class DrawlotsController extends CommonController
                     $queue = ExamQueue::query()->where('id', $examQueueId)->first();
                     if ($queue) {
                         // 直接剔除该学生
-                        ExamScreeningStudent::dropStudent($exam_screening_id, $queue->student_id);
+                        $queue->update(['status' => 4]);
+//                        ExamScreeningStudent::dropStudent($exam_screening_id, $queue->student_id);
                     }
                 }
                 else {
@@ -676,9 +677,10 @@ class DrawlotsController extends CommonController
                     ExamQueue::where('id', $examQueue[0]->exam_queue_id)->increment('next_num', 1);//下一次次数增加
                 }
             }
-            list($room_id) = $this->getRoomIdAndStation($teacher_id, $exam);
-            Common::updateRoomCache($exam->id, $room_id);
-            Common::updateCache($teacher_id, $exam->id);
+//            list($room_id) = $this->getRoomIdAndStation($teacher_id, $exam);
+//            Common::updateRoomCache($exam->id, $room_id);
+//            Common::updateCache($teacher_id, $exam->id);
+            Common::updateAllCache($exam->id, $exam_screening_id, true);
 
             //获取到当前队列学生顺序的第一个学生
 //            list($room_id, $stations) = $this->getRoomIdAndStation($teacher_id, $exam);

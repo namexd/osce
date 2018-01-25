@@ -191,7 +191,8 @@ return [
             'host' => env('REDIS_HOST', 'redis.sz-sulead.com'),
             'port' => env('REDIS_PORT', 60379),
             'database' => env('REDIS_MESSAGE_DATABASE', 3),
-            'password' => env('REDIS_PASSWORD', '4f38ad')
+            'password' => env('REDIS_PASSWORD', '4f38ad'),
+            'read_write_timeout' => 0
         ]
     ],
 

@@ -685,8 +685,8 @@ class IndexController extends CommonController
                     $this->watchUnbundling($id, $student_id);
 
                     //TODO:罗海华 2016-02-06 14:27     检查考试是否可以结束
-//                    $examScreening  =  new ExamScreening();
-//                    $examScreening  -> getExamCheck();
+                    $examScreening  =  new ExamScreening();
+                    $examScreening  -> getExamCheck();
                     $connection->commit();
 
                     return \Response::json([
