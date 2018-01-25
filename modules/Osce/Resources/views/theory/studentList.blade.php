@@ -12,7 +12,7 @@
 		
 		.top-sel .form-control {width: 300px; float: left;}
 		.top-sel button { float: left;}
-		
+		.delete{ cursor: pointer;}
 	</style>
 	
 		
@@ -34,26 +34,33 @@
 					fn:function (res) {
 						res = JSON.parse(res);
 						console.log(res);
-						uselayer2(1,res.message,function(){
-							if (res.code==1) {
-								toReload();
-							}
-						});
+						uselayer2(1,res.message,toReload);
 					},
 					error:function () {
 						uselayer2(1,'导入失败！请重试',toReload);
 					}
 				});
 			} else {
-				uselayer(1,'请上传正确的excel文件！')
+				uselayer2(1,'请上传正确的excel文件！')
 			}
 		};
-		function deletelist(id) {
-			uselayer(2,'确定要删除该考试吗？',function () {
-				$('.form-deletelist input').val(id);
-				$('.form-deletelist').submit();
+		$(function () {
+			$('.delete').click(function () {
+				var _id = $(this).attr('_id');
+				uselayer2(2,'确定要删除吗？',function () {
+					Api.ajax({
+						type:'get',
+						url:'{{route("osce.theory.getDelStudent")}}',
+						json:{id:_id},
+						fn:function (res) {
+							uselayer2(3,'删除成功！',toReload);
+						}
+					});
+					
+					
+				});
 			});
-		};		
+		});	
    </script>
 @stop
 
@@ -105,7 +112,7 @@
                             <td>{{$item->mobile}}</td>
                             <td>
                                 <a href="{{route('osce.admin.exam.postEditExaminee',['id'=>$item->id])}}" ><span class="read  state1 detail"><i class="fa fa-pencil-square-o fa-2x"></i></span></a>
-                                <span class="read  state2 delete" sid="{{$item->id}}" examid="" ><i class="fa fa-trash-o fa-2x"></i></span>
+                                <span class="read  state2 delete" _id="{{$item->id}}"><i class="fa fa-trash-o fa-2x"></i></span>
                             </td>
                         </tr>
                     @empty
