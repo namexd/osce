@@ -13,6 +13,7 @@ use DB;
 use Illuminate\Http\Request;
 use Modules\Osce\Entities\Student;
 use Modules\Osce\Entities\TestLog;
+use Modules\Osce\Entities\TestRecord;
 use Modules\Osce\Entities\TestStatistics;
 use Modules\Osce\Http\Controllers\CommonController;
 use Modules\Osce\Repositories\Common;
@@ -571,6 +572,31 @@ class CexamController extends CommonController
             return redirect()->back()->withErrors($ex->getMessage());
         }
     }*/
+    //删除考生
+    public function getDelStudent(Request $request){
+        $this   ->  validate($request,[
+            'id'  =>  'required',
+        ]);
+        try {
+            $id =   $request    ->  get('id');
+            $student    =   Student::find($id);
+            if($student){
+                $record = TestRecord::where(['stuid'=>$student->user_id,'logid'=>$student->test_id])->first();
+                if(empty($record)){
+                    $student->delete();
+                    return $this->success_data([],1,'删除成功!');
+                }else{
+                    return $this->success_data([],0,'考生已参与考生，删除失败!');
+                }
+            }else{
+                return $this->success_data([],0,'参数有误!');
+            }
+        } catch (\Exception $ex) {
+            dd($ex);
+            return response()->json($this->fail($ex));
+        }
+
+    }
     //导入考生
     public function importStudents(Request $request){
 
