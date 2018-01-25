@@ -36,14 +36,23 @@ class CexamController extends CommonController
         if($isExam){
             return redirect()->back()->withErrors('本场技能考试已存在一场理论考试！');
         }
-        $isHas = TestLog::where('start','<',$dataArray['start'])
-            ->where('end','>',$dataArray['start'])
-            ->orWhere(function ($query)use ($dataArray){
-                $query->where('start', '<', $dataArray['end'])
-                    ->where('end', '>', $dataArray['end']);
-            })->orWhere(function ($query)use ($dataArray){
-                $query->where('start', '>', $dataArray['start'])
-                    ->where('end', '<', $dataArray['end']);
+        $start=$request->get('start');
+        $end=$request->get('end');
+        $isHas = TestLog::where(function ($query)use ($start ,$end){
+            $query->where('start', '<=', $start)
+                ->where('end', '>=', $end);
+            })
+            ->orWhere(function ($query)use ($start,$end){
+                $query->where('start', '>=', $start)
+                    ->where('end', '<=', $end);
+            })
+            ->orWhere(function ($query)use ($end){
+                $query->where('start', '<=', $end)
+                    ->where('end', '>=', $end);
+            })
+            ->orWhere(function ($query)use ($start){
+                $query->where('start', '<=', $start)
+                    ->where('end', '>=', $start);
             })->first();
         if(empty($isHas)){
             if($dataArray['convert'] < 1 || $dataArray['convert'] > 100){
@@ -76,17 +85,26 @@ class CexamController extends CommonController
         $end=$request->get('end');
         //dd($request->all());
         try {
-            $isHas = TestLog::where('start','<',$start)
-                ->where('end','>',$start)
-                ->orWhere(function ($query)use ($end ){
-                    $query->where('start', '<', $end)
-                        ->where('end', '>', $end);
-                })->orWhere(function ($query)use ($start,$end ){
-                    $query->where('start', '>', $start)
-                        ->where('end', '<', $end);
-                })->where('id','<>',$id)
-                ->first();
-            if(!$isHas){
+            $isHas = TestLog::where('id','!=',$id)
+            ->where(function ($query)use ($start ,$end){
+                $query->where(function ($query)use ($start ,$end){
+                    $query->where('start', '<=', $start)
+                        ->where('end', '>=', $end);
+                });
+                $query->orWhere(function ($query)use ($start,$end){
+                    $query->where('start', '>=', $start)
+                        ->where('end', '<=', $end);
+                });
+                $query->orWhere(function ($query)use ($end){
+                    $query->where('start', '<=', $end)
+                        ->where('end', '>=', $end);
+                });
+                $query->orWhere(function ($query)use ($start){
+                    $query->where('start', '<=', $start)
+                        ->where('end', '>=', $start);
+                });
+            })->first();
+            if(empty($isHas)){
                 TestLog::where('id',$id)->update(['start'=>$start,'end'=>$end]);
                 return $this->success_data([],1,'修改成功');
                 //return redirect()->route('osce.theory.index')->withErrors('1修改成功');
