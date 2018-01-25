@@ -55,9 +55,9 @@ class BillboardRepository
      * @time 2016-05-05
      * @copyright 2013-2017 sulida.com Inc. All Rights Reserved
      */
-    public function getStudent($examId, $stationId)
+    public function getStudent($examId, $roomId)
     {
-        return $this->billboard->getQueue($examId, $stationId);
+        return $this->billboard->get2Queue($examId, $roomId);
     }
     
 
@@ -73,8 +73,8 @@ class BillboardRepository
      * @time 2016-05-05
      * @copyright 2013-2017 sulida.com Inc. All Rights Reserved
      */
-    public  function  getRoomData($examId,$studentId,$room_id)
+    public  function  getRoomData($examId,$studentId)
     {
-        return $this->billboard->getNextRoom($examId,$studentId,$room_id);
+        return $this->billboard->getNextRoom($examId,$studentId);
     }
 }

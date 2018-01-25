@@ -732,13 +732,7 @@ Route::group(['prefix' => 'billboard-login', 'namespace' => 'Modules\Osce\Http\C
 	Route::get('index', ['uses' => 'BillboardLoginController@getIndex', 'as' => 'osce.billboard.login.getIndex']);
 	Route::post('index', ['uses' => 'BillboardLoginController@postIndex', 'as' => 'osce.billboard.login.postIndex']);
 });
-Route::group(['prefix' => 's', 'namespace' => 'Modules\Osce\Http\Controllers\Billboard', 'middleware' => 'billboard'], function () {
 
-	//告示牌主页
-	Route::get('i', ['uses' => 'BillboardController@getIndex', 'as' => 'osce.billboard.getIndex']);
-	//学生接口
-	Route::get('student', ['uses' => 'BillboardController@getStudent', 'as' => 'osce.billboard.getStudent']);
-});
 
 Route::group(['prefix' => 's', 'namespace' => 'Modules\Osce\Http\Controllers\Billboard', 'middleware' => 'billboard'], function () {
 
