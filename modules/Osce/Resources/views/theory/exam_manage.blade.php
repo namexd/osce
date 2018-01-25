@@ -59,7 +59,11 @@
 		    });				
 			
 			$('.btn-primary').click(function () {
-				
+				if ($('#exam_id').val()=='0') {
+					$('.exam_name .control-label').html('考试名称：<i></i>');
+				} else {
+					$('.exam_name .control-label').html('考试名称：');
+				}
 				if(noempty('.form-horizontal')){
 					return false;
 				}
@@ -133,7 +137,7 @@
 	                    </div>
 	                </div>
 	                <div class="form-group exam_name hide">
-	                    <label for="name" class="col-sm-2 control-label">考试名称：<i></i></label>
+	                    <label for="name" class="col-sm-2 control-label">考试名称：</label>
 	                    <div class="col-sm-5">
 							<input type="text" name="name" id="name"  placeholder="请填写考试名称" class="form-control" />
 	                    </div>

@@ -18,22 +18,28 @@
     padding: 2.5%;
     text-align: left;
 }	
+.wrapper-content { padding-bottom: 10px;}
 .question_type { margin-bottom: 20px;}
 .allSubject { padding: 0 2.5%;}
 	
 .subjectBox img { display: block; height: auto; max-width: 20%; width: auto;}	
-.countdown {text-align: center; width: 800px;padding-left:400px; position: fixed; bottom: 5%; right: 0;}
+.bottom-menu-bg {width: 100%; padding:0 20px ;position: fixed; bottom: 0;}
+.bottom-menu {  background: #fff;height:60px ; line-height: 60px; }
+.countdown {text-align: right; float: right; }
+
+.menu-list { float: right; width: 65%; text-align: center; }
+.menu-list button { margin: 0 3%;}
 .type_1 li ,.type_2 li,.type_3 li {cursor: pointer;}
 .type_1 li:hover ,.type_2 li:hover,.type_3 li:hover { background: #f5f5f5;}
 .question_type li { padding: 5px 0;}
 .allSubject div { padding: 10px 0 5px;}
 #jiaojuan {}
 .allSubject label { font-weight: normal;}
-        .colockbox{width:250px;height:30px;overflow: hidden; color:#000;}
+        .colockbox{width:250px;overflow: hidden; color:#000;}
         .colockbox span{
             float:left;display:inline-block;
-            width:30px;height:29px;
-            line-height:29px;font-size:20px;
+            width:30px;
+            font-size:20px;
             font-weight:bold;text-align:center;
             color:#ff0101; margin-right:5px;}
 	
@@ -60,7 +66,7 @@
    <script>
 		$(function () {
 			document.oncontextmenu = function () {
-				return false;
+//				return false;
 			};
 			$(document).keydown(function (e) {
 				if (e.keyCode == 116) {
@@ -147,6 +153,23 @@
 				} else {
 					$(this).find('.radio_icon').addClass('check');
 				}
+			});
+			
+			$('#jiancha').click(function () {
+				setanswer();
+				if (!$(this).attr('_index')||$(this).attr('_index')==$('input[name="answer[]"]').length) {
+					$(this).attr('_index',0);
+				}
+				var _index = $(this).attr('_index');
+				$('input[name="answer[]"]').each(function (index) {
+					if (index>=_index&&$.trim($(this).val())=='') {
+						$(document).scrollTop($(this).parent().offset().top);
+						$('#jiancha').attr('_index',index+1);
+						return false;
+					}
+				});
+				
+				return false;
 			});
 			
 			$('#jiaojuan').click(function () {
@@ -251,7 +274,7 @@
 								
 							</div>
 							<input type="hidden" name="logid" value="{{$data->id}}" />
-							<button class="btn btn-primary" id="jiaojuan" type="submit">提交试卷</button>
+							
 						</form>
 					</div>
 
@@ -268,14 +291,25 @@
 		
 
 	</div>
-
-	<div class="btnBox left countdown">
-        <span class="marl_10 left" style="display:inline-block; height: 29px; width:100px; line-height: 29px;">剩余时间：</span>
-        <div class="colockbox" id="colockbox1">
-            <span class="hour" id="hour">00</span><span class="left">:</span>
-            <span class="minute" id="minute">00</span><span class="left">:</span>
-            <span class="second" id="second">00</span>
-        </div>
+	
+	
+	
+	<div class="btnBox left bottom-menu-bg">
+		<div class="bottom-menu clearfix">
+			<div class="countdown">
+		        <span class="marl_10 left">剩余时间：</span>
+		        <div class="colockbox" id="colockbox1">
+		            <span class="hour" id="hour">00</span><span class="left">:</span>
+		            <span class="minute" id="minute">00</span><span class="left">:</span>
+		            <span class="second" id="second">00</span>
+		        </div>
+			</div>
+			<div class="menu-list">
+				<button class="btn btn-warning" id="jiancha">检查未做</button>
+				<button class="btn btn-primary" id="jiaojuan">提交试卷</button>
+			</div>
+			
+		</div>
     </div> 	
 	
 @stop{{-- 内容主体区域 --}}

@@ -109,7 +109,7 @@ function setwendastr(arr,str) {
 	return str;
 };
 
-function tojiaojuan() {
+function setanswer() {
 	$('.type_1 .allSubject,.type_3 .allSubject').each(function () {
 		$(this).find('.answer').val($(this).find('.radio_icon.check').parent().find('span').html());
 	});
@@ -127,8 +127,14 @@ function tojiaojuan() {
 		});	
 		$(this).find('.answer').val(_arr.join(' '));
 	});		
+};
+
+function tojiaojuan() {
+	setanswer();
 	$('.form-shijuan').submit();
 };
+
+
 
 function setzhuguan(arr,str) {
 	console.log(arr)
