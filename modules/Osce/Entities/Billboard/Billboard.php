@@ -45,7 +45,8 @@ class Billboard
                 'subject.mins as mins',
                 'subject.id as subject_id',
                 'cases.name as case_name',
-                'cases.description as case_description'
+                'cases.description as case_description',
+                'exam_draft.room_id as room_id'
             )
             ->first();
     }
@@ -57,6 +58,20 @@ class Billboard
                 ->whereIn('status', [1, 2])
                 ->orderBy('begin_dt', 'asc')
                 ->first();
+    }
+    public function get2Queue($examId, $roomId)
+    {
+        $examscreening = ExamScreening::where('exam_id', $examId)->where('status', 1)->first();
+        $exam_screening_id = $examscreening->id;
+        $list2 = ExamPlan::leftjoin('student', 'exam_plan.student_id', '=', 'student.id')
+            ->select('exam_plan.id as planid', 'exam_plan.begin_dt','student.id as stuid', 'student.avator', 'student.idcard', 'student.code',  'student.exam_sequence','exam_plan.student_id as pstuid', 'student.name as stuname')
+            ->where('exam_plan.exam_id', $examId)
+            ->where('exam_plan.exam_screening_id', $exam_screening_id)
+            ->where('exam_plan.room_id', $roomId)
+            ->where('exam_plan.status','<',2)
+            ->orderBy('exam_plan.begin_dt', 'asc')
+            ->first();
+        return $list2;
     }
 
     /**
@@ -70,7 +85,7 @@ class Billboard
      * @time 2016-05-04
      * @copyright 2013-2017 sulida.com Inc. All Rights Reserved
      */
-    public function getNextRoom($examId, $studentId, $room_id)
+    public function getNextRoom($examId, $studentId)
     {
 
 /*        //拿到当前房间的时间
@@ -106,13 +121,13 @@ class Billboard
 
         $NextQueue = ExamPlan::leftjoin('student', 'exam_plan.student_id', '=', 'student.id')
             ->leftjoin('room','exam_plan.room_id','=','room.id')
-            ->select('exam_plan.id as planid','room.id as room_id','room.name as room_name','student.id as student_id','student.name as student_name')
+            ->select('exam_plan.id as planid','room.id as room_id','room.name as room_name','exam_plan.student_id as student_id','student.name as student_name')
             ->where('exam_plan.exam_id',$examId)
             ->where('exam_plan.exam_screening_id',$exam_screening_id)
             ->where('exam_plan.student_id',$studentId)
             ->where('exam_plan.status',0)
             ->orderBy('exam_plan.begin_dt','asc')
-            ->frist();
+            ->first();
 
         return $NextQueue;
     }

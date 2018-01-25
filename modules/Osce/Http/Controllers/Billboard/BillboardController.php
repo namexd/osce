@@ -60,17 +60,19 @@ class BillboardController extends CommonController
     {
         $this->validate($request, [
             'exam_id'       => 'required|integer',
-            'station_id'    => 'required|integer'
+            'station_id'    => 'required|integer',
+             'room_id'    => 'required|integer'
         ]);
         $examId    = $request->input('exam_id');
         $stationId = $request->input('station_id');
+        $roomId = $request->input('room_id');
         try {
-            $studentData = $billboardRepository->getStudent($examId, $stationId);
-            $student     = Student::find($studentData->student_id);
-            $studentId   = $studentData->student_id;
+            $studentData = $billboardRepository->getStudent($examId, $roomId);
+            $student     = Student::find($studentData->stuid);
+            $studentId   = $studentData->stuid;
 
             //返回学生信息和考场名字
-            $data = $billboardRepository->getRoomData($examId, $studentId, $studentData->room_id);
+            $data = $billboardRepository->getRoomData($examId, $studentId);
 
             //若数据为空
             if(is_null($data))

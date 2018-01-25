@@ -61,10 +61,11 @@
     function show(){
       var exam_id = $('#exam_id').val();
       var station_id = $('#station_id').val();
+      var room_id = $('#room_id').val();
       var url = $('#route').val();
       $.ajax({
         url: url,
-        data: {exam_id: exam_id, station_id: station_id},
+        data: {exam_id: exam_id, station_id: station_id,room_id:room_id},
         type: "get",
         dataType: "json",
         success: function (data) {
@@ -89,6 +90,7 @@
 <div id="area">
   <input type="hidden" id="exam_id" value="{{$data['exam_id']}}">
   <input type="hidden" id="station_id" value="{{$data['station_id']}}">
+  <input type="hidden" id="room_id" value="{{$data['room_id']}}">
   <input type="hidden" id="route" value="{{route('osce.billboard.getStudent')}}">
 
   <div id="body">
