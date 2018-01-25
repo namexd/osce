@@ -192,15 +192,13 @@
 @section('body')
 	<div class="wrapper wrapper-content animated fadeInRight">
 	    <div class="row table-head-style1 ">
-	        <div class="col-xs-6">
-	            <h5 class="title-label">{{request()->get('exam')}} 的理论考试</h5>
-	        </div>
+	        <div class="col-xs-6"></div>
 	    </div>
 		<div class="row">
 			<div class="col-lg-12">
                 <div class="ibox float-e-margins" style="margin-bottom: 0;">
                     <div class="ibox-content text-center p-md">
-                        <h2>{{$data[0]->examname}}</h2>
+                        <h2>{{$test->exam_id==0?$test->name:$test->exam->name }} 的理论考试</h2>
                         <span>考生姓名：</span>
                         <span class="checkTime">{{$data[0]->stuname}}</span>
                         <span style="margin-left: 1em;">考试时长：</span>
