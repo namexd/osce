@@ -10,6 +10,7 @@ namespace Modules\Osce\Http\Controllers\Admin;
 
 use App\Entities\User;
 use DB;
+use Auth;
 use Illuminate\Http\Request;
 use Modules\Osce\Entities\Student;
 use Modules\Osce\Entities\TestLog;
