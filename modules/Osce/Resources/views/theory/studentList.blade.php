@@ -53,7 +53,7 @@
 						url:'{{route("osce.theory.getDelStudent")}}',
 						json:{id:_id},
 						fn:function (res) {
-							uselayer2(3,'删除成功！',toReload);
+							uselayer2(31,'删除成功！',toReload);
 						}
 					});
 					
@@ -73,16 +73,23 @@
 	        </div>
 	        <div class="col-xs-6" style="float: right;">
 	            <a  href="{{asset('download/student.xlsx')}}" class="btn btn-primary" style="float: right;">&nbsp;下载模板&nbsp;</a>
-	        	<div class="form-horizontal form-import" >
-	        		<input type="file" name="file" onchange="upload()" class="import" accept="application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" />
-	        		<a  href="javascript:;" class="btn btn-primary mar0">&nbsp;导入考生&nbsp;</a>
-	        	</div>
-	        	<a  href="{{route('osce.theory.addStudent',['test_id'=>request()->get('test_id')])}}" class="btn btn-primary" style=" margin-right: 20px; float: right;">&nbsp;新增考生&nbsp;</a>
+	        	@if($test->end>date('Y-m-d H:i:s'))
+		        	<div class="form-horizontal form-import" >
+		        		<input type="file" name="file" onchange="upload()" class="import" accept="application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" />
+		        		<a  href="javascript:;" class="btn btn-primary mar0">&nbsp;导入考生&nbsp;</a>
+		        	</div>
+		        	<a  href="{{route('osce.theory.addStudent',['test_id'=>request()->get('test_id')])}}" class="btn btn-primary" style=" margin-right: 20px; float: right;">&nbsp;新增考生&nbsp;</a>
+	        	@else
+		        	<a  href="javascript:;" class="btn btn-default mar0" style="float: right; margin-right: 20px;">&nbsp;导入考生&nbsp;</a>
+		        	<a  href="javascript:;" class="btn btn-default mar0" style=" margin-right: 20px; float: right;">&nbsp;新增考生&nbsp;</a>
+	        	
+	        	@endif
 	        </div>
 	    </div>
    		<div class="container-fluid ibox-content" id="list_form">
     		<form action="" method="get" class="marb_15 top-sel clearfix">
-				<input type="text" placeholder="姓名、学号、身份证、电话" class="form-control" name="keyword" value="{{@$keyword}}">
+    			<input type="hidden" name="test_id" value="{{request()->get('test_id')}}" />
+				<input type="text" placeholder="姓名、学号、身份证、电话" class="form-control" name="keywords" value="{{@request()->get('keywords')}}">
 				<button type="submit" class="btn btn-sm btn-primary marl_10">搜索</button>
 			</form>
             <table class="table table-striped" id="table-striped">
@@ -111,8 +118,13 @@
                             <td>{{$item->teacher_name}}</td>
                             <td>{{$item->mobile}}</td>
                             <td>
-                                <a href="{{route('osce.admin.exam.postEditExaminee',['id'=>$item->id])}}" ><span class="read  state1 detail"><i class="fa fa-pencil-square-o fa-2x"></i></span></a>
-                                <span class="read  state2 delete" _id="{{$item->id}}"><i class="fa fa-trash-o fa-2x"></i></span>
+                            	@if($test->end>date('Y-m-d H:i:s'))
+	                                <a href="{{route('osce.admin.exam.postEditExaminee',['id'=>$item->id])}}" ><span class="read  state1 detail"><i class="fa fa-pencil-square-o fa-2x"></i></span></a>
+	                                <span class="read  state2 delete" _id="{{$item->id}}"><i class="fa fa-trash-o fa-2x"></i></span>
+                            	@else
+	                                <a href="javascript:;"><span class="read  state4"><i class="fa fa-pencil-square-o fa-2x"></i></span></a>
+	                                <span class="read  state4"><i class="fa fa-trash-o fa-2x"></i></span>
+                            	@endif
                             </td>
                         </tr>
                     @empty
