@@ -227,33 +227,17 @@ class IndexController extends CommonController
         $exam_id  = $request->get('exam_id');
 
         try{
-//            $ExamQueue = new ExamQueue();
-//            $examQueue = $ExamQueue->getExamineeByRoom($exam_id, $room_id, $stations);
-             //$this->ExamineRoomCache($exam_id,$room_id);
-            //获取当前组 缓存key
-            $currKey   = 'current_room_id' . $room_id .'_exam_id'.$exam_id;
-/*            for($i=1;$i<12;$i++){
-                for($j=$i+1;$j<12;$j++){
-                    $r1 = 'current_room_id' . $i .'_exam_id'.$exam_id;
-                    $r2 = 'current_room_id' . $j .'_exam_id'.$exam_id;
-                    $cr1 = \Cache::get($r1);
-                    $cr2 = \Cache::get($r2);
-                    if($cr1==$cr2){
-                        $this->ExamineRoomCache($exam_id,$room_id);
-                        break 2;
-                    }
-                }
-            }*/
-            //$c = \Cache::pull($currKey);
-            //dd($c);\Cache::flush();
-            //从缓存中取出 当前组考生队列
-            $examQueue = \Cache::get($currKey);
-            if(count($examQueue) == 0){
-               if($this->ExamineRoomCache($exam_id,$room_id)){
-                   $examQueue = \Cache::get($currKey);
-               }
-            }
-            \Log::info('电子门牌获取到的当前组',[$examQueue]);
+            $examscreening = ExamScreening::where('exam_id', $exam_id)->where('status', 1)->first();
+            $exam_screening_id = $examscreening->id;
+            $examQueue = ExamPlan::leftjoin('student', 'exam_plan.student_id', '=', 'student.id')
+                ->select('exam_plan.id as planid', 'exam_plan.begin_dt','student.id as stuid', 'student.avator', 'student.idcard', 'student.code',  'student.exam_sequence','exam_plan.student_id as pstuid', 'student.name as stuname')
+                ->where('exam_plan.exam_id', $exam_id)
+                ->where('exam_plan.exam_screening_id', $exam_screening_id)
+                ->where('exam_plan.room_id', $room_id)
+                ->where('exam_plan.status','<',2)
+                ->orderBy('exam_plan.begin_dt', 'asc')
+                ->first();
+
             return $examQueue;
 
         }catch (\Exception $ex)
@@ -322,20 +306,23 @@ class IndexController extends CommonController
         $exam_id  = $request->get('exam_id');
 
         try{
-//            $ExamQueue = new ExamQueue();
-//            $examQueue = $ExamQueue->getNextExamineeByRoom($exam_id, $room_id, $stations);
+            $examscreening = ExamScreening::where('exam_id', $exam_id)->where('status', 1)->first();
+            $exam_screening_id = $examscreening->id;
+            $data = ExamPlan::leftjoin('student', 'exam_plan.student_id', '=', 'student.id')
+                ->select('exam_plan.id as planid', 'exam_plan.begin_dt','student.id as stuid', 'student.avator', 'student.idcard', 'student.code',  'student.exam_sequence','exam_plan.student_id as pstuid', 'student.name as stuname')
+                ->where('exam_plan.exam_id', $exam_id)
+                ->where('exam_plan.exam_screening_id', $exam_screening_id)
+                ->where('exam_plan.room_id', $room_id)
+                ->where('exam_plan.status','<',2)
+                ->orderBy('exam_plan.begin_dt', 'asc')
+                ->get();
+             $dataarr = $data->toarray();
 
-            //获取下一组 缓存key
-            $nextKey   = 'next_room_id' . $room_id .'_exam_id'.$exam_id;
-            //从缓存中取出 下一组考生队列
-            $nextQueue = \Cache::get($nextKey);
-            if(count($nextQueue)==0){
-                if($this->ExamineRoomCache($exam_id,$room_id)){
-                    $nextQueue = \Cache::get($nextKey);
-                }
+            if($dataarr){
+                $nextQueue = $data[1];
+            }else{
+                $nextQueue = '';
             }
-            
-            \Log::info('电子门牌获取到的下一组',[$nextQueue]);
             return $nextQueue;
 
         }catch (\Exception $ex)
