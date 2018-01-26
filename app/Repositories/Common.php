@@ -163,84 +163,97 @@ class Common{
 
     public static function getExclData($request,$name,$cnHeader=true){
 
-        $excl=$request->file($name);
-        if(empty($excl))
-        {
-            throw new \Exception('没有上传文件');
-        }
+        try {
+            $excl = $request->file($name);
+            if (empty($excl)) {
+                throw new \Exception('没有上传文件');
+            }
 
-        // 判断上传文件正确性-added by wangjiang on 2015-12-2 18:00
-        if (true != $excl->isValid())
-        {
-            throw new \Exception('上传文件错误');
-        }
+            // 判断上传文件正确性-added by wangjiang on 2015-12-2 18:00
+            if (true != $excl->isValid()) {
+                throw new \Exception('上传文件错误');
+            }
 
-        //英文表头直接读取
-        if($cnHeader==='en')
-        {
-            $data=Excel::load($excl -> getRealPath(),function($reader){
-            },'UTF-8')->get();
-        }
-        else
-        {
-            //中文表头 或者 不要表头
-            $data=Excel::load($excl -> getRealPath(),function($reader){
-                $reader->noHeading();
-            },'UTF-8')->get();
-        }
-        $ExclData=[];
-        foreach($data as $items)
-        {
+            //英文表头直接读取
+            if ($cnHeader === 'en') {
+                $data = Excel::load($excl->getRealPath(), function ($reader) {
+                }, 'UTF-8')->get();
+            } else {
+                //中文表头 或者 不要表头
+                $data = Excel::load($excl->getRealPath(), function ($reader) {
+                    $reader->noHeading();
+                }, 'UTF-8')->get();
+            }
+            $ExclData = [];
             $sheet=[];
-            //判断是否为中文表头
-            if($cnHeader)
-            {
-                $itemsInfo=$items->first();
-                if(count($itemsInfo)<=0)
-                {
-                    throw new \Exception('没有找到首行');
-                }
+            foreach ($data as $row => $items) {
+                //判断是否为中文表头
+                if ($cnHeader) {
+                    $itemsInfo = $items->first();
+                    //var_dump($itemsInfo);
+                    if(is_object($itemsInfo)){
+                        $sheet=[];
+                        //多个表单
+                        if (count($itemsInfo) <= 0) {
+                            throw new \Exception('没有找到首行');
+                        }
 
-                $keyList=$itemsInfo->toArray();
-                foreach($items as $rowNum=>$rows)
-                {
-                    //如果是表头
-                    if($rowNum==0)
-                    {
-                        foreach($rows as $headName)
-                        {
-                            //检查表头单元格格式
-                            if(!is_string($headName)&&strlen($headName))
-                            {
-                                throw new \Exception('请设置表头单元格格式为文本');
+                        $keyList = $itemsInfo->toArray();
+                        foreach ($items as $rowNum => $rows) {
+                            //如果是表头
+                            if ($rowNum == 0) {
+                                foreach ($rows as $headName) {
+                                    //检查表头单元格格式
+                                    if (!is_string($headName) && strlen($headName)) {
+                                        throw new \Exception('请设置表头单元格格式为文本');
+                                    }
+                                }
+                                continue;
+                            }
+                            if(!empty($rows[1]) ||!empty($rows[2])){
+                                $rowData = [];
+                                foreach ($rows as $keyIndex => $value) {
+                                    if (strlen($keyList[$keyIndex]) == 0) {
+                                        continue;
+                                    }
+                                    $rowData[$keyList[$keyIndex]] = $value;
+                                }
+                                $sheet[] = $rowData;
                             }
                         }
-                        continue;
-                    }
-                    $rowData=[];
-                    foreach($rows as $keyIndex=>$value)
-                    {
-                        if(strlen($keyList[$keyIndex])==0)
-                        {
-                            continue;
+                    }else{
+                        //var_dump($row);
+                        //一个表单
+                        $rowData = [];
+                        foreach ($items as $itemsK => $itemsVal) {
+                            //检查表头单元格格式
+                            if($row == 0) {
+                                if (!is_string($itemsVal) && strlen($itemsVal)) {
+                                    throw new \Exception('请设置表头单元格格式为文本');
+                                }
+                                continue;
+                            }
+                            if(!empty($items[1]) || !empty($items[2]))
+                                $rowData[$data[0][$itemsK]] =$itemsVal;
                         }
-                        $rowData[$keyList[$keyIndex]]=$value;
+                        if(!empty($rowData)) {
+                            $sheet[] = $rowData;
+                        }
                     }
-                    $sheet[]=$rowData;
+                } else {
+                    foreach ($items as $rows) {
+                        $sheet[] = $rows->toArray();
+                    }
+                    //$ExclShell[$items->getTitle()]=$sheet;
                 }
+                $ExclShell[$items->getTitle()?:'Sheet1'] = $sheet;
             }
-            else
-            {
-                foreach($items as $rows)
-                {
-                    $sheet[]=$rows->toArray();
-                }
-                //$ExclShell[$items->getTitle()]=$sheet;
-            }
-            $ExclShell[$items->getTitle()]=$sheet;
+            //dd($ExclShell);
+            return $ExclShell;
+        } catch (\Exception $ex) {
+            //dd($ex);
+            //return response()->json($ex);
         }
-
-        return $ExclShell;
     }
     public function getExclExport($data){
         Excel::create('Filename', function($excel) use ($data){
