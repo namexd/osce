@@ -6,6 +6,10 @@ Route::get('/test/mi', function () {
 	$c = \Cache::flush();
 	dd($c);
 });*/
+Route::get('/test', function () {
+	return view('osce::theory.test');
+});
+
 Route::get('/A',['uses'=>'Modules\Osce\Http\Controllers\Admin\AddModuleController@index']);
 
 //理论考试排考查看
