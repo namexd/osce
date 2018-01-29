@@ -556,6 +556,8 @@ class InvigilatePadController extends CommonController
                     \Log::alert($mssge->getMessage() . ';' . $studentId . '成绩推送失败');
                 }
             }
+            // 验证是否已全部考完
+            (new ExamScreening())->getExamCheck();
             //修改exam_attach表里的结果id
             return response()->json($this->success_data([], 1, '成绩提交成功'));
 
@@ -908,7 +910,7 @@ class InvigilatePadController extends CommonController
                 ->whereIn('status', [0,1,2])
                 ->first();
             //拿到阶段序号
-            $gradationOrder =ExamScreening::find($examQueue->exam_screening_id);
+            $gradationOrder = ExamScreening::find($examQueue->exam_screening_id);
             //拿到属于该场考试，该场阶段所对应的所有场次id
             $examscreeningId = ExamScreening::where('exam_id','=',$examQueue->exam_id)->where('gradation_order','=',$gradationOrder->gradation_order)->get();
             if(!is_null($examscreeningId)){

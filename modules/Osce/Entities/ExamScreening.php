@@ -9,9 +9,6 @@
 namespace Modules\Osce\Entities;
 
 use Illuminate\Support\Facades\Cache;
-use Modules\Osce\Entities\ExamPlan;
-use Modules\Osce\Entities\ExamAbsent;
-use Modules\Osce\Entities\ExamScreeningStudent;
 
 class ExamScreening extends CommonModel
 {
@@ -255,26 +252,23 @@ class ExamScreening extends CommonModel
             throw new \Exception('所有考试场次已结束，请进行下一场考试',-7);
         }
         //根据考试场次id查询计划表所有考试学生
-        $examPianModel = new ExamPlan();
-        $exampianStudent = $examPianModel->getexampianStudent($ExamScreening->id,$exam->id);
-
-        //获取考试场次迟到的人数
-//        $examAbsentStudent = ExamAbsent::where('exam_screening_id', '=', $ExamScreening->id)
-//            ->where('exam_id','=',$exam->id)
-//            ->lists('student_id')
-//            ->unique()
-//            ->count();
+        $examPlanStudent = ExamPlan::query()
+                            ->where('exam_screening_id', '=', $ExamScreening->id)
+                            ->where('exam_id','=',$examId)
+                            ->count();
 
         //获取考试场次已考试完成的人数
-        $examFinishStudent = ExamScreeningStudent::where('is_end', 1)
-            ->where('exam_screening_id', '=', $ExamScreening->id)
-            ->lists('student_id')
-            ->unique()
-            ->count();
-        if ($examFinishStudent >= $exampianStudent) {
+        $examQueue = ExamQueue::query()
+                        ->where('exam_screening_id', '=', $ExamScreening->id)
+                        ->whereIn('status', [3, 4])
+                        ->count();
+
+        if ($examQueue >= $examPlanStudent) {
             $ExamScreening->status = 2;
             if (!$ExamScreening->save()) {
                 throw new \Exception('场次结束失败', -5);
+            } else {
+                (new Exam())->openNextScreen($ExamScreening->id);
             }
             //判断结束空场次
             $senseExamScreening = ExamScreening::where('exam_id','=',$exam->id)->get();
@@ -288,7 +282,6 @@ class ExamScreening extends CommonModel
             }
             if ($exam->examScreening()->whereIn('status', [0,1])->count() == 0) {
                 $exam->status = 2;
-                // todo 清空所有腕表绑定
                 if (!$exam->save()) {
                     throw new \Exception('考试结束失败', -6);
                 }
