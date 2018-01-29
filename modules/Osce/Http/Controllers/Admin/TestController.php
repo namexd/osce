@@ -721,6 +721,36 @@ class TestController extends CommonController
         }
     }
 
+    public function getAddQuestion() {
+        return view('osce::theory.add_question');
+    }
+
+    public function postAddQuestion(Request $request) {
+        $this->validate($request, [
+            'question'   =>  'required',
+            'content'   =>  'required',
+            'answer'      =>   'required',
+            'pbase'       =>  'required',
+            'base'        =>   'required',
+            'cognition'  =>  'required',
+            'source'     =>   'required',
+            'lv'          =>  'required',
+            'require'    =>  'required',
+            'times'      =>  'required',
+            'degree'     =>  'required',
+            'separate'   =>  'required',
+            'poins'      =>  'required',
+        ]);
+        if (TestContentModule::create($request->all())) {
+            return $this->success_data();
+        } else {
+            return [
+                'code' => -1,
+                'message' => '添加失败',
+            ];
+        }
+    }
+
     /*
      * name：限制IP列表
      * date：2018/1/29 10:10
