@@ -254,7 +254,6 @@ class ExamScreening extends CommonModel
         //根据考试场次id查询计划表所有考试学生
         $examPlanStudent = ExamPlan::query()
                             ->where('exam_screening_id', '=', $ExamScreening->id)
-                            ->where('exam_id','=',$examId)
                             ->count();
 
         //获取考试场次已考试完成的人数

@@ -8,8 +8,6 @@
 
 namespace Modules\Osce\Entities;
 
-use Illuminate\Database\Eloquent\Collection;
-use Modules\Osce\Entities\CommonModel;
 use Cache;
 use DB;
 

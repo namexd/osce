@@ -24,7 +24,7 @@ class ExamQueue extends CommonModel
         'exam_id', 'exam_screening_id', 'student_id', 'station_id',
         'room_id', 'begin_dt', 'end_dt', 'status', 'created_user_id',
         'flow_id', 'serialnumber', 'group', 'blocking',
-        'gradation_order', 'controlMark', 'next_num'
+        'gradation_order', 'controlMark', 'next_num', 'draw_type'
     ];
 
     public $search = [];

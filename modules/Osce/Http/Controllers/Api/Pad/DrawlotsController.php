@@ -870,7 +870,8 @@ class DrawlotsController extends CommonController
             }
             \Log::alert('抽签拿到的学生id',[$student->id]);
             //使用抽签的方法进行抽签操作
-            $result = $this->drawlots($student, $roomId, $teacherId, $exam);
+            $drawType = $request->get('flag', 0);
+            $result = $this->drawlots($student, $roomId, $teacherId, $exam, $drawType);
 //            $model = new Drawlots($student, $teacherId, $exam, $roomId);
 //            switch ($exam->sequence_mode) {
 //                case 1:
@@ -1163,7 +1164,7 @@ class DrawlotsController extends CommonController
      * @throws \Exception
      * @author ZouYuChao
      */
-    private function drawlots($student, $roomId, $teacherId, $exam)
+    private function drawlots($student, $roomId, $teacherId, $exam, $drawType = null)
     {
 
         try {
@@ -1247,6 +1248,9 @@ class DrawlotsController extends CommonController
 
                 //将队列状态变更为1
                 $tempObj->status = 1;
+                if ($drawType) {
+                    $tempObj->draw_type = 1;
+                }
                 $examQueue->blocking = 0;
                 if (!$tempObj->save()) {
                     throw new \Exception('当前抽签失败！', 3901);
