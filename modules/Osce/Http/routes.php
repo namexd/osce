@@ -6,6 +6,10 @@ Route::get('/test/mi', function () {
 	$c = \Cache::flush();
 	dd($c);
 });*/
+Route::get('/test', function () {
+	return view('osce::theory.test');
+});
+
 Route::get('/A',['uses'=>'Modules\Osce\Http\Controllers\Admin\AddModuleController@index']);
 
 //理论考试排考查看
@@ -51,6 +55,10 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::post('addQuestionList', ['uses'=>'TestController@addQuestionList',  'as' => 'osce.theory.addQuestionList']);//修改考试题目
 		Route::post('toUpload', ['uses'=>'TestController@toUpload',  'as' => 'osce.theory.toUpload']);//上传图片
 		Route::post('toDeleteUpload', ['uses'=>'TestController@toDeleteUpload',  'as' => 'osce.theory.toDeleteUpload']);//删除上传图片
+
+		Route::get('ipLimit', ['uses'=>'TestController@ipLimit',  'as' => 'osce.theory.ipLimit']);//IP限制判断
+		Route::post('addLimit', ['uses'=>'TestController@addLimit',  'as' => 'osce.theory.addLimit']);//新增IP限制判断
+		Route::get('delLimit', ['uses'=>'TestController@delLimit',  'as' => 'osce.theory.delLimit']);//删除IP限制判断
 
         Route::get('question-list', ['uses'=>'TestController@getQuestionList','as' => 'osce.theory.getQuestionList']);
         Route::get('view-question', ['uses'=>'TestController@getViewQuestion','as' => 'osce.theory.getViewQuestion']);

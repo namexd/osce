@@ -11,6 +11,8 @@ namespace Modules\Osce\Http\Controllers\Admin;
 use DB;
 use Illuminate\Http\Request;
 use Modules\Msc\Entities\Student;
+use Modules\Osce\Entities\IpLimit;
+use Modules\Osce\Entities\IpLimitItem;
 use Modules\Osce\Entities\TestContent;
 use Modules\Osce\Entities\TestContentModule;
 use Modules\Osce\Entities\TestStatistics;
@@ -656,7 +658,6 @@ class TestController extends CommonController
         return $result;
     }
 
-
     public function getQuestionList(Request $request) {
         $search = $request->get('search');
         $type = $request->get('type');
@@ -717,6 +718,104 @@ class TestController extends CommonController
             return redirect()->route('osce.theory.getQuestionList');
         } else {
             return redirect()->back()->withErrors('考题不存在');
+        }
+    }
+
+    /*
+     * name：限制IP列表
+     * date：2018/1/29 10:10
+     * author:Hsiaowei(phper.tang@qq.com)
+     * param： int *
+     * param： string *
+     * return： array
+     * */
+    public function ipLimit(){
+        try {
+            $list = IpLimit::get();
+            return view('osce::theory.ip_limit_list',['list'=>$list]);
+
+        } catch (\Exception $ex) {
+            dd($ex);
+            return response()->json($this->fail($ex));
+        }
+    }
+
+    /*
+     * name：新增IP限制接口
+     * date：2018/1/29 10:14
+     * author:Hsiaowei(phper.tang@qq.com)
+     * param： int *
+     * param： string *
+     * return： array
+     * */
+    public function addLimit(Request $request){
+        $this->validate($request, [
+            'ip_start' => 'required',
+            'ip_end' => 'required',
+        ], [
+            'ip_start.required' => '开始IP必传',
+            'ip_end.required' => '结束IP必传',
+        ]);
+        try {
+            $ip_start = $request->get('ip_start');
+            $ip_end = $request->get('ip_end');
+
+            $startArr =  explode('.',$ip_start);
+            $endArr =  explode('.',$ip_end);
+            if( count($startArr) ==count($endArr) ){
+                if($startArr[0]==$endArr[0] && $startArr[1]==$endArr[1] && $startArr[2]==$endArr[2]){
+                    $limitId = IpLimit::insertGetId([
+                        'ip_start'=>$ip_start,
+                        'ip_end'=>$ip_end,
+                        'created_at'=>date('Y-m-d H:i:s'),
+                        'updated_at'=>date('Y-m-d H:i:s')
+                    ]);
+                    $limitArr = [];
+                    for($i=$startArr[3];$i<=$endArr[3];$i++){
+                        $tempIp = $startArr;$tempIp[3]=$i;
+                        $limitArr[] =[
+                            'ip'=>implode('.',$tempIp),
+                            'limit_id'=>$limitId,
+                            'created_at'=>date('Y-m-d H:i:s'),
+                            'updated_at'=>date('Y-m-d H:i:s'),
+                        ];
+                    }
+                    IpLimitItem::insert($limitArr);
+                    return redirect()->route('osce.theory.ipLimit');
+                }else{
+                    return redirect()->route('osce.theory.ipLimit')->withErrors('开始ip和结束IP不在同一段内！');
+                }
+            }else{
+                return redirect()->route('osce.theory.ipLimit')->withErrors('开始ip或结束IP有误！');
+            }
+
+        } catch (\Exception $ex) {
+            dd($ex);
+            return response()->json($this->fail($ex));
+        }
+    }
+    /*
+     * name：获取硕博士所以老师学生列表
+     * date：2018/1/29 10:54
+     * author:Hsiaowei(phper.tang@qq.com)
+     * param： int *
+     * param： string *
+     * return： array
+     * */
+    public function delLimit(Request $request){
+        $this->validate($request, [
+            'id' => 'required|integer',
+        ], [
+            'id.required' => 'ID必传',
+        ]);
+        try {
+            $id = $request->get('id');
+            IpLimit::find($id)->delete();
+            IpLimitItem::where('limit_id',$id)->delete();
+            return redirect()->route('osce.theory.ipLimit')->withErrors('1删除成功！');
+        } catch (\Exception $ex) {
+            dd($ex);
+            return response()->json($this->fail($ex));
         }
     }
 }
