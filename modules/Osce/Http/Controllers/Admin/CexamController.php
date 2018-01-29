@@ -32,9 +32,11 @@ class CexamController extends CommonController
     public function addExame(Request $request)
     {
         $dataArray=$request->only('exam_id','name','tid','start','end','teacher','times','convert');
-        $isExam = TestLog::where('exam_id',$dataArray['exam_id'])->first();
-        if($isExam){
-            return redirect()->back()->withErrors('本场技能考试已存在一场理论考试！');
+        if( $dataArray['exam_id'] !=0 ){
+            $isExam = TestLog::where('exam_id',$dataArray['exam_id'])->first();
+            if($isExam){
+                return redirect()->back()->withErrors('本场技能考试已存在一场理论考试！');
+            }
         }
         $start=$request->get('start');
         $end=$request->get('end');
@@ -54,6 +56,7 @@ class CexamController extends CommonController
                 $query->where('start', '<=', $start)
                     ->where('end', '>=', $start);
             })->first();
+        //dd($isHas);
         if(empty($isHas)){
             if($dataArray['convert'] < 1 || $dataArray['convert'] > 100){
                 return redirect()->back()->withErrors('参数有误！');
