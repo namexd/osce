@@ -56,6 +56,8 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::post('toUpload', ['uses'=>'TestController@toUpload',  'as' => 'osce.theory.toUpload']);//上传图片
 		Route::post('toDeleteUpload', ['uses'=>'TestController@toDeleteUpload',  'as' => 'osce.theory.toDeleteUpload']);//删除上传图片
 
+		Route::get('iplimit', ['uses'=>'TestController@iplimit',  'as' => 'osce.theory.iplimit']);//IP限制判断
+
 	});
 
 	//考试管理

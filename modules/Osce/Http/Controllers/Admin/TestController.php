@@ -11,6 +11,7 @@ namespace Modules\Osce\Http\Controllers\Admin;
 use DB;
 use Illuminate\Http\Request;
 use Modules\Msc\Entities\Student;
+use Modules\Osce\Entities\IpLimit;
 use Modules\Osce\Entities\TestContent;
 use Modules\Osce\Entities\TestContentModule;
 use Modules\Osce\Entities\TestStatistics;
@@ -656,4 +657,22 @@ class TestController extends CommonController
         return $result;
     }
 
+    /*
+     * name：获取硕博士所以老师学生列表
+     * date：2018/1/29 10:10
+     * author:Hsiaowei(phper.tang@qq.com)
+     * param： int *
+     * param： string *
+     * return： array
+     * */
+    public function iplimit(){
+        try {
+            $list = IpLimit::get();
+            return view('osce::theory.ip_limit_list',['list'=>$list]);
+
+        } catch (\Exception $ex) {
+            dd($ex);
+            return response()->json($this->fail($ex));
+        }
+    }
 }
