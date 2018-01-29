@@ -57,7 +57,7 @@ class AddAllExamineeRepository extends AbstractAddAllExaminee
 //        $connection->beginTransaction();
         try {
             $data = $this->model->getData();
-            dd($data);
+            //dd($data);
             //查询是否有父考试，并获取父考试中所有的学生用户ID
             $userss = $this->getParentExamStudent($exam);
             
