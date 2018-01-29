@@ -70,8 +70,8 @@ class TestController extends CommonController
         ]);
         $id =$request->get('id');
 
-        $testlog = TestLog::where('tid',$id)->get();
-        if(empty($testlog)){
+        $testlog = TestLog::where('tid',$id)->first();
+        if(!$testlog){
             $data =Test::find($id);
             return view('osce::theory.exam_edit')->with('data',$data);
         }else{

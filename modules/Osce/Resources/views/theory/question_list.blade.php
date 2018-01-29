@@ -9,6 +9,11 @@
 		.form-horizontal {float: right; position: relative; margin-right: 20px; overflow: hidden; }
 		.import { opacity: 0; filter: alpha(opacity=0); position: absolute; left: -100%; top: 0; width: 200%; height: 100%; outline: none; cursor: pointer; }
 		table tbody tr td:last-child { width: 220px;}
+		.Fleft { float: left;}
+		
+		.table td,.table th { min-width: 100px;}
+		
+		
 	</style>
 	
 		
@@ -17,24 +22,17 @@
 
 @section('head_js')
    <script>
-		function upload() {
-			var e = e||event;
-			var str = e.target.value.substring(e.target.value.lastIndexOf('.')+1,e.target.value.length);
-			if (str=='xls'||str=='xlsx') {
-				layer.load(0, {
-					shade: [0.3,'#fff'] //0.1透明度的白色背景
-				});				
-				$('.form-import').submit();
-			} else {
-				uselayer(1,'请上传正确的excel文件！')
-			}
-		};
+
 		function deletelist(id) {
 			uselayer(2,'确定要删除该考题吗？',function () {
 				$('.form-deletelist input').val(id);
 				$('.form-deletelist').submit();
 			});
-		};		
+		};
+		$(function () {
+			$('select[name=type]').val({{request()->get('type')}});			
+		});
+				
    </script>
 @stop
 
@@ -47,6 +45,18 @@
 	        </div>
 	    </div>
    		<div class="container-fluid ibox-content" id="list_form">
+   			
+			<form action="" method="get" class="left">
+                <label for="" class="pull-left Fleft" style="margin-left: 20px;">题目类型：</label>
+                <select name="type" class="form-control Fleft" style="width: 150px;">
+                    <option value="">全部</option>
+                    @foreach($types as $k=>$type)
+                    	<option value="{{$k}}">{{$type}}</option>
+                    @endforeach
+                </select>
+                <button type="submit" class="btn btn-sm btn-primary marl_10 Fleft" id="search">查询</button>
+            </form>
+	        
             <table class="table table-striped" id="table-striped">
                 <thead>
                     <tr>

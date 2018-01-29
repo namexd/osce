@@ -4,9 +4,9 @@
    		if (msg) {
    			for (var name in msg) {
 				if (msg[name][0]==1) {
-					uselayer(31,msg[name].substring(1,msg[name].length));
+					uselayer2(31,msg[name].substring(1,msg[name].length));
 				} else {
-					uselayer(3,msg[name]);
+					uselayer2(3,msg[name]);
 				}
    			}	   				
    		}   			

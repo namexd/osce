@@ -10,6 +10,7 @@ namespace Modules\Osce\Http\Controllers\Theory;
 
 
 use Illuminate\Http\Request;
+use Modules\Osce\Entities\IpLimitItem;
 use Modules\Osce\Entities\Student;
 use Modules\Osce\Entities\TestLog;
 use Modules\Osce\Entities\TestRecord;
@@ -28,14 +29,29 @@ class TheoryLoginController extends Controller
      * @time 2016-05-04
      * @copyright 2013-2017 sulida.com Inc. All Rights Reserved
      */
-    public function getIndex()
+    public function getIndex(Request $request)
     {
         if(\Auth::check()){
+            $isSetIp = IpLimitItem::first();
+            //dd($isSetIp);
+            if($isSetIp){
+                $ip = $request->getClientIp();
+                $isHasSetIp = IpLimitItem::where('ip',$ip)->first();
+                if(empty($isHasSetIp)){
+                    return view('osce::theory.theory_login')->withErrors('你所在设备不在允许范围！');
+                }
+            }
             $test = TestLog::where('start','<',date('Y-m-d H:i:s'))->where('end','>',date('Y-m-d H:i:s'))->first();
             if($test){
                 $userid = \Auth::user()->id;
-                $isExist = Student::where('exam_id', $test->exam_id)->where('user_id', $userid)->first();
-                if (empty($isExist)) {
+                $student = Student::where('user_id', $userid);
+                if($test->exam_id){
+                    $student = $student->where('exam_id', $test->exam_id);
+                }else{
+                    $student = $student->where('test_id', $test->id);
+                }
+                $isExist = $student->first();
+                if (!$isExist) {
                     \Auth::logout();
                     return view('osce::theory.theory_login')->withErrors('你不属于当前考试');
                 }
@@ -79,17 +95,37 @@ class TheoryLoginController extends Controller
         $username = $request->input('username');
         $password = $request->input('password');
         try {
+            $isSetIp = IpLimitItem::first();
+            //dd($isSetIp);
+            if($isSetIp){
+                $ip = $request->getClientIp();
+                $isHasSetIp = IpLimitItem::where('ip',$ip)->first();
+                if(empty($isHasSetIp)){
+                    return view('osce::theory.theory_login')->withErrors('你所在设备不在允许范围！');
+                }
+            }
             $test = TestLog::where('start','<',date('Y-m-d H:i:s'))->where('end','>',date('Y-m-d H:i:s'))->first();
             if(!empty($test)){
                 $user = \Auth::attempt(['username' => $username, 'password' => $password]);
                 //dd($user);
                 if ($user) {
                     $userid = \Auth::user()->id;
-                    $isExist = Student::where('exam_id',$test->exam_id)->where('user_id',$userid)->first();
-                    if(empty($isExist)){
-                        \Auth::logout();
-                        return redirect()->back()->withErrors('你不属于当前考试');
+                    $student = Student::where('user_id', $userid);
+                    if($test->exam_id){
+                        $student = $student->where('exam_id', $test->exam_id);
+                    }else{
+                        $student = $student->where('test_id', $test->id);
                     }
+                    $isExist = $student->first();
+                    //dd($isExist);
+                    if (!$isExist) {
+                        \Auth::logout();
+                        return view('osce::theory.theory_login')->withErrors('你不属于当前考试');
+                    }
+                    $isSetIp = IpLimitItem::first();
+                    if($isSetIp)
+                    $ip = $request->getClientIp();
+                    $isHasIp = IpLimitItem::where('ip',$ip)->first();
                     $isAnswer =  TestRecord::where(['logid'=>$test->id,'stuid'=>$userid])->first();
                     if(!empty($isAnswer)){
                         \Auth::logout();

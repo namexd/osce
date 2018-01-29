@@ -121,6 +121,7 @@
 	        </div>
 	        <div class="col-xs-6" style="float: right;">
 	            <a  href="{{route('osce.theory.add')}}" class="btn btn-primary" style="float: right;">&nbsp;新增&nbsp;</a>
+	            <a  href="{{route('osce.theory.ipLimit')}}" class="btn btn-primary" style="float: right;">&nbsp;IP地址管理&nbsp;</a>
 	        </div>
 	    </div>
    		<div class="container-fluid ibox-content" id="list_form">
