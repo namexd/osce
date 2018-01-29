@@ -357,7 +357,6 @@ class DrawlotsController extends CommonController
             if(is_null($examQueue)){
                 $examQueue = [];
             }
-            \Log::info('缓存数据为', ['queue' => $examQueue]);
 
 //            //获取当前组考生队列
 //            $ExamQueue = new ExamQueue();
@@ -368,7 +367,6 @@ class DrawlotsController extends CommonController
 
         } catch (\Exception $ex)
         {
-            \Log::info('错误为', ['exception' => $ex]);
             return response()->json($this->fail($ex));
         }
     }
@@ -452,7 +450,6 @@ class DrawlotsController extends CommonController
             $key = 'next_teacher_id' . $user_id . '_exam_id' . $exam->id;
             //从缓存中取出 下一组考生队列
             $examQueue = \Cache::get($key);
-            \Log::info('下一组考生队列为', ['queue' => $examQueue]);
             if(is_null($examQueue)){
                 $examQueue = [];
             }
@@ -661,7 +658,8 @@ class DrawlotsController extends CommonController
                     $queue = ExamQueue::query()->where('id', $examQueueId)->first();
                     if ($queue) {
                         // 直接剔除该学生
-                        ExamScreeningStudent::dropStudent($exam_screening_id, $queue->student_id);
+                        $queue->update(['status' => 4]);
+//                        ExamScreeningStudent::dropStudent($exam_screening_id, $queue->student_id);
                     }
                 }
                 else {

@@ -125,16 +125,16 @@ class ExamScreeningStudent extends CommonModel
                 ->where('student_id', '=', $studentId)
                 ->update(['status' => 4]);
 
-            ExamScreeningStudent::query()
-                ->where('exam_screening_id', '=', $examScreenId)
-                ->where('student_id', '=', $studentId)
-                ->update(['is_end' => 1, 'status' => 1]);
+//            ExamScreeningStudent::query()
+//                ->where('exam_screening_id', '=', $examScreenId)
+//                ->where('student_id', '=', $studentId)
+//                ->update(['is_end' => 1, 'status' => 1]);
 
-            ExamOrder::query()
-                ->where('exam_screening_id', '=', $examScreenId)
-                ->where('student_id', '=', $studentId)
-                ->where('status', '=', 0)
-                ->update(['status' => 3]);
+//            ExamOrder::query()
+//                ->where('exam_screening_id', '=', $examScreenId)
+//                ->where('student_id', '=', $studentId)
+//                ->where('status', '=', 0)
+//                ->update(['status' => 3]);
             $connection->commit();
         } catch(\Exception $ex) {
             $connection->rollBack();
