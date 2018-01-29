@@ -52,7 +52,12 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::post('toUpload', ['uses'=>'TestController@toUpload',  'as' => 'osce.theory.toUpload']);//上传图片
 		Route::post('toDeleteUpload', ['uses'=>'TestController@toDeleteUpload',  'as' => 'osce.theory.toDeleteUpload']);//删除上传图片
 
-	});
+        Route::get('question-list', ['uses'=>'TestController@getQuestionList','as' => 'osce.theory.getQuestionList']);
+        Route::get('view-question', ['uses'=>'TestController@getViewQuestion','as' => 'osce.theory.getViewQuestion']);
+        Route::get('edit-question', ['uses'=>'TestController@getEditQuestion','as' => 'osce.theory.getEditQuestion']);
+        Route::get('delete-question', ['uses'=>'TestController@getDeleteQuestion','as' => 'osce.theory.getDeleteQuestion']);
+        Route::post('edit-question', ['uses'=>'TestController@postEditQuestion','as' => 'osce.theory.postEditQuestion']);
+    });
 
 	//考试管理
 	Route::group(['prefix' => "cexam", 'namespace' => 'Admin'], function()

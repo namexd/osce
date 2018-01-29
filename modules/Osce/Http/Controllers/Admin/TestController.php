@@ -656,4 +656,67 @@ class TestController extends CommonController
         return $result;
     }
 
+
+    public function getQuestionList(Request $request) {
+        $search = $request->get('search');
+        $type = $request->get('type');
+        $query = TestContentModule::query();//->where('status' , '<>' , 0);
+
+        if ($search) {
+            $query = $query->where('name', 'like', $search . '%');
+        }
+        if ($type) {
+            $query = $query->where('type', $type);
+        }
+
+        $types = (new TestContentModule())->typeValues;
+//        $query->with('examPlan');
+        return view('osce::theory.question_list', ['data' => $query->paginate(), 'types' => $types]);
+    }
+
+    public function getViewQuestion(Request $request) {
+        $id = $request->get('id');
+        $data = null;
+        if ($id && $data = TestContentModule::find($id)) {
+            return view('osce::theory.view_question', ['question' => $data]);
+        } else {
+            return redirect()->back()->withErrors('考题不存在');
+        }
+    }
+
+    public function getEditQuestion(Request $request) {
+        $id = $request->get('id');
+        $question = null;
+        if ($id && $question = TestContentModule::find($id)) {
+            return view('osce::theory.edit_question', ['question' => $question]);
+        } else {
+            return redirect()->back()->withErrors('考题不存在');
+        }
+    }
+
+    public function postEditQuestion(Request $request) {
+        $id = $request->get('id');
+        $question = null;
+        if ($id && $question = TestContentModule::find($id)) {
+            $data = $request->input();
+            $question->update($data);
+            return $this->success_data();
+        } else {
+            return [
+                'code' => -1,
+                'message' => '考题不存在',
+            ];
+        }
+    }
+
+    public function getDeleteQuestion(Request $request) {
+        $id = $request->get('id');
+        $question = null;
+        if ($id && $question = TestContentModule::find($id)) {
+            $question->delete();
+            return redirect()->route('osce.theory.getQuestionList');
+        } else {
+            return redirect()->back()->withErrors('考题不存在');
+        }
+    }
 }
