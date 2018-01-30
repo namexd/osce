@@ -62,7 +62,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 
         Route::get('question-list', ['uses'=>'TestController@getQuestionList','as' => 'osce.theory.getQuestionList']);
         Route::get('add-question', ['uses'=>'TestController@getAddQuestion','as' => 'osce.theory.getAddQuestion']);
-        Route::post('add-question', ['uses'=>'TestController@getAddQuestion','as' => 'osce.theory.postAddQuestion']);
+        Route::post('add-question', ['uses'=>'TestController@postAddQuestion','as' => 'osce.theory.postAddQuestion']);
         Route::get('view-question', ['uses'=>'TestController@getViewQuestion','as' => 'osce.theory.getViewQuestion']);
         Route::get('edit-question', ['uses'=>'TestController@getEditQuestion','as' => 'osce.theory.getEditQuestion']);
         Route::get('delete-question', ['uses'=>'TestController@getDeleteQuestion','as' => 'osce.theory.getDeleteQuestion']);
