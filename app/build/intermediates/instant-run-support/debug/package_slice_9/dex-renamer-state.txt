@@ -1,4 +1,0 @@
-#Thu Jan 18 16:37:09 CST 2018
-base.0=D\:\\android\\OSCE\\app\\build\\intermediates\\transforms\\dexMerger\\debug\\9
-path.0=classes.dex
-renamed.0=classes.dex

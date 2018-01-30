@@ -1,6 +1,8 @@
 package com.mx.osce;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.InputStreamReader;
 import java.util.Stack;
 
 import com.mx.osce.crashHandler.CrashHandler;
@@ -10,8 +12,16 @@ import com.mx.osce.service.SubscriberService;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Environment;
 import android.util.Log;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONObject;
 
 public class MyApplicaton extends Application {
 
@@ -25,7 +35,6 @@ public class MyApplicaton extends Application {
 	@Override
 	public void onCreate() {
 		super.onCreate();
-
 		mSubscriberIntent = new Intent(getApplicationContext(), SubscriberService.class);
 		
 //		CrashHandler crashHandler = CrashHandler.getInstance();
@@ -97,4 +106,5 @@ public class MyApplicaton extends Application {
 		android.os.Process.killProcess(android.os.Process.myPid());
 		System.exit(0);
 	}
+
 }

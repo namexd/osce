@@ -3,10 +3,8 @@ package com.mx.osce;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-
 import javax.xml.transform.ErrorListener;
 import javax.xml.transform.TransformerException;
-
 import com.acs.audiojack.AudioJackReader;
 import com.acs.audiojack.AudioJackReader.OnResetCompleteListener;
 import com.acs.audiojack.DukptReceiver;
@@ -35,7 +33,6 @@ import com.mx.osce.service.UploadScroeService.OnProgressListener;
 import com.mx.osce.util.Constant;
 import com.mx.osce.util.GsonRequest;
 import com.mx.osce.util.Utils;
-
 import android.app.AlertDialog;
 import android.app.FragmentManager;
 import android.content.BroadcastReceiver;
@@ -156,7 +153,7 @@ public class MainActivity extends BaseActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 
-		super.onCreate(savedInstanceState, this);
+		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.activity_main);
 
@@ -342,7 +339,7 @@ public class MainActivity extends BaseActivity {
 
 	/**
 	 * 设置最大音量
-	 * 
+	 *
 	 * @return true if current volume is equal to maximum volume.
 	 */
 	private void setMaxVolume() {
@@ -757,7 +754,7 @@ public class MainActivity extends BaseActivity {
 			@Override
 			public boolean onItemLongClick(AdapterView<?> arg0, View arg1, final int arg2, long arg3) {
 				// TODO Auto-generated method stub
-				new AlertDialog.Builder(MainActivity.this).
+				new AlertDialog.Builder(MainActivity.this,R.style.AlertDialog).
 						setTitle("请选择").
 						setItems(new String[]{"弃考","排到最后"}, new DialogInterface.OnClickListener() {
 							@Override
@@ -765,11 +762,23 @@ public class MainActivity extends BaseActivity {
 								switch (which){
 									case 0:
 										//弃考
-										qikao(arg2);
+										new AlertDialog.Builder(MainActivity.this,R.style.AlertDialog).setTitle("确认弃考？").setPositiveButton("确定", new DialogInterface.OnClickListener() {
+											@Override
+											public void onClick(DialogInterface dialog, int which) {
+												qikao(arg2);
+											}
+										})
+												.setNegativeButton("取消", null).show();
 										break;
 									case 1:
 										//拍到最后
-										paidaozuihou(arg2);
+										new AlertDialog.Builder(MainActivity.this,R.style.AlertDialog).setTitle("确认拍到最后？").setPositiveButton("确定", new DialogInterface.OnClickListener() {
+											@Override
+											public void onClick(DialogInterface dialog, int which) {
+												paidaozuihou(arg2);
+											}
+										})
+												.setNegativeButton("取消", null).show();
 										break;
 								}
 							}
@@ -785,8 +794,7 @@ public class MainActivity extends BaseActivity {
 			@Override
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
-				new AlertDialog.Builder(MainActivity.this).setTitle("确认注销？").setIcon(
-						android.R.drawable.stat_sys_warning).setPositiveButton("确定", new DialogInterface.OnClickListener() {
+				new AlertDialog.Builder(MainActivity.this,R.style.AlertDialog).setTitle("确认注销？").setPositiveButton("确定", new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
 						Utils.deleteSharedPrefrences(MainActivity.this);
@@ -1114,7 +1122,7 @@ public class MainActivity extends BaseActivity {
 //		params.put("room_id", room_id);
 //		params.put("teacher_id", teacher_id);
 		String drawUrl = BaseActivity.mSUrl + Constant.DRAW + "?uid=" + watchUid + "&room_id=" + room_id + "&teacher_id=" + teacher_id;
-		Log.e(">>>SendDrawRequest Url<<<", drawUrl);
+		Log.e(">>SendDrawRequest Url<<", drawUrl);
 		try {
 			GsonRequest<DrawInfor> drawRequest = new GsonRequest<DrawInfor>(Method.GET, drawUrl, DrawInfor.class, null,
 					null, new Listener<DrawInfor>() {

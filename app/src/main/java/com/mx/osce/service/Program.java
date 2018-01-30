@@ -1,14 +1,26 @@
 package com.mx.osce.service;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.util.Timer;
 
+import com.mx.osce.BaseActivity;
 import com.mx.osce.BaseActivity;
 import com.mx.osce.subscriber.Subscriber;
 import com.mx.osce.util.Utils;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.util.Log;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONObject;
+
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
@@ -26,13 +38,7 @@ public class Program {
 
 	// public static final String mSHost = BaseActivity.mEasyUrl;
 
-	public static final String mSHost = "192.168.0.163";
-
-	public static final int mSPort = 6379;
-
-	public static final String mSPass = "";
-
-	public static final String CHANNEL_NAME = "pad_message";
+	public String CHANNEL_NAME = "pad_message";
 
 	public Program(Context mContext) {
 		this.mContext = mContext;
@@ -40,8 +46,14 @@ public class Program {
 
 	public void Subscriberchannel() throws Exception {
 
+		System.out.println("redis信息:"+BaseActivity.mSHost+"port:"+BaseActivity.mSPort+"pass:"+BaseActivity.mSPass);
 		JedisPoolConfig poolConfig = new JedisPoolConfig();
-		JedisPool jedisPool = new JedisPool(poolConfig, mSHost, mSPort, 0, mSPass);
+		JedisPool jedisPool;
+		if(BaseActivity.mSPass.equals("")) {
+			 jedisPool = new JedisPool(poolConfig, BaseActivity.mSHost, BaseActivity.mSPort, 0);
+		}else {
+			jedisPool = new JedisPool(poolConfig, BaseActivity.mSHost, BaseActivity.mSPort, 0,BaseActivity.mSPass);
+		}
 		subscriberJedis = jedisPool.getResource();
 		PingJedis = jedisPool.getResource();
 		OnCount onCount = new OnCount() {
@@ -133,13 +145,17 @@ public class Program {
 		jedisMonitor.start();
 	}
 
-	class JedisMonitor extends Thread {
+		class JedisMonitor extends Thread {
 		@Override
 		public void run() {
 			//
 			try {
-				Jedis jedis = new Jedis(mSHost, mSPort);
-				jedis.auth(mSPass);
+				Jedis jedis = new Jedis(BaseActivity.mSHost, BaseActivity.mSPort);
+				if(BaseActivity.mSPass.equals("")) {
+
+				}else {
+					jedis.auth(BaseActivity.mSPass);
+				}
 				while (isalive) {
 					Log.v("Program", "发送pong");
 					jedis.publish(Utils.MD5(BaseActivity.mEasyUrl) + CHANNEL_NAME, "PONG");
@@ -151,5 +167,7 @@ public class Program {
 			}
 		}
 	}
+
+
 
 }

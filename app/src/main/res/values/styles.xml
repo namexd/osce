@@ -176,4 +176,8 @@
         <attr name="isShowPopup" format="boolean" />
     </declare-styleable>
 
+    <style name="AlertDialog" parent="@android:Theme.DeviceDefault.Light.Dialog">
+        <!-- 这里是修改顶部标题背景颜色，具体颜色自己定，可以是图片 -->
+        <item name="android:topDark">@color/activity_backgroud</item>
+    </style>
 </resources>

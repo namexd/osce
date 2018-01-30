@@ -4,6 +4,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.mx.osce.custom.LoadingDialog;
+import com.mx.osce.service.Program;
 import com.mx.osce.util.Constant;
 import com.mx.osce.util.NetStatus;
 import com.mx.osce.util.Out;
@@ -13,6 +14,7 @@ import com.mx.osce.util.Utils;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -24,6 +26,16 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 
 /**
  * Activity 基础类
@@ -43,6 +55,12 @@ public abstract class BaseActivity extends Activity implements OnClickListener {
 	public static String mSUrl;
 
 	public static String mEasyUrl;
+
+	public static String mSHost;
+
+	public static int mSPort;
+
+	public static String mSPass;
 
 	// private SweetAlertDialog mBaseDialog;
 
@@ -64,6 +82,8 @@ public abstract class BaseActivity extends Activity implements OnClickListener {
 		mScontext = this;
 
 		settingBasicUrl();
+
+		new Task().execute();
 
 		mBaseApp = (MyApplicaton) this.getApplication();
 
@@ -326,5 +346,35 @@ public abstract class BaseActivity extends Activity implements OnClickListener {
 																								// bar
 				| View.SYSTEM_UI_FLAG_FULLSCREEN // hide status bar
 				| View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+	}
+
+
+	static class Task extends AsyncTask<Void, Integer, Integer> {
+
+		/**
+		 * 后台运行的方法，可以运行非UI线程，可以执行耗时的方法
+		 */
+		@Override
+		protected Integer doInBackground(Void... params) {
+			try {
+				String url = BaseActivity.mSUrl+"/common/get-redis-config";
+				HttpClient httpClient = new DefaultHttpClient();
+				HttpGet httpGet = new HttpGet(url);
+				HttpResponse response = httpClient.execute(httpGet);
+				HttpEntity entity = response.getEntity();
+				BufferedReader reader = new BufferedReader(
+						new InputStreamReader(entity.getContent()));
+					String result = reader.readLine();
+					System.out.println("GET:"+result);
+					JSONObject json = new JSONObject(result);
+					mSHost = json.getString("host");
+					mSPort = Integer.parseInt(json.getString("port"));
+					mSPass = json.getString("password");
+			}catch (Exception e){
+				e.printStackTrace();
+			}
+			return 1;
+		}
+
 	}
 }

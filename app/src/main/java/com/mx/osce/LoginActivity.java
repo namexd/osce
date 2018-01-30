@@ -1,5 +1,7 @@
 package com.mx.osce;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
@@ -20,6 +22,7 @@ import com.mx.osce.util.Utils;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
@@ -32,6 +35,14 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONObject;
+
 import cn.pedant.SweetAlert.widget.SweetAlertDialog;
 import cn.pedant.SweetAlert.widget.SweetAlertDialog.OnSweetClickListener;
 import cn.pedant.SweetAlert.widget.SweetAlertDialog.OnSweetEditListener;
@@ -473,5 +484,6 @@ public class LoginActivity extends BaseActivity {
 			loadingDialog.cancel();
 		}
 	}
+
 
 }

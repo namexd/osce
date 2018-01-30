@@ -1493,77 +1493,78 @@ containing a value of this type.
         public static final int gray_button_background=0x7f020026;
         public static final int green=0x7f020027;
         public static final int ic_launcher=0x7f020028;
-        public static final int icon_camera_gary=0x7f020029;
-        public static final int icon_close_gary=0x7f02002a;
-        public static final int icon_mark_gary=0x7f02002b;
-        public static final int icon_mark_white=0x7f02002c;
-        public static final int icon_mic_gary=0x7f02002d;
-        public static final int icon_mic_white=0x7f02002e;
-        public static final int icon_video_white=0x7f02002f;
-        public static final int image_camera_selector=0x7f020030;
-        public static final int image_mark_selector=0x7f020031;
-        public static final int image_mic_selector=0x7f020032;
-        public static final int line_orange=0x7f020033;
-        public static final int markpoint=0x7f020034;
-        public static final int menu_selected=0x7f020035;
-        public static final int net_error=0x7f020036;
-        public static final int normal_bg=0x7f020037;
-        public static final int orange=0x7f020038;
-        public static final int other_btn_selector=0x7f020039;
-        public static final int pad_=0x7f02003a;
-        public static final int pad_next=0x7f02003b;
-        public static final int pad_pic=0x7f02003c;
-        public static final int pad_time=0x7f02003d;
-        public static final int point_min_gray=0x7f02003e;
-        public static final int popuowindos=0x7f02003f;
-        public static final int popup_bg=0x7f020040;
-        public static final int popup_bg_pic=0x7f020041;
-        public static final int progress_horizontal_custom=0x7f020042;
-        public static final int progress_horizontal_my=0x7f020043;
-        public static final int ready_icon=0x7f020044;
-        public static final int ready_normal=0x7f020045;
-        public static final int ready_pressed=0x7f020046;
-        public static final int recorder=0x7f020047;
-        public static final int red_button_background=0x7f020048;
-        public static final int refresh_selector=0x7f020049;
-        public static final int rod_handshank_butten=0x7f02004a;
-        public static final int rod_place_icon=0x7f02004b;
-        public static final int room_rating_bar=0x7f02004c;
-        public static final int seek_img=0x7f02004d;
-        public static final int seek_thumb_normal=0x7f02004e;
-        public static final int seekbar_drawable=0x7f02004f;
-        public static final int seekbar_thumb=0x7f020050;
-        public static final int seekbarpressure_bg_normal=0x7f020051;
-        public static final int seekbarpressure_bg_progress=0x7f020052;
-        public static final int settings=0x7f020053;
-        public static final int shape_btn=0x7f020054;
-        public static final int star_gary=0x7f020055;
-        public static final int star_light=0x7f020056;
-        public static final int start_end_point=0x7f020057;
-        public static final int success_bow=0x7f020058;
-        public static final int success_circle=0x7f020059;
-        public static final int tag_bg=0x7f02005a;
-        public static final int text_color=0x7f02005b;
-        public static final int thumb=0x7f02005c;
-        public static final int timeline_point=0x7f02005d;
-        public static final int timer_list_selector=0x7f02005e;
-        public static final int transparent=0x7f02006f;
-        public static final int v1=0x7f02005f;
-        public static final int v2=0x7f020060;
-        public static final int v3=0x7f020061;
-        public static final int v4=0x7f020062;
-        public static final int v5=0x7f020063;
-        public static final int v6=0x7f020064;
-        public static final int v7=0x7f020065;
-        public static final int v_anim1=0x7f020066;
-        public static final int v_anim2=0x7f020067;
-        public static final int v_anim3=0x7f020068;
-        public static final int video_fast_search_nomal=0x7f020069;
-        public static final int video_fast_search_press=0x7f02006a;
-        public static final int voice_to_short=0x7f02006b;
-        public static final int wait_icon=0x7f02006c;
-        public static final int warning_circle=0x7f02006d;
-        public static final int warning_sigh=0x7f02006e;
+        public static final int icon1=0x7f020029;
+        public static final int icon_camera_gary=0x7f02002a;
+        public static final int icon_close_gary=0x7f02002b;
+        public static final int icon_mark_gary=0x7f02002c;
+        public static final int icon_mark_white=0x7f02002d;
+        public static final int icon_mic_gary=0x7f02002e;
+        public static final int icon_mic_white=0x7f02002f;
+        public static final int icon_video_white=0x7f020030;
+        public static final int image_camera_selector=0x7f020031;
+        public static final int image_mark_selector=0x7f020032;
+        public static final int image_mic_selector=0x7f020033;
+        public static final int line_orange=0x7f020034;
+        public static final int markpoint=0x7f020035;
+        public static final int menu_selected=0x7f020036;
+        public static final int net_error=0x7f020037;
+        public static final int normal_bg=0x7f020038;
+        public static final int orange=0x7f020039;
+        public static final int other_btn_selector=0x7f02003a;
+        public static final int pad_=0x7f02003b;
+        public static final int pad_next=0x7f02003c;
+        public static final int pad_pic=0x7f02003d;
+        public static final int pad_time=0x7f02003e;
+        public static final int point_min_gray=0x7f02003f;
+        public static final int popuowindos=0x7f020040;
+        public static final int popup_bg=0x7f020041;
+        public static final int popup_bg_pic=0x7f020042;
+        public static final int progress_horizontal_custom=0x7f020043;
+        public static final int progress_horizontal_my=0x7f020044;
+        public static final int ready_icon=0x7f020045;
+        public static final int ready_normal=0x7f020046;
+        public static final int ready_pressed=0x7f020047;
+        public static final int recorder=0x7f020048;
+        public static final int red_button_background=0x7f020049;
+        public static final int refresh_selector=0x7f02004a;
+        public static final int rod_handshank_butten=0x7f02004b;
+        public static final int rod_place_icon=0x7f02004c;
+        public static final int room_rating_bar=0x7f02004d;
+        public static final int seek_img=0x7f02004e;
+        public static final int seek_thumb_normal=0x7f02004f;
+        public static final int seekbar_drawable=0x7f020050;
+        public static final int seekbar_thumb=0x7f020051;
+        public static final int seekbarpressure_bg_normal=0x7f020052;
+        public static final int seekbarpressure_bg_progress=0x7f020053;
+        public static final int settings=0x7f020054;
+        public static final int shape_btn=0x7f020055;
+        public static final int star_gary=0x7f020056;
+        public static final int star_light=0x7f020057;
+        public static final int start_end_point=0x7f020058;
+        public static final int success_bow=0x7f020059;
+        public static final int success_circle=0x7f02005a;
+        public static final int tag_bg=0x7f02005b;
+        public static final int text_color=0x7f02005c;
+        public static final int thumb=0x7f02005d;
+        public static final int timeline_point=0x7f02005e;
+        public static final int timer_list_selector=0x7f02005f;
+        public static final int transparent=0x7f020070;
+        public static final int v1=0x7f020060;
+        public static final int v2=0x7f020061;
+        public static final int v3=0x7f020062;
+        public static final int v4=0x7f020063;
+        public static final int v5=0x7f020064;
+        public static final int v6=0x7f020065;
+        public static final int v7=0x7f020066;
+        public static final int v_anim1=0x7f020067;
+        public static final int v_anim2=0x7f020068;
+        public static final int v_anim3=0x7f020069;
+        public static final int video_fast_search_nomal=0x7f02006a;
+        public static final int video_fast_search_press=0x7f02006b;
+        public static final int voice_to_short=0x7f02006c;
+        public static final int wait_icon=0x7f02006d;
+        public static final int warning_circle=0x7f02006e;
+        public static final int warning_sigh=0x7f02006f;
     }
     public static final class id {
         public static final int Bottom=0x7f0b00a5;
@@ -1832,27 +1833,36 @@ containing a value of this type.
         public static final int wait_to_draw=0x7f090024;
     }
     public static final class style {
+        public static final int AlertDialog=0x7f070001;
         /**  API 11 theme customizations can go here. 
  API 14 theme customizations can go here. 
+
+            Theme customizations available in newer API levels can go in
+            res/values-vXX/styles.xml, while customizations related to
+            backward-compatibility can go here.
+
+        
          */
         public static final int AppBaseTheme=0x7f070000;
-        public static final int AppTheme=0x7f070001;
-        public static final int CustomWindowTitleBackground=0x7f070002;
-        public static final int MyDialogStyle=0x7f070003;
-        public static final int Theme_AudioDialog=0x7f070004;
-        public static final int activity_grade_textview_style=0x7f070005;
-        public static final int activity_top_LL_image_style=0x7f070006;
-        public static final int activity_top_LL_style=0x7f070007;
-        public static final int activity_top_LL_textView_style=0x7f070008;
-        public static final int activity_top_textview_style=0x7f070009;
-        public static final int alert_dialog=0x7f07000a;
-        public static final int custom_title=0x7f07000b;
-        public static final int dialog=0x7f07000c;
-        public static final int dialog_blue_button=0x7f07000d;
-        public static final int fragment_grade_textview_style=0x7f07000e;
-        public static final int popup_animation=0x7f07000f;
-        public static final int progress_horizontal_custom=0x7f070010;
-        public static final int roomRatingBar=0x7f070011;
+        /**  All customizations that are NOT specific to a particular API-level can go here. 
+         */
+        public static final int AppTheme=0x7f070002;
+        public static final int CustomWindowTitleBackground=0x7f070003;
+        public static final int MyDialogStyle=0x7f070004;
+        public static final int Theme_AudioDialog=0x7f070005;
+        public static final int activity_grade_textview_style=0x7f070006;
+        public static final int activity_top_LL_image_style=0x7f070007;
+        public static final int activity_top_LL_style=0x7f070008;
+        public static final int activity_top_LL_textView_style=0x7f070009;
+        public static final int activity_top_textview_style=0x7f07000a;
+        public static final int alert_dialog=0x7f07000b;
+        public static final int custom_title=0x7f07000c;
+        public static final int dialog=0x7f07000d;
+        public static final int dialog_blue_button=0x7f07000e;
+        public static final int fragment_grade_textview_style=0x7f07000f;
+        public static final int popup_animation=0x7f070010;
+        public static final int progress_horizontal_custom=0x7f070011;
+        public static final int roomRatingBar=0x7f070012;
     }
     public static final class styleable {
         /** Attributes that can be used with a CircleProgressBar.
