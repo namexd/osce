@@ -699,8 +699,7 @@ class TestController extends CommonController
         $id = $request->get('id');
         $question = null;
         if ($id && $question = TestContentModule::find($id)) {
-            $types = (new TestContentModule())->typeValues;
-            return view('osce::theory.edit_question', ['question' => $question, 'types' => $types]);
+            return view('osce::theory.edit_question', ['question' => $question]);
         } else {
             return redirect()->back()->withErrors('考题不存在');
         }
@@ -734,8 +733,8 @@ class TestController extends CommonController
     }
 
     public function getAddQuestion() {
-        $types = (new TestContentModule())->typeValues;
-        return view('osce::theory.add_question', ['types' => $types]);
+        $data = new TestContentModule();
+        return view('osce::theory.add_question', ['data' => $data]);
     }
 
     public function postAddQuestion(Request $request) {
