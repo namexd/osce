@@ -1,7 +1,7 @@
 @extends('osce::theory.base')
 
 @section('title')
-	题库管理
+	试卷管理
 @stop
 @section('head_css')
 	<style>
@@ -43,7 +43,7 @@
 	<div class="wrapper wrapper-content animated fadeInRight">
 	    <div class="row table-head-style1 ">
 	        <div class="col-xs-6">
-	            <h5 class="title-label">题库管理</h5>
+	            <h5 class="title-label">试卷管理</h5>
 	        </div>
 	        <div class="col-xs-6" style="float: right;">
 	            <a  href="{{route('osce.theory.export')}}" class="btn btn-primary" style="float: right;">&nbsp;模版下载&nbsp;</a>
