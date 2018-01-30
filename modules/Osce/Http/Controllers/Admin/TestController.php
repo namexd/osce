@@ -105,14 +105,19 @@ class TestController extends CommonController
         $typeArr = $request->get('type');
         $numberArr = $request->get('number');
         $scoreArr = $request->get('score');
+        $scoreArr = $request->get('score');
+        $unit = $request->get('unit',1);
 
         if( count($typeArr) != count($numberArr) && count($typeArr) != count($scoreArr) ){
             return redirect()->back()->withErrors('参数有误！');
         }
-        $test_id = Test::insertGetId(['name' =>  $name, 'ctime' => date('Y-m-d H:i:s')]);
-        $sum = $this->creatautoexam($test_id,$typeArr,$numberArr,$scoreArr);
-        $data =Test::find($test_id);
-        $data->update(['score'=>$sum]);
+        for($i=1;$i<=$unit;$i++){
+            $name=$unit>1?$name."_第 $i 套":$name;
+            $test_id []= Test::insertGetId(['name' =>  $name, 'ctime' => date('Y-m-d H:i:s')]);
+            $sum = $this->creatautoexam($test_id,$typeArr,$numberArr,$scoreArr);
+            $data =Test::find($test_id);
+            $data->update(['score'=>$sum]);
+        }
         return $this->success_data(['test_id'=>$test_id]);
     }
     public function onceautoexam(Request $request){
