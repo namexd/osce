@@ -296,7 +296,7 @@
 				@if (request()->get('from')=='edit')
 					<button class="btn btn-primary addtm-save">保存</button>
 				@endif
-	            <a class="btn btn-white" onclick="javascript:history.go(-1);">取消</a>
+	            <a class="btn btn-white" onclick="javascript:history.go(-1);">返回</a>
 	        </div>
 	    </div>
 	</form>
