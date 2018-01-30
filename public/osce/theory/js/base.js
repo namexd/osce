@@ -135,10 +135,10 @@
 				layerindex = layer.confirm(str,layerfn);			
 				break;
 			case 3:
-				layerindex = layer.msg(str,layerfn,{time:1000,skin:'msg-error center',icon:1});			
+				layerindex = layer.msg(str,{time:1500,skin:'msg-error center',icon:1},layerfn);			
 				break;
 			case 31:
-				layerindex = layer.msg(str,layerfn,{time:1000,skin:'msg-success center',icon:1});			
+				layerindex = layer.msg(str,{time:1500,skin:'msg-success center',icon:1},layerfn);			
 				break;
 			default:
 				break;
@@ -564,6 +564,13 @@
 		
 	};
 
+
+	w.formToJson = function (data) {
+		data=data.replace(/&/g,"\",\"");
+		data=data.replace(/=/g,"\":\"");
+		data="{\""+data+"\"}";
+		return data;
+	};
 
 	
 })(window);
