@@ -370,6 +370,42 @@ class TestController extends CommonController
         return view('osce::theory.exam_check',['data'=>$data]);
     }
 
+    public function examstatistics(Request $request){
+        $this->validate($request, [
+            'id'    => 'required|integer',
+        ], [
+            'id.required' => 'ID必传'
+        ]);
+        $id = $request->get('id');
+        $test = TestLog::find($id);
+        $testStatistics = TestStatistics::where('logid',$id);
+        $students = $testStatistics->count();//参考总人数
+        //考试总得分
+        $total_score = TestStatistics::where('logid',$id)->select(DB::raw('sum(objective + subjective) as total_score'))->first()->total_score;
+        $avg_score = number_format($total_score/$students,2);//考试平均分
+        $test_score = $test->test->score;//试卷总分
+        $students_pass = 0; //及格人数统计
+        foreach ($testStatistics->get() as $v){
+            $student_score = $v->objective + $v->subjective;
+            if ($student_score > $test_score*0.6){
+                $students_pass++;
+            }
+            $student_score_arr[] = $student_score;
+        }
+        $student_score_max = max($student_score_arr);//最高分
+        $student_score_min = min($student_score_arr);//最低分
+        $pass_percent = number_format($students_pass/$students*100,2).'%';  //合格率
+        $data = [
+            'total_score'       => $total_score,        //考试总得分
+            'avg_score'         => $avg_score,          //考试平均分
+            'student_score_max' => $student_score_max,  //最高分
+            'student_score_min' => $student_score_min,  //最低分
+            'pass_percent'      => $pass_percent,       //合格率
+            '' => '',
+        ];
+        return view('osce::theory.exam_statistics',['data'=>$data]);
+    }
+
 
     public function studentscore(Request $request){
         $this->validate($request, [
