@@ -63,7 +63,7 @@
             android:layout_height="match_parent"
             android:background="#d1d1d1" />
 
-        <com.mx.osce.custom.CalendarCard
+        <com.mx.bluetooth.custom.CalendarCard
             android:id="@+id/sb_fragment_grade_detail_point_item_score"
             android:layout_width="0dp"
             android:layout_height="match_parent"

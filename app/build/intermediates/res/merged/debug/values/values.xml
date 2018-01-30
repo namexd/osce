@@ -78,7 +78,7 @@
     <dimen name="text_size_normal">20sp</dimen>
     <item name="transparent" type="drawable">#00000000</item>
     <string name="action_settings">Settings</string>
-    <string name="app_name">OSCE-3.10-Beta-3.6</string>
+    <string name="app_name">OSCE-3.10-Beta-3.7</string>
     <string name="button_point">打开评分标准</string>
     <string name="close_media">关闭闹钟</string>
     <string name="communication_skill">医患沟通技巧</string>

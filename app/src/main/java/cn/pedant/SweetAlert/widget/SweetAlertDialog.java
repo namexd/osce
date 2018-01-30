@@ -1,6 +1,6 @@
 package cn.pedant.SweetAlert.widget;
 
-import com.mx.osce.R;
+import com.mx.bluetooth.R;
 
 import android.app.Dialog;
 import android.content.Context;

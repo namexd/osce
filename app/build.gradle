@@ -6,7 +6,7 @@ android {
     aaptOptions.cruncherEnabled = false
     aaptOptions.useNewCruncher = false
     defaultConfig {
-        applicationId "com.mx.osce"
+        applicationId "com.mx.bluetooth"
         minSdkVersion 16
         targetSdkVersion 22
         compileOptions {
@@ -48,5 +48,6 @@ dependencies {
     compile files('libs/jedis-2.0.0.jar')
     compile files('libs/redisson-2.1.1.jar')
     compile files('libs/xUtils-2.6.14.jar')
+    compile files('libs/identitycard.jar')
     compile 'org.apache.httpcomponents:httpcore:4.3.3'
 }

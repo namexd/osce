@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.mx.osce"
+    package="com.mx.bluetooth"
     android:versionCode="1"
     android:versionName="3.7" >
 
@@ -18,16 +18,20 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.BLUETOOTH"/>
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"/>
 
     <application
-        android:name="com.mx.osce.MyApplicaton"
+        android:name="com.mx.bluetooth.MyApplicaton"
         android:allowBackup="true"
         android:configChanges="orientation|keyboardHidden|touchscreen|locale|keyboard|navigation|screenSize|layoutDirection"
         android:icon="@drawable/app_icon"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="com.mx.osce.LoginActivity"
+            android:name="com.mx.bluetooth.LoginActivity"
             android:label="@string/app_name"
             android:screenOrientation="landscape"
             android:theme="@android:style/Theme.Light.NoTitleBar"
@@ -39,53 +43,53 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.mx.osce.MainActivity"
+            android:name="com.mx.bluetooth.MainActivity"
             android:configChanges="orientation|keyboardHidden|touchscreen|locale|keyboard|navigation|screenSize|layoutDirection"
             android:screenOrientation="landscape"
             android:theme="@android:style/Theme.Light.NoTitleBar" >
         </activity>
         <activity
-            android:name="com.mx.osce.VideoActivity"
+            android:name="com.mx.bluetooth.VideoActivity"
             android:screenOrientation="landscape"
             android:theme="@android:style/Theme.Light.NoTitleBar" >
         </activity>
         <activity
-            android:name="com.mx.osce.GradeActivity"
+            android:name="com.mx.bluetooth.GradeActivity"
             android:screenOrientation="landscape"
             android:theme="@android:style/Theme.Light.NoTitleBar" >
         </activity>
         <activity
-            android:name="com.mx.osce.DemoActivity"
+            android:name="com.mx.bluetooth.DemoActivity"
             android:theme="@android:style/Theme.Light.NoTitleBar" >
         </activity>
 
-        <receiver android:name="com.mx.osce.broadcast.ForceBroadReciver" >
+        <receiver android:name="com.mx.bluetooth.broadcast.ForceBroadReciver" >
             <intent-filter>
-                <action android:name="com.mx.osce.broadcast.Force_Warn_End_Exam" />
+                <action android:name="com.mx.bluetooth.broadcast.Force_Warn_End_Exam" />
             </intent-filter>
             <intent-filter>
-                <action android:name="com.mx.osce.broadcast.Force_Off_Line" />
+                <action android:name="com.mx.bluetooth.broadcast.Force_Off_Line" />
             </intent-filter>
         </receiver>
-        <receiver android:name="com.mx.osce.broadcast.SubscriberReciver" >
+        <receiver android:name="com.mx.bluetooth.broadcast.SubscriberReciver" >
             <intent-filter>
-                <action android:name="com.mx.osce.broadcast.SubscriberReciver" />
+                <action android:name="com.mx.bluetooth.broadcast.SubscriberReciver" />
             </intent-filter>
         </receiver>
 
-        <service android:name="com.mx.osce.service.TimeService" >
+        <service android:name="com.mx.bluetooth.service.TimeService" >
             <intent-filter>
-                <action android:name="com.mx.osce.service.TimeService" />
+                <action android:name="com.mx.bluetooth.service.TimeService" />
             </intent-filter>
         </service>
-        <service android:name="com.mx.osce.service.SubscriberService" >
+        <service android:name="com.mx.bluetooth.service.SubscriberService" >
             <intent-filter>
-                <action android:name="com.mx.osce.service.SubscriberService" />
+                <action android:name="com.mx.bluetooth.service.SubscriberService" />
             </intent-filter>
         </service>
-        <service android:name="com.mx.osce.service.UploadScroeService" >
+        <service android:name="com.mx.bluetooth.service.UploadScroeService" >
             <intent-filter>
-                <action android:name="com.mx.osce.service.UploadScroeService" />
+                <action android:name="com.mx.bluetooth.service.UploadScroeService" />
             </intent-filter>
         </service>
     </application>

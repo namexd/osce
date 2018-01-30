@@ -1,4 +1,4 @@
-com.mx.osce
+com.mx.bluetooth
 int anim dialog_scale_in 0x7f040000
 int anim dialog_scale_out 0x7f040001
 int anim error_frame_in 0x7f040002
