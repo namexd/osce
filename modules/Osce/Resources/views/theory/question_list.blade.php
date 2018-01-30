@@ -1,7 +1,7 @@
 @extends('osce::theory.base')
 
 @section('title')
-	考题管理
+	题库管理
 @stop
 @section('head_css')
 	<style>
@@ -22,7 +22,18 @@
 
 @section('head_js')
    <script>
-
+		function upload() {
+			var e = e||event;
+			var str = e.target.value.substring(e.target.value.lastIndexOf('.')+1,e.target.value.length);
+			if (str=='xls'||str=='xlsx') {
+				layer.load(0, {
+					shade: [0.3,'#fff'] //0.1透明度的白色背景
+				});				
+				$('.form-import').submit();
+			} else {
+				uselayer(1,'请上传正确的excel文件！')
+			}
+		};
 		function deletelist(id) {
 			uselayer(2,'确定要删除该考题吗？',function () {
 				$('.form-deletelist input').val(id);
@@ -41,7 +52,15 @@
 	<div class="wrapper wrapper-content animated fadeInRight">
 	    <div class="row table-head-style1 ">
 	        <div class="col-xs-6">
-	            <h5 class="title-label">考题管理</h5>
+	            <h5 class="title-label">题库管理</h5>
+	        </div>
+	        <div class="col-xs-6" style="float: right;">
+	            <a  href="{{route('osce.theory.export')}}" class="btn btn-primary" style="float: right;">&nbsp;模版下载&nbsp;</a>
+	        	<form method="post" enctype="multipart/form-data" class="form-horizontal form-import" action="{{route('osce.theory.import')}}" >
+	        		<input type="file" name="file" onchange="upload()" class="import" accept="application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" />
+	        		<a  href="javascript:;" class="btn btn-primary mar0">&nbsp;导入题目&nbsp;</a>
+	        	</form>
+	        	<a  href="{{route('osce.theory.getAddQuestion')}}" class="btn btn-primary" style=" margin-right: 20px; float: right;">&nbsp;新增题目&nbsp;</a>
 	        </div>
 	    </div>
    		<div class="container-fluid ibox-content" id="list_form">
