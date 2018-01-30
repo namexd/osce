@@ -101,19 +101,29 @@ class TestController extends CommonController
             'number.required'   => '数量必传',
             'score.required'   => '分数必传',
         ]);
-        $name = $request->get('name');
+
         $typeArr = $request->get('type');
         $numberArr = $request->get('number');
         $scoreArr = $request->get('score');
-
-        if( count($typeArr) != count($numberArr) && count($typeArr) != count($scoreArr) ){
-            return redirect()->back()->withErrors('参数有误！');
+        $unit = $request->get('unit',1);
+        try {
+            if( count($typeArr) != count($numberArr) && count($typeArr) != count($scoreArr) ){
+                return redirect()->back()->withErrors('参数有误！');
+            }
+            for($i=1;$i<=$unit;$i++){
+                $name = $request->get('name');
+                $name=$unit>1?$name.'_第'.$i.'套':$name;
+                $test_id= Test::insertGetId(['name' =>  $name, 'ctime' => date('Y-m-d H:i:s')]);
+                $sum = $this->creatautoexam($test_id,$typeArr,$numberArr,$scoreArr);
+                $data =Test::find($test_id);
+                $data->update(['score'=>$sum]);
+                $testArr[]=$test_id;
+            }
+            return $this->success_data(['test_id'=>$testArr]);
+        } catch (\Exception $ex) {
+            dd($ex);
+            return response()->json($this->fail($ex));
         }
-        $test_id = Test::insertGetId(['name' =>  $name, 'ctime' => date('Y-m-d H:i:s')]);
-        $sum = $this->creatautoexam($test_id,$typeArr,$numberArr,$scoreArr);
-        $data =Test::find($test_id);
-        $data->update(['score'=>$sum]);
-        return $this->success_data(['test_id'=>$test_id]);
     }
     public function onceautoexam(Request $request){
         $this->validate($request, [
