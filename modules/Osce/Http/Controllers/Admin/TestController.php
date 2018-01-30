@@ -727,28 +727,31 @@ class TestController extends CommonController
     }
 
     public function postAddQuestion(Request $request) {
-        $this->validate($request, [
-            'question'   =>  'required',
-            'content'   =>  'required',
-            'answer'      =>   'required',
-            'pbase'       =>  'required',
-            'base'        =>   'required',
-            'cognition'  =>  'required',
-            'source'     =>   'required',
-            'lv'          =>  'required',
-            'require'    =>  'required',
-            'times'      =>  'required',
-            'degree'     =>  'required',
-            'separate'   =>  'required',
-            'poins'      =>  'required',
-        ]);
-        if (TestContentModule::create($request->all())) {
-            return $this->success_data();
-        } else {
-            return [
-                'code' => -1,
-                'message' => '添加失败',
-            ];
+        try {
+            $this->validate($request, [
+                'question'   =>  'required',
+                'content'   =>  'required',
+                'answer'      =>   'required',
+                'pbase'       =>  'required',
+                'base'        =>   'required',
+                'cognition'  =>  'required',
+                'source'     =>   'required',
+                'lv'          =>  'required',
+                'require'    =>  'required',
+                'times'      =>  'required',
+                'degree'     =>  'required',
+                'separate'   =>  'required',
+                'poins'      =>  'required',
+            ]);
+            $model = new TestContentModule($request->all());
+            if ($model->save()) {
+                return redirect()->route('osce.theory.getQuestionList');
+            } else {
+                return redirect()->back()->withErrors('添加失败');
+            }
+
+        } catch (\Exception $ex) {
+            return redirect()->back()->withErrors($ex->getMessage());
         }
     }
 
