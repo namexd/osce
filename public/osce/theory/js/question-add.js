@@ -50,27 +50,9 @@ $(function() {
 		}
 	});
 		
-	$('#type').change(function () {
-		var _type = $('#type').val();
-		$('.addtm-xz,.addtm-pd ,.addtm-wd').css('display','none');
-		if (_type=='1'||_type=='2') {
-			$('.addtm-xz').css('display','block');
-		} else if (_type=='3') {
-			$('.addtm-pd').css('display','block');
-		} else {
-			$('.addtm-wd').css('display','block');
-		}
-		if (_type=='4') {
-			$('.addtm-wd .control-label').html('参考答案');
-			$('.addtm-answer').attr('placeholder','请填写参考答案，多个答案请换行');
-		} else {
-			$('.addtm-wd .control-label').html('参考评分点');
-			$('.addtm-answer').attr('placeholder','请填写参考评分点，多个参考评分点请换行');
-		}
-	});
+	$('#type').change(typechange);
 	
-	
-	
+
 	
 	$('.addtm-save').click(function () {
 		if (noempty('#add-dx')) {
@@ -115,7 +97,6 @@ $(function() {
 
 		var _tp =  '';
 		$('.tp-list img').each(function () {
-			console.log($(this).prop("outerHTML"));
 			_tp+=$(this).prop("outerHTML");
 		});
 		
@@ -123,7 +104,6 @@ $(function() {
 		$('#answer').val(_da);
 		$('#images').val(_tp);
 		
-		console.log(JSON.parse(formToJson($('#add-dx').serialize())))
 //		return false;	
 	});
 	
@@ -131,6 +111,24 @@ $(function() {
 
 });
 
+function typechange() {
+	var _type = $('#type').val();
+	$('.addtm-xz,.addtm-pd ,.addtm-wd').css('display','none');
+	if (_type=='1'||_type=='2') {
+		$('.addtm-xz').css('display','block');
+	} else if (_type=='3') {
+		$('.addtm-pd').css('display','block');
+	} else {
+		$('.addtm-wd').css('display','block');
+	}
+	if (_type=='4') {
+		$('.addtm-wd .control-label').html('参考答案');
+		$('.addtm-answer').attr('placeholder','请填写参考答案，多个答案请换行');
+	} else {
+		$('.addtm-wd .control-label').html('参考评分点');
+		$('.addtm-answer').attr('placeholder','请填写参考评分点，多个参考评分点请换行');
+	}
+};
 
 function inituploadimg(obj) {
 	$(obj).find('.uploadimg:last').change(function () {
