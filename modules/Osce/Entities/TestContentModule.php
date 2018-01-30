@@ -25,7 +25,8 @@ class TestContentModule extends Model
         'pbase', 'base', 'cognition', 'source', 'lv', 'require','times',
         'degree', 'separate', 'content'
     ];
-    protected $visible = ['typeValues'];
+    protected $visible = ['typeValues','cognitionValues','sourceValues','lvValues','requireValues','degreeValues'];
+
     public $typeValues  = [
         1 => '单选题',
         2 => '多选题',
@@ -35,6 +36,43 @@ class TestContentModule extends Model
         6 => '论述题',
         7 => '简答题'
     ];
+    //认知
+    public $cognitionValues  = [
+        1 => '解释',
+        2 => '记忆',
+        3 => '应用'
+    ];
+    //题源
+    public $sourceValues  = [
+        1 => '自编',
+        2 => '国内',
+        3 => '国外'
+    ];
+    //适用层次
+    public $lvValues  = [
+        1 => '专科生',
+        2 => '本科生',
+        3 => '研究生',
+        4 => '博士生'
+    ];
+    //要求度
+    public $requireValues  = [
+        1 => '熟悉',
+        2 => '了解',
+        3 => '掌握'
+    ];
+    //难度
+    public $degreeValues  = [
+        1 => '简单',
+        2 => '中等',
+        3 => '较难'
+    ];
+
+    public function getValues($column)
+    {
+        $column = $column.'Values';
+        return $this->$column;
+    }
 
 
 }
