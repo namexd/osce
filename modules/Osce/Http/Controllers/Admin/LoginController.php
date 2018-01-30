@@ -29,8 +29,11 @@ class LoginController extends  CommonController
         $username   =   $request    ->  get('username');
         $password   =   $request    ->  get('password');
         try{
-            $user=Auth::attempt(['username' => $username, 'password' => $password]);
-            if ($user)
+            //$user=Auth::attempt(['username' => $username, 'password' => $password]);
+            //if ($user)
+            //允许用户账号手机号登录
+            if(Auth::attempt(['username' => $username, 'password' => $password]) ||
+                Auth::attempt(['mobile' => $username, 'password' => $password]))
             {
                 return redirect()->route('osce.admin.index');
             }
