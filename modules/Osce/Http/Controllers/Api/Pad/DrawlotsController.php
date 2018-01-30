@@ -354,8 +354,13 @@ class DrawlotsController extends CommonController
             $key = 'current_teacher_id'. $user_id . '_exam_id' . $exam->id;
             //从缓存中取出 当前组考生队列
             $examQueue = \Cache::get($key);
-            if(is_null($examQueue)){
-                $examQueue = [];
+            if(is_null($examQueue) || !count($examQueue)) {
+                // 当没有数据时，可能为新开始的考次更新全部缓存
+                $examScreening = Common::getExamScreening($exam->id);
+                if ($examScreening) {
+                    Common::updateAllCache($exam->id, $examScreening->id);
+                }
+                $examQueue = \Cache::get($key, []);
             }
 
 //            //获取当前组考生队列
