@@ -42,7 +42,8 @@
 	<script src="{{ asset('osce/theory/js/question-add.js') }}"></script>
 	<script>
 		$(function () {
-						
+			
+	
 			$('#type').val('{{$question->type}}');
 			$('#cognition').val('{{$question->cognition}}');
 			$('#source').val('{{$question->source}}');
@@ -91,6 +92,14 @@
 			if (_type=='4'||_type=='5'||_type=='6'||_type=='7') {
 				$('.addtm-answer').val(answer);
 			}
+			
+			@if (request()->get('from')=='view')
+				$('.title-label').html('试题预览');
+				$('title').html('试题预览');
+				$('.form-control').attr('disabled','disabled');	
+				$('.remove-image,.remove-xx,.add-xx,.tp-list div:last').css('display','none');
+				$('#add-dx').off('click');
+			@endif
 			
 		});
 	</script>
@@ -284,7 +293,9 @@
 	  
 	    <div class="form-group">
 	        <div class="col-sm-6 col-sm-offset-4">
-	            <button class="btn btn-primary addtm-save">保存</button>
+				@if (request()->get('from')=='edit')
+					<button class="btn btn-primary addtm-save">保存</button>
+				@endif
 	            <a class="btn btn-white" onclick="javascript:history.go(-1);">取消</a>
 	        </div>
 	    </div>

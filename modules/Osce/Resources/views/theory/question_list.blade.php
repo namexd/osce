@@ -95,11 +95,11 @@
                         <td>{{$val->ctime}}</td>
                         
                         <td>
-                            <a class="state1 modal-control" href="{{route('osce.theory.getViewQuestion',['id'=>$val->id])}}">
+                            <a class="state1 modal-control" href="{{route('osce.theory.getEditQuestion',['id'=>$val->id,'from'=>'view'])}}">
                                 <span class="read  state1 detail"><i class="fa fa-search fa-2x"></i> 预览</span>
                             </a>
-                            <a class="state1 modal-control" href="{{route('osce.theory.getEditQuestion',['id'=>$val->id])}}">
-                                <span class="read  state1 detail"><i class="fa fa-search fa-2x"></i> 编辑</span>
+                            <a class="state1 modal-control" href="{{route('osce.theory.getEditQuestion',['id'=>$val->id,'from'=>'edit'])}}">
+                                <span class="read  state1 detail"><i class="fa fa-pencil-square-o fa-2x"></i> 编辑</span>
                             </a>
                             <a class="state1 modal-control" href="javascript:;" onclick="deletelist({{$val->id}})">
                                 <span class="read  state2 detail"><i class="fa fa-trash-o fa-2x"></i> 删除</span>
