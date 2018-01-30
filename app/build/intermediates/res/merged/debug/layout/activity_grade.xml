@@ -41,7 +41,7 @@
                 android:adjustViewBounds="true"
                 android:src="@drawable/pad_time" />
 
-            <TextView
+            <com.mx.test.custom.TimerTextView
                 android:id="@+id/tv_time_tips"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
@@ -50,10 +50,10 @@
                 android:paddingLeft="@dimen/y6"
                 android:text="倒计时"
                 android:textSize="23sp" >
-            </TextView>
+            </com.mx.test.custom.TimerTextView>
 
             <!--
-                 <com.mx.bluetooth.custom.CustomAnticlockwise
+                 <com.mx.test.custom.CustomAnticlockwise
                 android:id="@+id/textView_Time"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"

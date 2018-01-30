@@ -1,22 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:resource="http://schemas.android.com/apk/res/com.mx.bluetooth"
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
-
-    <com.mx.bluetooth.custom.CustomTextView
-        android:id="@+id/tv_ready_tips"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:drawableLeft="@drawable/ready_icon"
-        android:drawablePadding="@dimen/y4"
-        android:text="@string/fragment_wait_tv_ready_tips"
-        android:textColor="@color/fragmnet_wait_tv_tips_complete_color"
-        android:textSize="@dimen/simple_font_size"
-        android:visibility="visible"
-        resource:customFont="scyahei.ttf" >
-    </com.mx.bluetooth.custom.CustomTextView>
 
     <ImageButton
         android:id="@+id/testView_readyExam"

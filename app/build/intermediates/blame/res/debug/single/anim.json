@@ -1,34 +1,34 @@
 [
     {
-        "merged": "D:\\android\\OSCE\\app\\build\\intermediates\\res\\merged\\debug\\anim\\popup_show.xml",
-        "source": "D:\\android\\OSCE\\app\\src\\main\\res\\anim\\popup_show.xml"
+        "merged": "D:\\android\\demo\\app\\build\\intermediates\\res\\merged\\debug\\anim\\success_bow_roate.xml",
+        "source": "D:\\android\\demo\\app\\src\\main\\res\\anim\\success_bow_roate.xml"
     },
     {
-        "merged": "D:\\android\\OSCE\\app\\build\\intermediates\\res\\merged\\debug\\anim\\popup_hide.xml",
-        "source": "D:\\android\\OSCE\\app\\src\\main\\res\\anim\\popup_hide.xml"
+        "merged": "D:\\android\\demo\\app\\build\\intermediates\\res\\merged\\debug\\anim\\error_frame_in.xml",
+        "source": "D:\\android\\demo\\app\\src\\main\\res\\anim\\error_frame_in.xml"
     },
     {
-        "merged": "D:\\android\\OSCE\\app\\build\\intermediates\\res\\merged\\debug\\anim\\dialog_scale_in.xml",
-        "source": "D:\\android\\OSCE\\app\\src\\main\\res\\anim\\dialog_scale_in.xml"
+        "merged": "D:\\android\\demo\\app\\build\\intermediates\\res\\merged\\debug\\anim\\error_x_in.xml",
+        "source": "D:\\android\\demo\\app\\src\\main\\res\\anim\\error_x_in.xml"
     },
     {
-        "merged": "D:\\android\\OSCE\\app\\build\\intermediates\\res\\merged\\debug\\anim\\error_frame_in.xml",
-        "source": "D:\\android\\OSCE\\app\\src\\main\\res\\anim\\error_frame_in.xml"
+        "merged": "D:\\android\\demo\\app\\build\\intermediates\\res\\merged\\debug\\anim\\popup_show.xml",
+        "source": "D:\\android\\demo\\app\\src\\main\\res\\anim\\popup_show.xml"
     },
     {
-        "merged": "D:\\android\\OSCE\\app\\build\\intermediates\\res\\merged\\debug\\anim\\success_bow_roate.xml",
-        "source": "D:\\android\\OSCE\\app\\src\\main\\res\\anim\\success_bow_roate.xml"
+        "merged": "D:\\android\\demo\\app\\build\\intermediates\\res\\merged\\debug\\anim\\success_mask_layout.xml",
+        "source": "D:\\android\\demo\\app\\src\\main\\res\\anim\\success_mask_layout.xml"
     },
     {
-        "merged": "D:\\android\\OSCE\\app\\build\\intermediates\\res\\merged\\debug\\anim\\error_x_in.xml",
-        "source": "D:\\android\\OSCE\\app\\src\\main\\res\\anim\\error_x_in.xml"
+        "merged": "D:\\android\\demo\\app\\build\\intermediates\\res\\merged\\debug\\anim\\dialog_scale_out.xml",
+        "source": "D:\\android\\demo\\app\\src\\main\\res\\anim\\dialog_scale_out.xml"
     },
     {
-        "merged": "D:\\android\\OSCE\\app\\build\\intermediates\\res\\merged\\debug\\anim\\dialog_scale_out.xml",
-        "source": "D:\\android\\OSCE\\app\\src\\main\\res\\anim\\dialog_scale_out.xml"
+        "merged": "D:\\android\\demo\\app\\build\\intermediates\\res\\merged\\debug\\anim\\dialog_scale_in.xml",
+        "source": "D:\\android\\demo\\app\\src\\main\\res\\anim\\dialog_scale_in.xml"
     },
     {
-        "merged": "D:\\android\\OSCE\\app\\build\\intermediates\\res\\merged\\debug\\anim\\success_mask_layout.xml",
-        "source": "D:\\android\\OSCE\\app\\src\\main\\res\\anim\\success_mask_layout.xml"
+        "merged": "D:\\android\\demo\\app\\build\\intermediates\\res\\merged\\debug\\anim\\popup_hide.xml",
+        "source": "D:\\android\\demo\\app\\src\\main\\res\\anim\\popup_hide.xml"
     }
 ]

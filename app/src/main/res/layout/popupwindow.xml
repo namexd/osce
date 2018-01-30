@@ -114,7 +114,7 @@
             android:layout_weight="2" >
         </ListView>
 
-        <com.mx.bluetooth.audio.AudioRecorderButton
+        <com.mx.test.audio.AudioRecorderButton
             android:id="@+id/recorderButton"
             android:layout_width="match_parent"
             android:layout_height="@dimen/y19"

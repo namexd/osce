@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">OSCE-3.10-Beta-3.7</string>
+    <string name="app_name">test演示版</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <!-- LoginActivity -->
-    <string name="login_activity_title_text_text">OSCE考试智能管理</string>
+    <string name="login_activity_title_text_text">test考试智能管理</string>
     <!-- LoginActivity -->
 
     <string name="login_activity_username_edit_hint">账号</string>

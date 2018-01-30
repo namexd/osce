@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:misrobot="http://schemas.android.com/apk/res/com.mx.bluetooth"
+    xmlns:misrobot="http://schemas.android.com/apk/res/com.mx.test"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#f3f3f3"
@@ -172,12 +172,12 @@
                     android:gravity="center_vertical"
                     android:orientation="horizontal" >
 
-                    <com.mx.bluetooth.custom.TagFlowLayout
+                    <com.mx.test.custom.TagFlowLayout
                         android:id="@+id/flowlayout"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         misrobot:max_select="-1" >
-                    </com.mx.bluetooth.custom.TagFlowLayout>
+                    </com.mx.test.custom.TagFlowLayout>
                 </LinearLayout>
             </LinearLayout>
 

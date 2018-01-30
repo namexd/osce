@@ -61,7 +61,7 @@
             android:layout_height="match_parent"
             android:background="#d1d1d1" />
 
-        <com.mx.bluetooth.custom.CustomSeekBar
+        <com.mx.test.custom.CustomSeekBar
             android:id="@+id/seekBar_tg2"
             android:layout_width="0dp"
             android:layout_height="100dp"

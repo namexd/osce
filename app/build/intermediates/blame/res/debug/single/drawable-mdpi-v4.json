@@ -1,6 +1,26 @@
 [
     {
-        "merged": "D:\\android\\OSCE\\app\\build\\intermediates\\res\\merged\\debug\\drawable-mdpi-v4\\ic_launcher.png",
-        "source": "D:\\android\\OSCE\\app\\src\\main\\res\\drawable-mdpi\\ic_launcher.png"
+        "merged": "D:\\android\\demo\\app\\build\\intermediates\\res\\merged\\debug\\drawable-mdpi-v4\\pic.png",
+        "source": "D:\\android\\demo\\app\\src\\main\\res\\drawable-mdpi\\pic.png"
+    },
+    {
+        "merged": "D:\\android\\demo\\app\\build\\intermediates\\res\\merged\\debug\\drawable-mdpi-v4\\icon1.png",
+        "source": "D:\\android\\demo\\app\\src\\main\\res\\drawable-mdpi\\icon1.png"
+    },
+    {
+        "merged": "D:\\android\\demo\\app\\build\\intermediates\\res\\merged\\debug\\drawable-mdpi-v4\\image_emoticon30.png",
+        "source": "D:\\android\\demo\\app\\src\\main\\res\\drawable-mdpi\\image_emoticon30.png"
+    },
+    {
+        "merged": "D:\\android\\demo\\app\\build\\intermediates\\res\\merged\\debug\\drawable-mdpi-v4\\image_emoticon28.png",
+        "source": "D:\\android\\demo\\app\\src\\main\\res\\drawable-mdpi\\image_emoticon28.png"
+    },
+    {
+        "merged": "D:\\android\\demo\\app\\build\\intermediates\\res\\merged\\debug\\drawable-mdpi-v4\\image_emoticon25.png",
+        "source": "D:\\android\\demo\\app\\src\\main\\res\\drawable-mdpi\\image_emoticon25.png"
+    },
+    {
+        "merged": "D:\\android\\demo\\app\\build\\intermediates\\res\\merged\\debug\\drawable-mdpi-v4\\ic_launcher.png",
+        "source": "D:\\android\\demo\\app\\src\\main\\res\\drawable-mdpi\\ic_launcher.png"
     }
 ]

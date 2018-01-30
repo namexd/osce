@@ -1,10 +1,10 @@
 [
     {
-        "merged": "D:\\android\\OSCE\\app\\build\\intermediates\\res\\merged\\debug\\raw\\bb.m4a",
-        "source": "D:\\android\\OSCE\\app\\src\\main\\res\\raw\\bb.m4a"
+        "merged": "D:\\android\\demo\\app\\build\\intermediates\\res\\merged\\debug\\raw\\bb.m4a",
+        "source": "D:\\android\\demo\\app\\src\\main\\res\\raw\\bb.m4a"
     },
     {
-        "merged": "D:\\android\\OSCE\\app\\build\\intermediates\\res\\merged\\debug\\raw\\aa.m4a",
-        "source": "D:\\android\\OSCE\\app\\src\\main\\res\\raw\\aa.m4a"
+        "merged": "D:\\android\\demo\\app\\build\\intermediates\\res\\merged\\debug\\raw\\aa.m4a",
+        "source": "D:\\android\\demo\\app\\src\\main\\res\\raw\\aa.m4a"
     }
 ]

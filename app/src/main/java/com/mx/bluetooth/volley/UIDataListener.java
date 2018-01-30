@@ -1,9 +1,0 @@
-package com.mx.bluetooth.volley;
-
-public interface UIDataListener<T> {
-
-	public void onDataChanged(T data);
-
-	public void onErrorHappened(String errorCode, String errorMessage);
-
-}
