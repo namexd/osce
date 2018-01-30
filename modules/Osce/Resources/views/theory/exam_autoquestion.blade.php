@@ -30,7 +30,7 @@
 		        	uselayer(3,'数量不能大于总题数！');
 		        }		        
 		    });	
-		    $('input[name="score[]"]').keyup(function () {
+		    $('#unit,input[name="score[]"],input[name=count]').keyup(function () {
 		        this.value = this.value.replace(/[^\d]/g, '');
 		    });				
 			
@@ -71,7 +71,12 @@
 						url:"{{route('osce.theory.autoexam')}}",
 						json:$('.form-horizontal').serialize(),
 						fn:function (res) {
-							window.location.href = "{{route('osce.theory.autoexampreview')}}?id="+res.test_id+'&type=add';
+							if ($('#unit').val()==''||$('#unit').val()=='1') {
+								window.location.href = "{{route('osce.theory.autoexampreview')}}?id="+res.test_id+'&type=add';
+							} else {
+								window.location.href = "{{route('osce.theory.examquestion')}}";
+							}
+							
 						}
 					});
 				
@@ -107,6 +112,13 @@
 	                </div>
 	                <div class="hr-line-dashed"></div>
 	                
+	                <div class="form-group">
+	                    <label for="end" class="col-sm-4 control-label">生成套数：<i></i></label>
+	                    <div class="col-sm-5">
+							<input type="text" name="unit" id="unit" value="1" placeholder="请输入试卷生成的套数" class="form-control" />
+	                    </div>
+	                </div>
+	                <div class="hr-line-dashed"></div>
 	                
 	                
 	            	@foreach($data as $val)
