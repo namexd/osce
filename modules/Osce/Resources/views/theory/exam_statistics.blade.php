@@ -113,7 +113,7 @@
                 <h5>成绩统计</h5>
             </div>
             <div class="ibox-content">
-            	<h2 class="text-center p-md">{{$data['exam_name']}}的理论考试</h2>
+            	<h2 class="text-center p-md">{{$data['exam_name']}}</h2>
                 <div class="row">
                     <div class="col-md-12 ">
                         <div class="form-horizontal" id="sourceForm">
