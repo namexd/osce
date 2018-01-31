@@ -21,7 +21,7 @@ class TestContentModule extends Model
     protected $guarded      = [];
     protected $hidden = ['answer'];
     protected $fillable     = [
-        'id', 'test_id', 'type', 'images', 'answer', 'poins', 'question',
+        'id', 'test_id', 'type', 'category', 'images', 'answer', 'poins', 'question',
         'pbase', 'base', 'cognition', 'source', 'lv', 'require','times',
         'degree', 'separate', 'content'
     ];

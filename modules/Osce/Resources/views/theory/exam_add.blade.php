@@ -131,7 +131,7 @@
 	              
 			        <div class="form-group">
 	                    <div class="col-sm-4 col-sm-offset-2">
-            				<button class="btn btn-success ja-save">提交</button>
+            				<button class="btn btn-primary ja-save">提交</button>
 	                        <a class="btn btn-white" href="javascript:history.go(-1);">取消</a>
 	                    </div>
 	                </div>
@@ -152,6 +152,13 @@
 		</div>
     </div>    
     <div class="hr-line-dashed"></div>   
+    <div class="form-group">
+        <label class="col-sm-3 control-label">医学题型分类：</label>
+		<div class="col-sm-7">
+			<input class="form-control addtm-meditype" type="text" placeholder="请填写医学题型分类（A1~A4、B1、B2、X等）" />
+		</div>
+    </div>
+    <div class="hr-line-dashed"></div>  
     <div class="form-group">
         <label class="col-sm-3 control-label"><i>*</i> 分值：</label>
 		<div class="col-sm-7">
@@ -217,7 +224,7 @@
   
     <div class="form-group">
         <div class="col-sm-6 col-sm-offset-4">
-            <button class="btn btn-success addtm-save">保存</button>
+            <button class="btn btn-primary addtm-save">保存</button>
             <a class="btn btn-white addtm-close">取消</a>
         </div>
     </div>

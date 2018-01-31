@@ -77,7 +77,7 @@
 							<ul class="dx-list">
 								@if (isset($question['1']))
 									@foreach($question['1'] as $key=>$val)
-										<li issave="1" _type="1" _typename="单选题" _fz="{{$val->poins}}" _tg="{{strip_tags($val->question)}}" _tp="{{$val->question}}"
+										<li issave="1" _type="1" _typename="单选题" _mt="{{$val->category}}" _fz="{{$val->poins}}" _tg="{{strip_tags($val->question)}}" _tp="{{$val->question}}"
 											_da="{{$val->answer}}" _xx="{{$val->content}}">
 											<i>{{$key+1}}、</i>
 											<span>（{{$val->poins}}分）{{strip_tags($val->question)}}</span>
@@ -97,7 +97,7 @@
 							<ul class="dx-list">
 								@if (isset($question['2']))
 									@foreach($question['2'] as $key=>$val)
-										<li issave="1" _type="2" _typename="多选题" _fz="{{$val->poins}}" _tg="{{strip_tags($val->question)}}" _tp="{{$val->question}}"
+										<li issave="1" _type="2" _typename="多选题" _mt="{{$val->category}}" _fz="{{$val->poins}}" _tg="{{strip_tags($val->question)}}" _tp="{{$val->question}}"
 											_da="{{$val->answer}}" _xx="{{$val->content}}">
 											<i>{{$key+1}}、</i>
 											<span>（{{$val->poins}}分）{{strip_tags($val->question)}}</span>
@@ -116,7 +116,7 @@
 							<ul class="dx-list">
 								@if (isset($question['3']))
 									@foreach($question['3'] as $key=>$val)
-										<li issave="1" _type="3" _typename="判断题" _fz="{{$val->poins}}" _tg="{{strip_tags($val->question)}}" _tp="{{$val->question}}"
+										<li issave="1" _type="3" _typename="判断题" _mt="{{$val->category}}" _fz="{{$val->poins}}" _tg="{{strip_tags($val->question)}}" _tp="{{$val->question}}"
 											_da="{{$val->answer}}" _xx="{{$val->content}}">
 											<i>{{$key+1}}、</i>
 											<span>（{{$val->poins}}分）{{strip_tags($val->question)}}</span>
@@ -135,7 +135,7 @@
 							<ul class="dx-list">
 								@if (isset($question['4']))
 									@foreach($question['4'] as $key=>$val)
-										<li issave="1" _type="4" _typename="填空题" _fz="{{$val->poins}}" _tg="{{strip_tags($val->question)}}" _tp="{{$val->question}}"
+										<li issave="1" _type="4" _typename="填空题" _mt="{{$val->category}}" _fz="{{$val->poins}}" _tg="{{strip_tags($val->question)}}" _tp="{{$val->question}}"
 											_da="{{$val->answer}}" _xx="{{strip_tags($val->question)}}">
 											<i>{{$key+1}}、</i>
 											<span>（{{$val->poins}}分）{{$val->question}}</span>
@@ -154,7 +154,7 @@
 							<ul class="dx-list">
 								@if (isset($question['5']))
 									@foreach($question['5'] as $key=>$val)
-										<li issave="1" _type="5" _typename="名词解释题" _fz="{{$val->poins}}" _tg="{{strip_tags($val->question)}}" _tp="{{$val->question}}"
+										<li issave="1" _type="5" _typename="名词解释题" _mt="{{$val->category}}" _fz="{{$val->poins}}" _tg="{{strip_tags($val->question)}}" _tp="{{$val->question}}"
 											_da="{{$val->answer}}" _xx="{{$val->content}}">
 											<i>{{$key+1}}、</i>
 											<span>（{{$val->poins}}分）{{strip_tags($val->question)}}</span>
@@ -173,7 +173,7 @@
 							<ul class="dx-list">
 								@if (isset($question['6'])) 
 									@foreach($question['6'] as $key=>$val)
-										<li issave="1" _type="6" _typename="论述题" _fz="{{$val->poins}}" _tg="{{strip_tags($val->question)}}" _tp="{{$val->question}}"
+										<li issave="1" _type="6" _typename="论述题" _mt="{{$val->category}}" _fz="{{$val->poins}}" _tg="{{strip_tags($val->question)}}" _tp="{{$val->question}}"
 											_da="{{$val->answer}}" _xx="{{$val->content}}">
 											<i>{{$key+1}}、</i>
 											<span>（{{$val->poins}}分）{{strip_tags($val->question)}}</span>
@@ -192,7 +192,7 @@
 							<ul class="dx-list">
 								@if (isset($question['7']))
 									@foreach($question['7'] as $key=>$val)
-										<li issave="1" _type="7" _typename="简答题" _fz="{{$val->poins}}" _tg="{{strip_tags($val->question)}}" _tp="{{$val->question}}"
+										<li issave="1" _type="7" _typename="简答题" _mt="{{$val->category}}" _fz="{{$val->poins}}" _tg="{{strip_tags($val->question)}}" _tp="{{$val->question}}"
 											_da="{{$val->answer}}" _xx="{{$val->content}}">
 											<i>{{$key+1}}、</i>
 											<span>（{{$val->poins}}分）{{strip_tags($val->question)}}</span>
@@ -208,7 +208,7 @@
 	              
 			        <div class="form-group">
 	                    <div class="col-sm-4 col-sm-offset-2">
-            				<button class="btn btn-success ja-save">提交</button>
+            				<button class="btn btn-primary ja-save">提交</button>
 	                        <a class="btn btn-white" href="javascript:history.go(-1);">取消</a>
 	                    </div>
 	                </div>
@@ -229,6 +229,13 @@
 		</div>
     </div>    
     <div class="hr-line-dashed"></div>   
+    <div class="form-group">
+        <label class="col-sm-3 control-label">医学题型分类：</label>
+		<div class="col-sm-7">
+			<input class="form-control addtm-meditype" type="text" placeholder="请填写医学题型分类（A1~A4、B1、B2、X等）" />
+		</div>
+    </div>
+    <div class="hr-line-dashed"></div>  
     <div class="form-group">
         <label class="col-sm-3 control-label"><i>*</i> 分值：</label>
 		<div class="col-sm-7">
@@ -294,7 +301,7 @@
   
     <div class="form-group">
         <div class="col-sm-6 col-sm-offset-4">
-            <button class="btn btn-success addtm-save">保存</button>
+            <button class="btn btn-primary addtm-save">保存</button>
             <a class="btn btn-white addtm-close">取消</a>
         </div>
     </div>

@@ -4,6 +4,9 @@ var uploadStr = '<div><i class="fa fa-plus"></i><input class="uploadimg" type="f
 
 
 $(function() {
+    $('#poins,#times').keyup(function () {
+        this.value = this.value.replace(/[^\d]/g, '');
+    });	
 	$('.add-xx').click(function () {
 		var _ul = $(this).parent().find('ul');
 		if ($(_ul).find('li').length>=14) {
