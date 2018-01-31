@@ -236,6 +236,7 @@ class TestController extends CommonController
                         }*/
                         $questionArr['test_id'] = $id;
                         $questionArr['type'] = $val['type'];
+                        $questionArr['category'] = $val['category'];
                         $questionArr['question'] = $val['question'];
                         $questionArr['content'] = $val['content'];
                         $questionArr['answer'] = $val['answer'];
