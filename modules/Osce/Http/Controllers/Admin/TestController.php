@@ -427,7 +427,7 @@ class TestController extends CommonController
         $id = $request->get('id');
         $data = TestStatistics::where('logid',$id)->get();
         $exam = TestLog::find($id);
-        $examName = $exam->exam->name.'的理论考试';
+        $examName = $exam->exam_id==0?$exam->name:$exam->exam->name.'的理论考试';
         $teacherName = $exam->teacherdata->name;
         $scoreList[]=['姓名','学号','考试名称','监考老师','客观题得分','主观题得分','考试总成绩'];
         foreach($data as $k=>$v){
