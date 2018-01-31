@@ -845,6 +845,11 @@ class TestController extends CommonController
             $endArr =  explode('.',$ip_end);
             if( count($startArr) ==count($endArr) ){
                 if($startArr[0]==$endArr[0] && $startArr[1]==$endArr[1] && $startArr[2]==$endArr[2]){
+                    //判断这个ip是否已存在数据库
+                    $isExist = IpLimitItem::where('ip',$ip_start)->orWhere('ip',$ip_end)->first();
+                    if($isExist){
+                        return redirect()->route('osce.theory.ipLimit')->withErrors('当前IP段内存在IP与已保存冲突！');
+                    }
                     $limitId = IpLimit::insertGetId([
                         'ip_start'=>$ip_start,
                         'ip_end'=>$ip_end,
