@@ -27,8 +27,11 @@ $(function () {
 			$(e.target).parent().remove();
 		}
 	});
+
+    $('.addtm-points').keyup(function () {
+        this.value = this.value.replace(/[^\d]/g, '');
+    });				
 			
-	
 	function opendanxuan(name) {
 		
 		openindex = layer.open({

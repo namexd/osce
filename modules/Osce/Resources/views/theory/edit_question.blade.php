@@ -17,7 +17,7 @@
 		#sj-form ul li em,#add-dx ul li em {color: #ed5565; position: absolute; right: 0; top: 2px;}
 		
 		
-		#add-dx { overflow: hidden; padding: 20px 0;}
+		#add-dx { overflow: hidden; padding: 20px 0; background: #fff;}
 		#add-dx ul { padding: 0;}
 		#add-dx ul li { position: relative; margin-bottom: 5px;}
 		#add-dx ul li div { padding: 0 20px 0 50px;}
@@ -130,6 +130,13 @@
 			</div>
 	    </div>    
 	    <div class="hr-line-dashed"></div>   
+	    <div class="form-group">
+	        <label for="category" class="col-sm-3 control-label">医学题型分类：</label>
+			<div class="col-sm-7">
+				<input value="{{$question->category}}" name="category" id="category" placeholder="请输入医学题型分类（A1~A4、B1、B2、X等）" class="form-control" type="text" />
+			</div>
+	    </div>
+	    <div class="hr-line-dashed"></div> 
 	    <div class="form-group">
 	        <label for="question" class="col-sm-3 control-label"><i>*</i> 题干：</label>
 			<div class="col-sm-7">
