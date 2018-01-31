@@ -53,6 +53,8 @@ $(function () {
 				if ($(listobj).attr('issave')==1) {
 //					$('.type-value').val(_type);
 //					$('.type-name').val($(listobj).attr('_typename'));					
+					
+					$('.addtm-meditype').val($(listobj).attr('_mt'));
 					$('.addtm-points').val($(listobj).attr('_fz'));
 					$('.addtm-question').val($(listobj).attr('_tg'));
 					var answer = $(listobj).attr('_da');
@@ -113,6 +115,7 @@ $(function () {
 				
 				$('.type-value').val('');
 				$('.type-name').val('');					
+				$('.addtm-meditype').val('');				
 				$('.addtm-points').val('');
 				$('.addtm-question').val('');
 
@@ -249,6 +252,7 @@ $(function () {
 			issave:'1',
 			_type:$('.type-value').val(),
 			_typename:$('.type-name').val(),
+			_mt:$('.addtm-meditype').val(),
 			_fz:_fz,
 			_tg:_tg,
 			_tp:_tp,
@@ -271,6 +275,7 @@ $(function () {
 			var aTp = $(this).attr('_tp').match(/<img[^>]*>/gi)
 			question.push({
 				type:$(this).attr('_type'),
+				category:$(this).attr('_mt'),
 				question:$(this).attr('_tg')+(aTp?aTp.join(''):''),
 				content:$(this).attr('_xx'),
 				answer:$(this).attr('_da'),
