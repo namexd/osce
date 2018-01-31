@@ -68,6 +68,9 @@ class BillboardController extends CommonController
         $roomId = $request->input('room_id');
         try {
             $studentData = $billboardRepository->getStudent($examId, $roomId);
+            if(empty($studentData)){
+                return \Response::json($this->success_data([], 0));
+            }
             $student     = Student::find($studentData->stuid);
             $studentId   = $studentData->stuid;
 
