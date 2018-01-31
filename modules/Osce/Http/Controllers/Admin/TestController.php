@@ -15,6 +15,7 @@ use Modules\Osce\Entities\IpLimit;
 use Modules\Osce\Entities\IpLimitItem;
 use Modules\Osce\Entities\TestContent;
 use Modules\Osce\Entities\TestContentModule;
+use Modules\Osce\Entities\TestRecord;
 use Modules\Osce\Entities\TestStatistics;
 use Modules\Osce\Http\Controllers\CommonController;
 use Modules\Osce\Repositories\Common;
@@ -382,11 +383,15 @@ class TestController extends CommonController
         $test = TestLog::find($id);
         $testStatistics = TestStatistics::where('logid',$id);
         $students = $testStatistics->count();//参考总人数
+        if (!$students > 0) {
+            return redirect()->back()->withErrors('该场考试无考生参加！');
+        }
         //考试总得分
         $total_score = TestStatistics::where('logid',$id)->select(DB::raw('sum(objective + subjective) as total_score'))->first()->total_score;
         $avg_score = number_format($total_score/$students,2);//考试平均分
         $test_score = $test->test->score;//试卷总分
         $students_pass = 0; //及格人数统计
+        $student_score_arr = [];
         foreach ($testStatistics->get() as $v){
             $student_score = $v->objective + $v->subjective;
             if ($student_score > $test_score*0.6){
@@ -397,13 +402,31 @@ class TestController extends CommonController
         $student_score_max = max($student_score_arr);//最高分
         $student_score_min = min($student_score_arr);//最低分
         $pass_percent = number_format($students_pass/$students*100,2).'%';  //合格率
+        $false_records = TestRecord::where('logid',$id)->where('isright',2)->count(); //错题数量
+        $all_records = TestRecord::where('logid',$id)->whereIn('isright',[1,2])->count(); //题总数量
+        if ($all_records > 0) {
+            $hard_level = $false_records/$all_records;//难度
+            if ( 0 < $hard_level && $hard_level <= 0.2) {
+                $hard_level = '简单';
+            } elseif (0.2 < $hard_level && $hard_level <= 0.4) {
+                $hard_level = '一般';
+            } elseif (0.4 < $hard_level && $hard_level <= 0.6) {
+                $hard_level = '中等';
+            } elseif (0.6 < $hard_level && $hard_level <= 0.8) {
+                $hard_level = '较难';
+            } elseif (0.8 < $hard_level && $hard_level <= 1) {
+                $hard_level = '极难';
+            }
+        } else {
+            $hard_level = '视考试结果而定';
+        }
         $data = [
             'total_score'       => $total_score,        //考试总得分
             'avg_score'         => $avg_score,          //考试平均分
             'student_score_max' => $student_score_max,  //最高分
             'student_score_min' => $student_score_min,  //最低分
             'pass_percent'      => $pass_percent,       //合格率
-            '' => '',
+            'hard_level'        => $hard_level,         //难度
         ];
         return view('osce::theory.exam_statistics',['data'=>$data]);
     }
