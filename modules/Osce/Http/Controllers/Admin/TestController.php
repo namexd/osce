@@ -386,6 +386,7 @@ class TestController extends CommonController
         if (!$students > 0) {
             return redirect()->back()->withErrors('该场考试无考生参加！');
         }
+        $exam_name = ($test->exam_id==0?$test->name:$test->exam->name).'的理论考试'; //考试名称
         //考试总得分
         $total_score = TestStatistics::where('logid',$id)->select(DB::raw('sum(objective + subjective) as total_score'))->first()->total_score;
         $avg_score = number_format($total_score/$students,2);//考试平均分
@@ -421,6 +422,7 @@ class TestController extends CommonController
             $hard_level = '视考试结果而定';
         }
         $data = [
+            'exam_name'         => $exam_name,          //考试名称
             'score_list'        => $student_score_arr,  //考生分数列表
             'total_score'       => $total_score,        //考试总得分
             'avg_score'         => $avg_score,          //考试平均分
@@ -453,7 +455,7 @@ class TestController extends CommonController
         $id = $request->get('id');
         $data = TestStatistics::where('logid',$id)->get();
         $exam = TestLog::find($id);
-        $examName = $exam->exam_id==0?$exam->name:$exam->exam->name.'的理论考试';
+        $examName = ($exam->exam_id==0?$exam->name:$exam->exam->name).'的理论考试';
         $teacherName = $exam->teacherdata->name;
         $scoreList[]=['姓名','学号','考试名称','监考老师','客观题得分','主观题得分','考试总成绩'];
         foreach($data as $k=>$v){
