@@ -46,7 +46,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::get('studentmarking', ['uses'=>'TestController@studentmarking', 'as' => 'osce.theory.studentmarking']);//学生打分列表
 		Route::get('examcheck', ['uses'=>'TestController@examcheck', 'as' => 'osce.theory.examcheck']);//在线批卷
 		Route::post('import', ['uses'=>'TestController@import', 'as' => 'osce.theory.import']);
-		Route::get('export', ['uses'=>'TestController@export', 'as' => 'osce.theory.export']);
+		Route::get('export', ['uses'=>'TestController@export', 'as' => 'osce.theory.export']);//试卷模板导出
 		Route::get('choose', ['uses'=>'TestController@choose','as' => 'osce.theory.choose']);
 		Route::get('chooseexam', ['uses'=>'TestController@chooseexam', 'as' => 'osce.theory.chooseexam']);
 		Route::get('chooseteacher', ['uses'=>'TestController@chooseteacher', 'as' => 'osce.theory.choosteacher']);
