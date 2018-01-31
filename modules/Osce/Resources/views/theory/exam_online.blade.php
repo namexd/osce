@@ -171,7 +171,7 @@
 						return false;
 					}
 				});
-				
+				uselayer2(31,'你已经都做完了！');
 				return false;
 			});
 			

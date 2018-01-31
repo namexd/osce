@@ -278,7 +278,7 @@ $(function () {
 			var aTp = $(this).attr('_tp').match(/<img[^>]*>/gi)
 			question.push({
 				type:$(this).attr('_type'),
-				category:$(this).attr('_mt'),
+				category:$(this).attr('_mt').toUpperCase(),
 				question:$(this).attr('_tg')+(aTp?aTp.join(''):''),
 				content:$(this).attr('_xx'),
 				answer:$(this).attr('_da'),

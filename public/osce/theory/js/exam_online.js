@@ -1,5 +1,5 @@
 var title={
-	1:'选择题',
+	1:'单选题',
 	2:'多选题',
 	3:'判断题',
 	4:'填空题',
@@ -9,9 +9,10 @@ var title={
 };			
 var aZimu = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N'];
 function setnamestr(question,i) {
+	console.log(question)
 	var _name = 
 		'<div class="clearfix">'
-			+'<span class="font16">'+(i+1)+'、'+'（'+question.poins+'分）'+question.question
+			+'<span class="font16">'+(i+1)+'、'+(question.category?'（'+question.category+'）':'')+question.question+'（本题：'+question.poins+'分）'
 			+(question.score||question.score==0?'<i class="defen">（得分：'+question.score+'分）</i>':'')+'</span>'
 			+(question.images?'<img src="question.images" />':'')
 			+'<div class="dafen"><strong>得分：</strong><input type="text" name="poins[]" _max="'+question.poins+'" class="form-control" /></div>'
