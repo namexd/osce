@@ -397,7 +397,7 @@ class TestController extends CommonController
             if ($student_score > $test_score*0.6){
                 $students_pass++;
             }
-            $student_score_arr[] = $student_score;
+            $student_score_arr[$v->student->name] = $student_score;
         }
         $student_score_max = max($student_score_arr);//最高分
         $student_score_min = min($student_score_arr);//最低分
@@ -421,6 +421,7 @@ class TestController extends CommonController
             $hard_level = '视考试结果而定';
         }
         $data = [
+            'score_list'        => $student_score_arr,  //考生分数列表
             'total_score'       => $total_score,        //考试总得分
             'avg_score'         => $avg_score,          //考试平均分
             'student_score_max' => $student_score_max,  //最高分
