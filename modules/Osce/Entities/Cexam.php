@@ -223,6 +223,7 @@ class Cexam extends CommonModel
             ->update([
                 'logid' =>  $data['logid'],
                 'stuid' =>  $data['stuid'],
+                'ipaddress' =>  $data['ipaddress'],
                 'time' =>  $data['time'],
                 //'status'=> $status,
                 'objective' =>   $data['objective']

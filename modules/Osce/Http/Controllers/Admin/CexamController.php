@@ -164,6 +164,7 @@ class CexamController extends CommonController
         $dataArray=$request->only('logid','cid','answer','type');
         $dataArray['stuid'] = \Auth::user()->id;
         $dataArray['time'] = time();
+        $dataArray['ipaddress'] = $request->getClientIp();
         $exam = new Cexam();
 
 
