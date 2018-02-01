@@ -421,9 +421,20 @@ class TestController extends CommonController
         } else {
             $hard_level = '视考试结果而定';
         }
+        $students_join = TestStatistics::select('id')->where('logid',$id)->get();
+        $students_join_ids = [];
+        foreach ($students_join as $v){
+            $students_join_ids[] = $v->id; //取出参考人员id
+        }
+        $students_absences = $test->students()->whereNotIn('id',$students_join_ids)->get();
+        $students_absence = [];
+        foreach ($students_absences as $v){
+            $students_absence[] = $v->name;//取出未参考学生
+        }
         $data = [
             'exam_name'         => $exam_name,          //考试名称
             'score_list'        => $student_score_arr,  //考生分数列表
+            'students_absence'  => $students_absence,   //未参考学生
             'total_score'       => $total_score,        //考试总得分
             'avg_score'         => $avg_score,          //考试平均分
             'student_score_max' => $student_score_max,  //最高分
