@@ -758,7 +758,7 @@ class TestController extends CommonController
 //        }
         $model = new TestContentModule();
         foreach ($params as $key => $val) {
-            if (in_array($key, $model->getFillable())) {
+            if (in_array($key, $model->getFillable()) && $val) {
                 $query = $query->where($key, $val);
             }
         }
