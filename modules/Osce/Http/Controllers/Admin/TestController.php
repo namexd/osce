@@ -709,18 +709,23 @@ class TestController extends CommonController
     public function getQuestionList(Request $request) {
         $search = $request->get('search');
         $type = $request->get('type');
+        $params = $request->all();
         $query = TestContentModule::query();//->where('status' , '<>' , 0);
 
-        if ($search) {
-            $query = $query->where('name', 'like', $search . '%');
-        }
-        if ($type) {
-            $query = $query->where('type', $type);
+//        if ($search) {
+//            $query = $query->where('name', 'like', $search . '%');
+//        }
+//        if ($type) {
+//            $query = $query->where('type', $type);
+//        }
+        $model = new TestContentModule();
+        foreach ($params as $key => $val) {
+            if (in_array($key, $model->getFillable())) {
+                $query = $query->where($key, $val);
+            }
         }
 
-        $types = (new TestContentModule())->typeValues;
-//        $query->with('examPlan');
-        return view('osce::theory.question_list', ['data' => $query->paginate(), 'types' => $types]);
+        return view('osce::theory.question_list', ['data' => $query->paginate(), 'model' => $model]);
     }
 
     public function getViewQuestion(Request $request) {
@@ -798,7 +803,6 @@ class TestController extends CommonController
             } else {
                 return redirect()->back()->withErrors('添加失败');
             }
-
         } catch (\Exception $ex) {
             return redirect()->back()->withErrors($ex->getMessage());
         }
