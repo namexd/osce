@@ -138,6 +138,11 @@
                                 <label class="col-sm-2 control-label text-left">{{$data['hard_level']}}</label>
                             </div>
                             <div class="hr-line-dashed"></div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">未参考学生：</label>
+                                <label class="col-sm-6 control-label text-left">{{implode(',',$data['students_absence'])}}</label>
+                            </div>
+                            <div class="hr-line-dashed"></div>
 
 							<div id="main" style="height:400px;"></div>
 							
