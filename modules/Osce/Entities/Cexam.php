@@ -126,7 +126,7 @@ class Cexam extends CommonModel
             ->join('g_test_content','g_test_content.id','=','g_test_record.cid')
             ->join('g_test_statistics','g_test_statistics.logid','=','g_test_log.id')
             ->join('g_test','g_test.id','=','g_test_log.tid')
-            ->select('g_test_record.*','g_test_record.poins as score','student.name as stuname','g_test_content.question','g_test_content.answer as rightanswer','g_test_statistics.time as alltime','g_test_statistics.status as zt','g_test_statistics.objective','g_test_content.content','g_test_content.poins','g_test_log.name as examname','g_test.score as examscore','g_test_log.times')
+            ->select('g_test_record.*','g_test_record.poins as score','student.name as stuname','g_test_content.question','g_test_content.answer as rightanswer','g_test_statistics.time as alltime','g_test_statistics.status as zt','g_test_statistics.objective','g_test_content.content','g_test_content.poins','g_test_content.category','g_test_log.name as examname','g_test.score as examscore','g_test_log.times')
             ->where('g_test_log.id',$logid)
             ->where('g_test_record.stuid',$stuid)
             ->orderBy('g_test_log.id')
@@ -223,6 +223,7 @@ class Cexam extends CommonModel
             ->update([
                 'logid' =>  $data['logid'],
                 'stuid' =>  $data['stuid'],
+                'ipaddress' =>  $data['ipaddress'],
                 'time' =>  $data['time'],
                 //'status'=> $status,
                 'objective' =>   $data['objective']

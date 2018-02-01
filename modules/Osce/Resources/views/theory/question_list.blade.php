@@ -82,6 +82,8 @@
                         <th>序号</th>
                         <th>题目名称</th>
 						<th>类型</th>
+						<th>医学题型分类</th>
+						
                         <th>创建时间</th>
                         <th>操作</th>
                     </tr>
@@ -92,6 +94,7 @@
                         <td>{{$k+1}}</td>
                         <td>{{$val->question}}</td>
 						<td>{{isset($types[$val->type]) ? $types[$val->type]: ''}}</td>
+                        <td>{{$val->category}}</td>
                         <td>{{$val->ctime}}</td>
                         
                         <td>
