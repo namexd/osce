@@ -421,10 +421,10 @@ class TestController extends CommonController
         } else {
             $hard_level = '视考试结果而定';
         }
-        $students_join = TestStatistics::select('id')->where('logid',$id)->get();
+        $students_join = TestStatistics::select('stuid')->where('logid',$id)->get();
         $students_join_ids = [];
         foreach ($students_join as $v){
-            $students_join_ids[] = $v->id; //取出参考人员id
+            $students_join_ids[] = $v->stuid; //取出参考人员id
         }
         $students_absences = $test->students()->whereNotIn('id',$students_join_ids)->get();
         $students_absence = [];
