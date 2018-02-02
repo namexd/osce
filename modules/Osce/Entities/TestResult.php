@@ -8,6 +8,7 @@
 
 namespace Modules\Osce\Entities;
 
+use App\Commands\DownloadNvrVideo;
 use DB;
 use Illuminate\Support\Facades\Log;
 use Modules\Osce\Entities\CommonModel;
@@ -149,8 +150,10 @@ class TestResult extends CommonModel
 
             //标记父考试成绩 TODO：fandian 2016-06-17
             $result = $this->flagOldExamResult($exam_id, $data['student_id']);
-
             $connection->commit();
+            if (config('nvr') && config('nvr')['enable']) {
+                \Queue::push(new DownloadNvrVideo($testResult->id));
+            }
             return $testResult;
 
         } catch (\Exception $ex) {
