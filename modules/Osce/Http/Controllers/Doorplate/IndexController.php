@@ -97,10 +97,14 @@ class IndexController extends CommonController
                 throw new \Exception('本场次该房间下暂时没有考试信息');
             };
 
+
             // 获取到当前组 TODO: fandian 2016-06-12
             $current   = $this->getExaminee($request);
+
             // 获取到下一组
             $nextGroup = $this->getNextExaminee($request);
+
+
             if(empty($current) || count($current)==0){
                 $RoomName = '';
             }else{
@@ -229,6 +233,9 @@ class IndexController extends CommonController
 
         try{
             $examscreening = ExamScreening::where('exam_id', $exam_id)->where('status', 1)->first();
+            if(empty($examscreening)){
+                return '';
+            }
             $exam_screening_id = $examscreening->id;
             $examQueue = ExamPlan::leftjoin('student', 'exam_plan.student_id', '=', 'student.id')
                 ->select('exam_plan.id as planid', 'exam_plan.begin_dt','student.id as stuid', 'student.avator', 'student.idcard', 'student.code',  'student.exam_sequence','exam_plan.student_id as pstuid', 'student.name as stuname')
@@ -308,7 +315,11 @@ class IndexController extends CommonController
 
         try{
             $examscreening = ExamScreening::where('exam_id', $exam_id)->where('status', 1)->first();
+            if(empty($examscreening)){
+                return '';
+            }
             $exam_screening_id = $examscreening->id;
+
             $data = ExamPlan::leftjoin('student', 'exam_plan.student_id', '=', 'student.id')
                 ->select('exam_plan.id as planid', 'exam_plan.begin_dt','student.id as stuid', 'student.avator', 'student.idcard', 'student.code',  'student.exam_sequence','exam_plan.student_id as pstuid', 'student.name as stuname')
                 ->where('exam_plan.exam_id', $exam_id)

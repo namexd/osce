@@ -1,0 +1,6 @@
+
+
+
+
+
+F:\HIKVISION_DownLoad_Console\HIKVISION\HIKVISIONConsole\Release\HIKVISIONConsole.exe 192.168.111.11 8000 admin misrobot2016 2016 5 1 08 00 00 2016 5 1 08 15 00
