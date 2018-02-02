@@ -373,7 +373,7 @@ class TestController extends CommonController
         $data = TestStatistics::join('g_test_log', 'g_test_statistics.logid', '=', 'g_test_log.id')
             ->join('student','g_test_statistics.stuid','=','student.user_id')
             ->join('g_test','g_test_log.tid','=','g_test.id')
-            ->select('g_test_statistics.objective','g_test_statistics.subjective','g_test_statistics.logid','g_test.name','student.name as stuname','student.user_id')
+            ->select('g_test_statistics.objective','g_test_statistics.subjective','g_test_statistics.logid','g_test_log.name','g_test.name as testname','student.name as stuname','student.user_id')
             ->where('student.user_id', $stuid)
             ->where('student.test_id','<>',0)
             ->first();
