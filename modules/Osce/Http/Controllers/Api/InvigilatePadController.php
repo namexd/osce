@@ -577,6 +577,56 @@ class InvigilatePadController extends CommonController
         }
     }
 
+    public function getResultVideo(Request $request) {
+        $id = $request->get('id');
+        if (!$id || !$result = TestResult::find($id)) {
+            return [
+                'code' => -1,
+                'message' => '成绩不存在',
+            ];
+        }
+        if (!$result->video_path) {
+            return [
+                'code' => -1,
+                'message' => '该成绩暂无视频',
+            ];
+        }
+
+//        header("Content-type:text/html;charset=utf-8");
+        $file_name = "video.mp4";
+        //用以解决中文不能显示出来的问题
+//        $file_name=iconv("utf-8","gb2312",$file_name);
+        $file_path = $result->video_path;
+        //首先要判断给定的文件存在与否
+        if (!file_exists($file_path)) {
+            return [
+                'code' => -1,
+                'message' => '视频文件丢失',
+            ];
+        }
+        $fp = fopen($file_path, "r");
+        $file_size = filesize($file_path);
+        //下载文件需要用到的头
+        Header("Content-type: application/octet-stream");
+        Header("Accept-Ranges: bytes");
+        Header("Accept-Length:" . $file_size);
+        if (strpos(strtolower($_SERVER["HTTP_USER_AGENT"]), 'firefox') === false && strpos(strtolower($_SERVER["HTTP_USER_AGENT"]), 'safari') === false) {
+            Header("Content-Disposition: attachment; filename=" . urlencode($file_name));
+        } else {
+            Header("Content-Disposition: attachment; filename=" . $file_name);
+        }
+
+        $buffer = 1024;
+        $file_count = 0;
+        //向浏览器返回数据
+        while (!feof($fp) && $file_count < $file_size) {
+            $file_con = fread($fp, $buffer);
+            $file_count += $buffer;
+            echo $file_con;
+        }
+        fclose($fp);
+    }
+
 
     /**
      * 照片附件的上传

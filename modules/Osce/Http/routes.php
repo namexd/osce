@@ -577,8 +577,10 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::get('invigilatepad/start-exam', 	['uses'=>'InvigilatePadController@getStartExam','as'=>'osce.api.invigilatepad.getStartExam']);
 		Route::get('invigilatepad/end-exam', 	['uses'=>'InvigilatePadController@getEndExam','as'=>'osce.api.invigilatepad.getEndExam']);
 		Route::get('invigilatepad/test-index', 	['uses'=>'InvigilatePadController@getTestIndex','as'=>'osce.api.invigilatepad.getTestIndex']);
+        Route::get('invigilatepad/get-result-video', 	['uses'=>'InvigilatePadController@getResultVideo','as'=>'osce.api.invigilatepad.getResultVideo']);
 
-		Route::get('exam-list', ['uses' => 'LoginPullDownController@getExamList', 'as' => 'osce.api.LoginPullDown.getExamList']);
+
+        Route::get('exam-list', ['uses' => 'LoginPullDownController@getExamList', 'as' => 'osce.api.LoginPullDown.getExamList']);
 		Route::get('room-list', ['uses' => 'LoginPullDownController@getRoomList', 'as' => 'osce.api.LoginPullDown.getRoomList']);
 
 		//pad的上传
