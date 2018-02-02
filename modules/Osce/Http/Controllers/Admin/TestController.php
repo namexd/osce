@@ -365,7 +365,7 @@ class TestController extends CommonController
             ->where('student.user_id', $stuid)
             ->where('student.test_id','<>',0)
             ->first();
-        dd($data);
+
         return view('osce::theory.student_lscore',['data'=>$data]);
     }
 
