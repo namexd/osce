@@ -42,6 +42,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::get('examsstatistics', ['uses'=>'TestController@examstatistics', 'as' => 'osce.theory.examstatistics']);//成绩统计
 		Route::get('examcheck', ['uses'=>'TestController@examcheck', 'as' => 'osce.theory.examcheck']);//批巻管理
 		Route::get('studentscore', ['uses'=>'TestController@studentscore', 'as' => 'osce.theory.studentscore']);//学生成绩列表
+		Route::get('studentlscore', ['uses'=>'TestController@studentlscore', 'as' => 'osce.theory.studentlscore']);//理伦学生成绩列表
 		Route::get('studentscoreexport', ['uses'=>'TestController@studentscoreexport', 'as' => 'osce.theory.studentscoreexport']);//学生成绩导出
 		Route::get('studentmarking', ['uses'=>'TestController@studentmarking', 'as' => 'osce.theory.studentmarking']);//学生打分列表
 		Route::get('examcheck', ['uses'=>'TestController@examcheck', 'as' => 'osce.theory.examcheck']);//在线批卷
