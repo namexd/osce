@@ -353,6 +353,24 @@ class TestController extends CommonController
         //dd($data);
         return view('osce::theory.exam_score',['data'=>$data]);
     }
+    //学生对应理伦考试列表
+    public function examlscore(){
+        $stuid = \Auth::user()->id;
+        $data = Student::where('user_id',$stuid)->where('test_id','<>',0)->paginate(10);
+        return view('osce::theory.exam_lscore',['data'=>$data]);
+    }
+    public function studentlscore(Request $request){
+        $this->validate($request, [
+            'id'    => 'required|integer',
+        ], [
+            'id.required' => 'ID必传'
+        ]);
+        $id = $request->get('id');
+        $stuid = \Auth::user()->id;
+        $test = TestLog::find($id);
+        $data = TestStatistics::where('logid',$id)->where('stuid',$stuid)->paginate(10);
+        return view('osce::theory.student_lscore',['data'=>$data,'test'=>$test]);
+    }
 
     public function examcheck(){
         $data = TestLog::where('end','<',date('Y-m-d H:i:s'))->paginate(10);
