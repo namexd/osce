@@ -353,23 +353,20 @@ class TestController extends CommonController
         //dd($data);
         return view('osce::theory.exam_score',['data'=>$data]);
     }
+
     //学生对应理伦考试列表
-    public function examlscore(){
+    public function studentlscore(){
+
         $stuid = \Auth::user()->id;
-        $data = Student::where('user_id',$stuid)->where('test_id','<>',0)->paginate(10);
-        return view('osce::theory.exam_lscore',['data'=>$data]);
-    }
-    public function studentlscore(Request $request){
-        $this->validate($request, [
-            'id'    => 'required|integer',
-        ], [
-            'id.required' => 'ID必传'
-        ]);
-        $id = $request->get('id');
-        $stuid = \Auth::user()->id;
-        $test = TestLog::find($id);
-        $data = TestStatistics::where('logid',$id)->where('stuid',$stuid)->paginate(10);
-        return view('osce::theory.student_lscore',['data'=>$data,'test'=>$test]);
+        $data = TestStatistics::join('g_test_log', 'g_test_statistics.logid', '=', 'g_test_log.id')
+            ->join('student','g_test_statistics.stuid','=','student.user_id')
+            ->join('g_test','g_test_log.tid','=','g_test.id')
+            ->select('g_test_statistics.objective','g_test_statistics.subjective','g_test_statistics.logid','g_test.name','student.name as stuname','student.user_id')
+            ->where('student.user_id', $stuid)
+            ->where('student.test_id','<>',0)
+            ->first();
+        dd($data);
+        return view('osce::theory.student_lscore',['data'=>$data]);
     }
 
     public function examcheck(){
