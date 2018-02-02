@@ -17,6 +17,7 @@ class Kernel extends ConsoleKernel
         \App\Console\Commands\Inspire::class,
         \App\Console\Commands\MigrateMysqlSchemaCommand::class,
         \App\Console\Commands\RedisSubscribe::class,
+        \App\Console\Commands\Nvr::class,
     ];
 
     /**

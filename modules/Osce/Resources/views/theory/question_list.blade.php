@@ -41,7 +41,10 @@
 			});
 		};
 		$(function () {
-			$('select[name=type]').val({{request()->get('type')}});			
+			$('select[name=type]').val({{request()->get('type')}});	
+			$('select[name=degree]').val({{request()->get('degree')}});	
+			$('select[name=require]').val({{request()->get('require')}});	
+			$('select[name=lv]').val({{request()->get('lv')}});	
 		});
 				
    </script>
@@ -65,14 +68,36 @@
 	    </div>
    		<div class="container-fluid ibox-content" id="list_form">
    			
-			<form action="" method="get" class="left">
-                <label for="" class="pull-left Fleft" style="margin-left: 20px;">题目类型：</label>
+			<form action="" method="get" class="left" style="margin: 10px 20px;">
+                <label for="" class="pull-left Fleft">题目类型：</label>
                 <select name="type" class="form-control Fleft" style="width: 150px;">
                     <option value="">全部</option>
-                    @foreach($types as $k=>$type)
+                    @foreach($model->typeValues as $k=>$type)
                     	<option value="{{$k}}">{{$type}}</option>
                     @endforeach
                 </select>
+                <label for="" class="pull-left Fleft" style="margin-left: 20px;">难度：</label>
+                <select name="degree" class="form-control Fleft" style="width: 100px;">
+                    <option value="">全部</option>
+                    @foreach($model->degreeValues as $k=>$degree)
+                    	<option value="{{$k}}">{{$degree}}</option>
+                    @endforeach
+                </select>
+                <label for="" class="pull-left Fleft" style="margin-left: 20px;">要求度：</label>
+                <select name="require" class="form-control Fleft" style="width: 100px;">
+                    <option value="">全部</option>
+                    @foreach($model->requireValues as $k=>$require)
+                    	<option value="{{$k}}">{{$require}}</option>
+                    @endforeach
+                </select>
+                <label for="lv" class="pull-left Fleft" style="margin-left: 20px;">适用层次：</label>
+                <select name="lv" class="form-control Fleft" style="width: 100px;">
+                    <option value="">全部</option>
+                    @foreach($model->lvValues as $k=>$lv)
+                    	<option value="{{$k}}">{{$lv}}</option>
+                    @endforeach
+                </select>
+                
                 <button type="submit" class="btn btn-sm btn-primary marl_10 Fleft" id="search">查询</button>
             </form>
 	        
@@ -82,20 +107,27 @@
                         <th>序号</th>
                         <th>题目名称</th>
 						<th>类型</th>
-						<th>医学题型分类</th>
+						<!--<th>医学题型分类</th>-->
+						<th>难度</th>
+						<th>要求度</th>
+						<th>适用层次</th>
 						
-                        <th>创建时间</th>
+                        <!--<th>创建时间</th>-->
                         <th>操作</th>
                     </tr>
                 </thead>
+                
                 <tbody>
             		@foreach($data->items() as $k=>$val)
                     <tr>
                         <td>{{$k+1}}</td>
                         <td>{{$val->question}}</td>
-						<td>{{isset($types[$val->type]) ? $types[$val->type]: ''}}</td>
-                        <td>{{$val->category}}</td>
-                        <td>{{$val->ctime}}</td>
+						<td>{{$model->typeValues[$val->type] or ''}}</td>
+                        <!--<td>{{$val->category}}</td>-->
+                        <td>{{$model->degreeValues[$val->degree] or ''}}</td>
+                        <td>{{$model->requireValues[$val->require] or ''}}</td>
+                        <td>{{$model->lvValues[$val->lv] or ''}}</td>
+                        <!--<td>{{$val->ctime}}</td>-->
                         
                         <td>
                             <a class="state1 modal-control" href="{{route('osce.theory.getEditQuestion',['id'=>$val->id,'from'=>'view'])}}">
