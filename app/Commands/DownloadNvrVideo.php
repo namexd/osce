@@ -47,8 +47,8 @@ class DownloadNvrVideo implements SelfHandling, ShouldQueue
                         ->first();
                     // 如果存在摄像头获取考试视频
                     if ($vcr) {
-                        $begin_dt = date('Y m d h i s', strtotime($model->begin_dt));
-                        $end_dt = date('Y m d h i s', strtotime($model->end_dt));
+                        $begin_dt = date('Y m d H i s', strtotime($model->begin_dt));
+                        $end_dt = date('Y m d H i s', strtotime($model->end_dt));
                         $cmd = "{$nvr['dir']}{$nvr['exec_command']} {$nvr['host']} {$nvr['port']} {$nvr['username']} {$nvr['password']} {$begin_dt} {$end_dt}";
                         // 正在转换
                         $model->update(['video_status' => 1]);
@@ -56,7 +56,7 @@ class DownloadNvrVideo implements SelfHandling, ShouldQueue
                         exec($cmd, $o);
 //                    rename('/data/www/osce_child/aaaa', public_path('videos/aaaa'));
 //                    pclose(popen($cmd, 'r'));
-                        $fileName = date('Y-m-d h-i-s', strtotime($model->begin_dt)) . "_" . date('Y-m-d h-i-s', strtotime($model->end_dt)) . '.mp4';
+                        $fileName = date('Y-m-d H-i-s', strtotime($model->begin_dt)) . "_" . date('Y-m-d H-i-s', strtotime($model->end_dt)) . '.mp4';
                         //var_dump($cmd, $nvr['dir'] . $fileName, public_path('videos/') . $fileName);exit;
                         // 转换完成
                         \Log::info('cmd', ['cmd' => $cmd, $nvr['dir'] . $fileName]);

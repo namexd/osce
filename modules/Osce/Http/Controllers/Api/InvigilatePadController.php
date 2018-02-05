@@ -507,9 +507,7 @@ class InvigilatePadController extends CommonController
                 //throw new \Exception('没有查询到该学生队列', -100);
                 $begin_dt = Input::get('begin_dt');
                 $useTime = Input::get('use_time');
-                $end_dt = strtotime($begin_dt) + $useTime;
-
-
+                $end_dt = date('Y-m-d H:i:s',strtotime($begin_dt) + $useTime);
             }else{
                 $begin_dt=$studentExamTime->begin_dt;
                 $end_dt=$studentExamTime->end_dt;

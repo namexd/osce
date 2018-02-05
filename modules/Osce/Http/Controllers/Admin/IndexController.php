@@ -24,7 +24,7 @@ class IndexController extends CommonController
         //获取用户所有权限ID
         $userRoles =Auth::user()->roles->pluck('id')->all();
         //监考老师
-        if(in_array(config('config.teacherRoleId'),$userRoles)){
+        if(in_array(config('config.teacherRoleId'),$userRoles) || in_array(config('config.superRoleId'),$userRoles)){
             $exam   =   new Exam();
             $data   =   $exam->selectExamToday();
             return view('osce::admin.index.examboard',['data'=>$data]);
