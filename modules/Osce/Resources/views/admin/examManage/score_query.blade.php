@@ -99,6 +99,11 @@
                                         <a class="subject-a" href="{{route('osce.admin.getExamResultDetail',['exam_result_id'=>$item->id,'flag'=>$item->flag])}}">
                                             <span class="read  state1 detail"><i class="fa fa-search fa-2x"></i></span>
                                         </a>
+                                        @if($item->video_status == 2 && $item->video_path)
+                                            <a class="subject-a" href="{{route('osce.api.invigilatepad.getResultVideo',['id' => $item->id])}}">
+                                                <span class="read  state1 detail"><i class="fa fa-2x">下载</i></span>
+                                            </a>
+                                        @endif
                                     </td>
                                 @endif
                             @else

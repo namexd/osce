@@ -90,6 +90,8 @@ class ExamResult extends CommonModel
             'exam_result.time as time',
             'exam_result.score as score',
             'exam_result.flag as flag',
+            'exam_result.video_status',
+            'exam_result.video_path',
             'student.name as student_name',
             'student.id as student_id',
             'station.name as station_name',
