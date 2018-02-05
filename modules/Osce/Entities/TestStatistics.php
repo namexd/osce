@@ -32,7 +32,9 @@ class TestStatistics extends Model
     public  function logdata(){
         return $this->hasOne('Modules\Osce\Entities\TestLog', 'id', 'logid');
     }
-
+    public function exam(){
+        return $this->hasOne('\Modules\Osce\Entities\Exam','id','exam_id');
+    }
 
 }
 

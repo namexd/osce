@@ -644,11 +644,11 @@ class ExamController extends CommonController
                 }
                 foreach($data as $field => $value) {
                     if(!empty($value)){
-                        $student->$field = $value;
+                        $studentData[$field] = $value;
                     }
                 }
-
-                if($student->save()) {
+                $studentupdate =Student::where('user_id',$student->user_id)->update($studentData);
+                if($studentupdate) {
                     $user   =   $student->userInfo;
                     $user->email  = $request->get('email');
                     $user->gender = $request->get('gender');
