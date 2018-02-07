@@ -33,6 +33,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::get('examquestion', ['uses'=>'TestController@examquestion', 'as' => 'osce.theory.examquestion']);//题库管理
 		Route::get('autoquestion', ['uses'=>'TestController@autoquestion', 'as' => 'osce.theory.autoquestion']);//自动组卷
 		Route::get('autoexampreview', ['uses'=>'TestController@autoexampreview', 'as' => 'osce.theory.autoexampreview']);//考卷预览
+		Route::get('autoexamdownload', ['uses'=>'TestController@autoexamdownload', 'as' => 'osce.theory.autoexamdownload']);//考卷预览
 		Route::get('autoexamedit', ['uses'=>'TestController@autoexamedit', 'as' => 'osce.theory.autoexamedit']);//考卷修改
 		Route::get('autoexamadd', ['uses'=>'TestController@autoexamadd', 'as' => 'osce.theory.autoexamadd']);//考卷新增
 		Route::post('autoexam', ['uses'=>'TestController@autoexam', 'as' => 'osce.theory.autoexam']);//自动组卷提交
