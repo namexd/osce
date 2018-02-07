@@ -43,6 +43,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::get('examsstatisticsexport', ['uses'=>'TestController@examstatisticsexport', 'as' => 'osce.theory.examstatisticsexport']);//成绩统计导出
 		Route::get('examcheck', ['uses'=>'TestController@examcheck', 'as' => 'osce.theory.examcheck']);//批巻管理
 		Route::get('studentscore', ['uses'=>'TestController@studentscore', 'as' => 'osce.theory.studentscore']);//学生成绩列表
+		Route::get('studentlscore', ['uses'=>'TestController@studentlscore', 'as' => 'osce.theory.studentlscore']);//理伦学生成绩列表
 		Route::get('studentscoreexport', ['uses'=>'TestController@studentscoreexport', 'as' => 'osce.theory.studentscoreexport']);//学生成绩导出
 		Route::get('studentmarking', ['uses'=>'TestController@studentmarking', 'as' => 'osce.theory.studentmarking']);//学生打分列表
 		Route::get('examcheck', ['uses'=>'TestController@examcheck', 'as' => 'osce.theory.examcheck']);//在线批卷
@@ -577,8 +578,10 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::get('invigilatepad/start-exam', 	['uses'=>'InvigilatePadController@getStartExam','as'=>'osce.api.invigilatepad.getStartExam']);
 		Route::get('invigilatepad/end-exam', 	['uses'=>'InvigilatePadController@getEndExam','as'=>'osce.api.invigilatepad.getEndExam']);
 		Route::get('invigilatepad/test-index', 	['uses'=>'InvigilatePadController@getTestIndex','as'=>'osce.api.invigilatepad.getTestIndex']);
+        Route::get('invigilatepad/get-result-video', 	['uses'=>'InvigilatePadController@getResultVideo','as'=>'osce.api.invigilatepad.getResultVideo']);
 
-		Route::get('exam-list', ['uses' => 'LoginPullDownController@getExamList', 'as' => 'osce.api.LoginPullDown.getExamList']);
+
+        Route::get('exam-list', ['uses' => 'LoginPullDownController@getExamList', 'as' => 'osce.api.LoginPullDown.getExamList']);
 		Route::get('room-list', ['uses' => 'LoginPullDownController@getRoomList', 'as' => 'osce.api.LoginPullDown.getRoomList']);
 
 		//pad的上传

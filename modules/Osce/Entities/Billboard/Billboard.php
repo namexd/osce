@@ -62,6 +62,9 @@ class Billboard
     public function get2Queue($examId, $roomId)
     {
         $examscreening = ExamScreening::where('exam_id', $examId)->where('status', 1)->first();
+        if(empty($examscreening)){
+            return '';
+        }
         $exam_screening_id = $examscreening->id;
         $list2 = ExamPlan::leftjoin('student', 'exam_plan.student_id', '=', 'student.id')
             ->select('exam_plan.id as planid', 'exam_plan.begin_dt','student.id as stuid', 'student.avator', 'student.idcard', 'student.code',  'student.exam_sequence','exam_plan.student_id as pstuid', 'student.name as stuname')

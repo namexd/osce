@@ -1,0 +1,15 @@
+﻿Build started 2016/6/18 17:40:14.
+     1>Project "F:\HIKVISION_DownLoad_Console\HIKVISION\HIKVISIONConsole\HIKVISIONConsole\HIKVISIONConsole.vcxproj" on node 2 (Build target(s)).
+     1>ClCompile:
+         D:\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I../Header /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MTd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Yu"stdafx.h" /Fp"Debug\HIKVISIONConsole.pch" /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt HIKVISIONConsole.cpp
+         HIKVISIONConsole.cpp
+       Link:
+         D:\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"F:\HIKVISION_DownLoad_Console\HIKVISION\HIKVISIONConsole\Debug\HIKVISIONConsole.exe" /INCREMENTAL /NOLOGO /LIBPATH:../Library HCNetSDK.lib PlayCtrl.lib FormatConversion.lib ws2_32.lib winmm.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /manifestinput:"D:\Microsoft Visual Studio 12.0\VC\Include\Manifest\dpiaware.manifest" /DEBUG /PDB:"F:\HIKVISION_DownLoad_Console\HIKVISION\HIKVISIONConsole\Debug\HIKVISIONConsole.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"F:\HIKVISION_DownLoad_Console\HIKVISION\HIKVISIONConsole\Debug\HIKVISIONConsole.lib" /MACHINE:X86 Debug\HIKVISIONConsole.res
+         Debug\HIKVISIONConsole.obj
+         Debug\stdafx.obj
+         HIKVISIONConsole.vcxproj -> F:\HIKVISION_DownLoad_Console\HIKVISION\HIKVISIONConsole\Debug\HIKVISIONConsole.exe
+     1>Done Building Project "F:\HIKVISION_DownLoad_Console\HIKVISION\HIKVISIONConsole\HIKVISIONConsole\HIKVISIONConsole.vcxproj" (Build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:01.20

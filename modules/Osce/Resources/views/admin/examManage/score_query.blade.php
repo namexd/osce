@@ -28,42 +28,58 @@
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row table-head-style1 ">
             <div class="col-xs-6 col-md-2">
-                <h5 class="title-label">成绩查询</h5>
+            	@if($isAdmin)
+            		<h5 class="title-label">成绩查询</h5>
+            	@else
+            		<h5 class="title-label">技能考试成绩查询</h5>
+            	@endif
+                
             </div>
+            
         </div>
+
         <form class="container-fluid ibox-content" id="list_form" action="{{route('osce.admin.geExamResultList')}}" method="get">
             <div class="panel blank-panel">
-                <div  class="row" style="margin:20px 0;">
-                    <div class="col-md-4 col-sm-4 col-xs-12">
-                        <label class="pull-left left-text">考试名称:</label>
-
-                        <div class="pull-left right-list">
-                            <select id="select_Category" class="form-control m-b" name="exam_id">
-                                <option value="">全部考试</option>
-                                @foreach($exams as $key=>$item)
-                                <option value="{{$item->id}}" {{$exam_id==$item->id?"selected":""}}>{{$item->name}}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-md-4 col-sm-4 col-xs-12">
-                        <label class="pull-left left-text">考站名称:</label>
-                        <div class="pull-left right-list">
-                            <select id="station_Category" class="form-control m-b" name="station_id">
-                                <option value="">全部考站</option>
-                                @foreach($stations as $key=>$item)
-                                <option value="{{$item->id}}" {{$station_id==$item->id?"selected":""}}>{{$item->name}}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                    </div>
-                    <div class="input-group col-md-4 col-sm-4 col-xs-12">
-                        <input type="text" placeholder="请输入考生姓名" style="height:36px;" name="name" value="{{$name!=null?$name:''}}"class="input-md form-control">
-                         <span class="input-group-btn">
-                             <button type="submit" class="btn btn-md btn-primary" id="search">搜索</button>
-                        </span>
-                    </div>
-                </div>
+                @if($isAdmin)
+               		<div  class="row" style="margin:20px 0;">
+	                    <div class="col-md-4 col-sm-4 col-xs-12">
+	                        <label class="pull-left left-text">考试名称:</label>
+	
+	                        <div class="pull-left right-list">
+	                            <select id="select_Category" class="form-control m-b" name="exam_id">
+	                                <option value="">全部考试</option>
+	                                @foreach($exams as $key=>$item)
+	                                <option value="{{$item->id}}" {{$exam_id==$item->id?"selected":""}}>{{$item->name}}</option>
+	                                @endforeach
+	                            </select>
+	                        </div>
+	                    </div>
+	                    <div class="col-md-4 col-sm-4 col-xs-12">
+	                        <label class="pull-left left-text">考站名称:</label>
+	                        <div class="pull-left right-list">
+	                            <select id="station_Category" class="form-control m-b" name="station_id">
+	                                <option value="">全部考站</option>
+	                                @foreach($stations as $key=>$item)
+	                                <option value="{{$item->id}}" {{$station_id==$item->id?"selected":""}}>{{$item->name}}</option>
+	                                @endforeach
+	                            </select>
+	                        </div>
+	                    </div>
+	                    <div class="input-group col-md-4 col-sm-4 col-xs-12">
+	                        <input type="text" placeholder="请输入考生姓名" style="height:36px;" name="name" value="{{$name!=null?$name:''}}"class="input-md form-control">
+	                         <span class="input-group-btn">
+	                             <button type="submit" class="btn btn-md btn-primary" id="search">搜索</button>
+	                        </span>
+	                    </div>
+	                </div>             
+                @else
+					<div class="panel-options">
+	                    <ul class="nav nav-tabs" style="margin-left: 0">
+							<li class="active"><a href="{{route('osce.admin.geExamResultList')}}">技能考试成绩</a></li>
+	                        <li class=""><a href="{{route('osce.theory.studentlscore')}}">理论考试成绩</a></li>
+	                    </ul>
+	                </div>
+                @endif
                 <table class="table table-striped" id="table-striped" style="margin-bottom: 20px;">
                     <thead>
                     <tr>
@@ -99,6 +115,11 @@
                                         <a class="subject-a" href="{{route('osce.admin.getExamResultDetail',['exam_result_id'=>$item->id,'flag'=>$item->flag])}}">
                                             <span class="read  state1 detail"><i class="fa fa-search fa-2x"></i></span>
                                         </a>
+                                        @if($item->video_status == 2 && $item->video_path)
+                                            <a class="subject-a" href="{{route('osce.api.invigilatepad.getResultVideo',['id' => $item->id])}}">
+                                                <span class="read  state1 detail"><i class="fa fa-2x">下载</i></span>
+                                            </a>
+                                        @endif
                                     </td>
                                 @endif
                             @else

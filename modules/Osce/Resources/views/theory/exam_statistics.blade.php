@@ -26,7 +26,7 @@
 			
 			var option = {
 			    title : {
-			        text: '考生成绩统计图',
+			        text: '考生总成绩统计图',
 			        subtext: '',
 			        x:'center'
 			    },
@@ -111,7 +111,9 @@
         <div class="ibox float-e-margins">
             <div class="ibox-title">
                 <h5>成绩统计</h5>
+                <a  href="{{route('osce.theory.studentscore',['id'=>request()->get('id')])}}" class="btn btn-primary" style="float: right; position: relative;top: -10px;">&nbsp;查看详细成绩&nbsp;</a>
             </div>
+	
             <div class="ibox-content">
             	<h2 class="text-center p-md">{{$data['exam_name']}}</h2>
                 <div class="row">

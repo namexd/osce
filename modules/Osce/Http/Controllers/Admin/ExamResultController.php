@@ -31,6 +31,7 @@ use Modules\Osce\Http\Controllers\CommonController;
 use Modules\Osce\Repositories\Common;
 use Modules\Osce\Entities\TestLog;
 use Modules\Osce\Entities\TestStatistics;
+use Auth;
 
 class ExamResultController extends CommonController{
 
@@ -64,7 +65,16 @@ class ExamResultController extends CommonController{
 
         $examId    = $request->get('exam_id');
         $stationId = $request->get('station_id');
-        $name      = $request->get('name');
+
+        $userRoles =Auth::user()->roles->pluck('id')->all();
+        $isAdmin =true;
+        if(in_array(config('config.examineeRoleId'),$userRoles)){
+            //是学生
+            $name      = $request->get('name',Auth::user()->name);
+            $isAdmin =false;
+        }else{
+            $name      = $request->get('name');
+        }
 
         $ExamDraft = new ExamDraft();
         //查询考站，(存在考试ID, 根据考试ID查询)
@@ -85,7 +95,8 @@ class ExamResultController extends CommonController{
             [
                 'examResults'=> $examResults, 'exams'    => $exams,
                 'stations'   => $stations,    'exam_id'  => $examId,
-                'station_id' => $stationId,   'name'     => $name
+                'station_id' => $stationId,   'name'     => $name,
+                'isAdmin'=>$isAdmin
             ]);
     }
 

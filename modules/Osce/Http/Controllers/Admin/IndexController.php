@@ -21,13 +21,16 @@ use Auth;
 class IndexController extends CommonController
 {
     public function dashboard(){
-
-        $userRole = SysUserRole::where('user_id',Auth::user()->id)->first();
-
-        if(!empty($userRole) && $userRole->role->name !='监考老师'){
+        //获取用户所有权限ID
+        $userRoles =Auth::user()->roles->pluck('id')->all();
+        //监考老师
+        if(in_array(config('config.teacherRoleId'),$userRoles) || in_array(config('config.superRoleId'),$userRoles)){
             $exam   =   new Exam();
             $data   =   $exam->selectExamToday();
             return view('osce::admin.index.examboard',['data'=>$data]);
+        }elseif(in_array(config('config.examineeRoleId'),$userRoles)) {
+            //学生
+            return redirect()->route('osce.admin.geExamResultList');
         }else{
             return view('osce::admin.index.dashboard');
         }
