@@ -33,8 +33,10 @@ class CommonController extends Controller
                 }
                 //取得上传文件的MIME类型：//$mime = $file->getMimeType();
                 $mime = $file->getClientMimeType();
+//                var_dump($mime);exit;
                 //if (($mime == "image/gif") || ($mime == "image/jpeg") || ($mime == "image/pjpeg") || ($mime == "image/png")) {
-                if ( in_array($mime ,['image/gif','image/jpeg','image/pjpeg','image/png','text/plain'])|| strpos($mime,'application/vnd.')===0 || strpos($mime,'application/msword')===0) {
+                $types = ['video/mp4', 'audio/wav', 'audio/mp3', 'image/gif','image/jpeg','image/pjpeg','image/png','text/plain'];
+                if ( in_array($mime, $types)|| strpos($mime,'application/vnd.')===0 || strpos($mime,'application/msword')===0) {
                     $entension = $file->getClientOriginalExtension(); //上传文件的后缀.
                     $newName = date('YmdHis') . mt_rand(100, 999) . '.' . $entension;
                     $path = $file->move($filePath, $newName);

@@ -341,9 +341,8 @@ class TestController extends CommonController
     }
     //上传图片
     public function toUpload(Request $request){
-        //dd($request->hasFile('exam_images'));
         if($request->hasFile('exam_images')){
-            return  $this->uploadFile('exam_images',10,'uploads/theory/');
+            return  $this->uploadFile('exam_images',1000,'uploads/theory/');
         }else{
             return $this->success_data([],0,'参数有误！');
         }
