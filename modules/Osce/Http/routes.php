@@ -40,6 +40,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::get('delquestion', ['uses'=>'TestController@delquestion', 'as' => 'osce.theory.delquestion']);//题库管理
 		Route::get('examscore', ['uses'=>'TestController@examscore', 'as' => 'osce.theory.examscore']);//成绩管理
 		Route::get('examsstatistics', ['uses'=>'TestController@examstatistics', 'as' => 'osce.theory.examstatistics']);//成绩统计
+		Route::get('examsstatisticsexport', ['uses'=>'TestController@examstatisticsexport', 'as' => 'osce.theory.examstatisticsexport']);//成绩统计导出
 		Route::get('examcheck', ['uses'=>'TestController@examcheck', 'as' => 'osce.theory.examcheck']);//批巻管理
 		Route::get('studentscore', ['uses'=>'TestController@studentscore', 'as' => 'osce.theory.studentscore']);//学生成绩列表
 		Route::get('studentscoreexport', ['uses'=>'TestController@studentscoreexport', 'as' => 'osce.theory.studentscoreexport']);//学生成绩导出
