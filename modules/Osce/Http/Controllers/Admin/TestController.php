@@ -447,6 +447,7 @@ class TestController extends CommonController
             $students_absence[] = $v->name;//取出未参考学生
         }
         $data = [
+            'id'=>$id,
             'exam_name'         => $exam_name,          //考试名称
             'score_list'        => $student_score_arr,  //考生分数列表
             'students_absence'  => $students_absence,   //未参考学生
@@ -460,6 +461,39 @@ class TestController extends CommonController
         return view('osce::theory.exam_statistics',['data'=>$data]);
     }
 
+    public function examstatisticsexport (Request $request){
+        $this->validate($request, [
+            'id'    => 'required|integer',
+        ], [
+            'id.required' => 'ID必传'
+        ]);
+        $id = $request->get('id');
+        $answers = TestRecord::where('logid',$id)->whereIn('isright',[1,2])->get()->groupBy('cid');
+        $data = [];
+        foreach ($answers as $key=>$value){
+            $question = TestContent::find($key)->question;
+            $data[$key]['question'] = trim($question);
+            $data[$key]['true']  = $value->where('isright',1)->count(); //每题正确人数
+            $data[$key]['false'] = $value->where('isright',2)->count(); //每题错误人数
+            foreach ($value as $k=>$val){
+                $answer = array_filter(explode(' ',$val->answer));  //获取考生答案
+                foreach ($answer as $v){
+                    if (!empty($v)) {
+                        empty($data[$key]['option'][$v]['count']) ? $data[$key]['option'][$v]['count'] = 1 : $data[$key]['option'][$v]['count']++; //每个选项人数统计
+                        empty($data[$key]['option'][$v]['student']) ? $data[$key]['option'][$v]['student'] = $val->student->name : $data[$key]['option'][$v]['student'].=','.$val->student->name;//每个选项考生姓名
+                    }
+                }
+                empty($data[$key]['option']) ? : ksort($data[$key]['option']);
+            }
+        }
+        $exam = TestLog::find($id);
+        $examName = ($exam->exam_id==0?$exam->name:$exam->exam->name).'的理论考试';
+        Excel::create(mb_convert_encoding($examName.'试题分析','GBK','UTF-8' ), function($excel) use($data) {
+            $excel->sheet('试题分析', function($sheet) use($data) {
+                $sheet->loadView('osce::theory.exam_statistics_export',['data'=>$data]);
+            });
+        })->download('xls');
+    }
 
     public function studentscore(Request $request){
         $this->validate($request, [

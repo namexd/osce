@@ -24,4 +24,15 @@ class TestRecord extends Model
         'poins', 'type', 'ifexam'
     ];
 
+
+    //relationshp
+    public function student()
+    {
+        return $this->hasOne('App\Entities\User', 'id', 'stuid');
+    }
+
+    public function testcontent()
+    {
+        return $this->hasOne('App\Entities\TestContent', 'id', 'cid');
+    }
 }
