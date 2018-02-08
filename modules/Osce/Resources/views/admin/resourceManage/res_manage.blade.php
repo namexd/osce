@@ -32,6 +32,7 @@
             <ul class="nav nav-tabs teacher-tabs">
                 <li role="presentation"><a href="{{route('osce.admin.topic.getList')}}">考试项目</a></li>
                 <li role="presentation"><a href="{{route('osce.admin.case.getCaseList')}}">病例</a></li>
+                <li role="presentation"><a href="{{route('osce.admin.kind.getKindList')}}">病种</a></li>
                 <li role="presentation" class="active"><a href="{{route('osce.admin.supply.getList')}}">用物</a></li>
             </ul>
             <div class="panel blank-panel">

@@ -23,28 +23,28 @@
 
 
 @section('content')
-<input type="hidden" id="parameter" value="{'pagename':'clinical_case_manage','deletes':'{{route('osce.admin.case.postDelete')}}',
-'firstpage':'{{route('osce.admin.case.getCaseList')}}'}" />
+<input type="hidden" id="parameter" value="{'pagename':'clinical_kind_manage','deletes':'{{route('osce.admin.kind.postDelete')}}',
+'firstpage':'{{route('osce.admin.kind.getKindList')}}'}" />
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="row table-head-style1 ">
         <div class="col-xs-6 col-md-2">
-            <h5 class="title-label">病例管理</h5>
+            <h5 class="title-label">病种管理</h5>
         </div>
         <div class="col-xs-6 col-md-2" style="float: right;">
-            <a  href="{{route('osce.admin.case.getCreateCase')}}" class="btn btn-primary" style="float: right;">&nbsp;新增&nbsp;</a>
+            <a  href="{{route('osce.admin.kind.getCreateKind')}}" class="btn btn-primary" style="float: right;">&nbsp;新增&nbsp;</a>
         </div>
     </div>
     <div class="container-fluid ibox-content" id="list_form">
         <ul class="nav nav-tabs teacher-tabs">
             <li role="presentation"><a href="{{route('osce.admin.topic.getList')}}">考试项目</a></li>
-            <li role="presentation" class="active"><a href="{{route('osce.admin.case.getCaseList')}}">病例</a></li>
-            <li role="presentation"><a href="{{route('osce.admin.kind.getKindList')}}">病种</a></li>
+            <li role="presentation"><a href="{{route('osce.admin.case.getCaseList')}}">病例</a></li>
+            <li role="presentation" class="active"><a href="{{route('osce.admin.kind.getKindList')}}">病种</a></li>
             <li role="presentation"><a href="{{route('osce.admin.supply.getList')}}">用物</a></li>
         </ul>
         <table class="table table-striped" id="table-striped">
             <thead>
                 <tr>
-                    <th>病例</th>
+                    <th>病种</th>
                     <th>描述</th>
                     <th>操作</th>
                 </tr>
@@ -55,7 +55,7 @@
                     <td><span class="description" title="{{$item->name}}">{{$item->name}}</span></td>
                     <td><span class="description-this" title="{{$item->description}}">{{$item->description}}</span></td>
                     <td>
-                        <a href="{{route('osce.admin.case.getEditCase')}}?id={{$item->id}}"><span class="read  state1 detail"><i class="fa fa-pencil-square-o fa-2x"></i></span></a>
+                        <a href="{{route('osce.admin.kind.getEditKind')}}?id={{$item->id}}"><span class="read  state1 detail"><i class="fa fa-pencil-square-o fa-2x"></i></span></a>
                         <a href="javascript:void(0)" class="delete" value="{{$item->id}}"><span class="read  state2"><i class="fa fa-trash-o fa-2x"></i></span></a>
                     </td>
                 </tr>
