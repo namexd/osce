@@ -447,8 +447,18 @@ class TestController extends CommonController
         foreach ($students_absences as $v){
             $students_absence[] = $v->name;//取出未参考学生
         }
+        //试卷区分度
+        $exam_questions = TestRecord::where('logid',$id)->whereIn('isright',[1,2])->get()->pluck('cid')->toarray();
+        $exam_questions = array_unique($exam_questions);
+        $separate = TestContent::whereIn('id',$exam_questions)->avg('separate');
+        $separate = round($separate,2);
+        //信度
+        $exam_scores = TestStatistics::where('logid',$id)->get()->pluck('objective')->toarray();
+        $variance = round($this->variance($exam_scores),2);
+        //效度
+
         $data = [
-            'id'=>$id,
+            'id'                => $id,                 //testlog id
             'exam_name'         => $exam_name,          //考试名称
             'score_list'        => $student_score_arr,  //考生分数列表
             'students_absence'  => $students_absence,   //未参考学生
@@ -458,8 +468,24 @@ class TestController extends CommonController
             'student_score_min' => $student_score_min,  //最低分
             'pass_percent'      => $pass_percent,       //合格率
             'hard_level'        => $hard_level,         //难度
+            'separate'          => $separate,           //区分度
+            'variance'          => $variance,           //信度
         ];
         return view('osce::theory.exam_statistics',['data'=>$data]);
+    }
+
+    private function variance($arr) { //方差计算
+        $length = count($arr);
+        if ($length == 0) {
+            return 0;
+        }
+        $average = array_sum($arr)/$length;
+        $count = 0;
+        foreach ($arr as $v) {
+            $count += pow($average-$v, 2);
+        }
+        $variance = $count/$length;
+        return sqrt($variance);
     }
 
     public function examstatisticsexport (Request $request){
