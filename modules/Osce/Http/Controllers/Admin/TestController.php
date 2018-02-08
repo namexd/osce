@@ -433,6 +433,7 @@ class TestController extends CommonController
         $all_records = TestRecord::where('logid',$id)->whereIn('isright',[1,2])->count(); //题总数量
         if ($all_records > 0) {
             $hard_level = $false_records/$all_records;//难度
+            $variance_off = $hard_level;
             if ( 0 < $hard_level && $hard_level <= 0.2) {
                 $hard_level = '简单';
             } elseif (0.2 < $hard_level && $hard_level <= 0.4) {
@@ -446,6 +447,7 @@ class TestController extends CommonController
             }
         } else {
             $hard_level = '视考试结果而定';
+            $variance_off = 0;
         }
         $students_join = TestStatistics::select('stuid')->where('logid',$id)->get();
         $students_join_ids = [];
@@ -464,9 +466,14 @@ class TestController extends CommonController
         $separate = round($separate,2);
         //信度
         $exam_scores = TestStatistics::where('logid',$id)->get()->pluck('objective')->toarray();
-        $variance = round($this->variance($exam_scores),2);
+        $exam_score_off = (TestContent::whereIn('id',$exam_questions)->sum('poins'))*(1-$variance_off);
+        if ($this->variance($exam_scores,$exam_score_off)>0) {
+            $variance = round(($this->variance($exam_scores)/$this->variance($exam_scores,$exam_score_off)),2);
+        } else{
+            $variance = 0;
+        }
         //效度
-
+        $validity = sqrt($variance);
         $data = [
             'id'                => $id,                 //testlog id
             'exam_name'         => $exam_name,          //考试名称
@@ -480,22 +487,27 @@ class TestController extends CommonController
             'hard_level'        => $hard_level,         //难度
             'separate'          => $separate,           //区分度
             'variance'          => $variance,           //信度
+            'validity'          => $validity,           //效度
         ];
         return view('osce::theory.exam_statistics',['data'=>$data]);
     }
 
-    private function variance($arr) { //方差计算
+    private function variance($arr, $score = null) { //方差计算
         $length = count($arr);
         if ($length == 0) {
             return 0;
         }
-        $average = array_sum($arr)/$length;
+        if (!$score){
+            $average = $score;
+        } else {
+            $average = array_sum($arr)/$length;
+        }
         $count = 0;
         foreach ($arr as $v) {
             $count += pow($average-$v, 2);
         }
         $variance = $count/$length;
-        return sqrt($variance);
+        return $variance;
     }
 
     public function examstatisticsexport (Request $request){
