@@ -90,6 +90,17 @@ class TestController extends CommonController
         $data =Test::find($id);
         return view('osce::theory.exam_preview')->with('data',$data);
     }
+    //试卷预览
+    public function autoexamdownload(Request $request){
+        $this->validate($request, [
+            'id'    => 'required'
+        ],[
+            'id.required'   => '试卷ID必传'
+        ]);
+        $id =$request->get('id');
+        $data =Test::find($id);
+        return view('osce::theory.exam_download')->with('data',$data);
+    }
     public function autoexam(Request $request){
         $this->validate($request, [
             'name'    => 'required',
