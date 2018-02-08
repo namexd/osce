@@ -61,7 +61,7 @@ $(function () {
 					$('.addtm-points').val($(listobj).attr('_fz'));
 					$('.addtm-question').val($(listobj).attr('_tg'));
 					var answer = $(listobj).attr('_da');
-					var aTp = $(listobj).attr('_tp').match(/<img[^>]*>/gi);
+					var aTp = $(listobj).attr('_tp').match(/(<img[^>]*>|<video[^>]*><\/video>|<audio[^>]*><\/audio>)/gi);
 					if (aTp) {
 						for (var i = 0 ; i < aTp.length; i++ ) {
 							$('<div>'+aTp[i]+'<em class="fa fa-times-circle remove-image"></em></div>').insertBefore($('.tp-list div').last());
@@ -246,9 +246,10 @@ $(function () {
 		}
 
 		var _tp =  '';
-		$('.tp-list img').each(function () {
+		$('.tp-list img,.tp-list video,.tp-list audio').each(function () {
 			_tp+=$(this).prop("outerHTML");
 		});
+		console.info('_tp', _tp);
 		
 		
 		$(listobj).attr({
@@ -275,7 +276,7 @@ $(function () {
 		}
 		var question = [];
 		$('.dx-list li').each(function () {
-			var aTp = $(this).attr('_tp').match(/<img[^>]*>/gi)
+			var aTp = $(this).attr('_tp').match(/(<img[^>]*>|<video[^>]*><\/video>|<audio[^>]*><\/audio>)/gi)
 			question.push({
 				type:$(this).attr('_type'),
 				category:$(this).attr('_mt').toUpperCase(),
@@ -330,7 +331,14 @@ function inituploadimg(obj) {
 					return false;
 				}
 				$(_this).parent().parent().append(uploadStr);
-				$(_this).parent().html('<img src="'+res.filepath+'" /><em class="fa fa-times-circle remove-image"></em>');
+                var ext = res.filepath.substring(res.filepath.lastIndexOf('.') + 1);
+                if ($.inArray(ext, ['mp4', 'ogg']) !== -1) {
+                    $(_this).parent().html('<video controls="controls" src="'+res.filepath+'" /><em class="fa fa-times-circle remove-image"></em>');
+                } else if ($.inArray(ext, ['wav', 'mp3']) !== -1) {
+                    $(_this).parent().html('<audio controls="controls" src="'+res.filepath+'" /><em class="fa fa-times-circle remove-image"></em>');
+                } {
+                    $(_this).parent().html('<img src="'+res.filepath+'" /><em class="fa fa-times-circle remove-image"></em>');
+                }
 				inituploadimg(obj);
 			}
 		});

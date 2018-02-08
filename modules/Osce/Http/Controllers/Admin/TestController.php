@@ -90,6 +90,17 @@ class TestController extends CommonController
         $data =Test::find($id);
         return view('osce::theory.exam_preview')->with('data',$data);
     }
+    //试卷预览
+    public function autoexamdownload(Request $request){
+        $this->validate($request, [
+            'id'    => 'required'
+        ],[
+            'id.required'   => '试卷ID必传'
+        ]);
+        $id =$request->get('id');
+        $data =Test::find($id);
+        return view('osce::theory.exam_download')->with('data',$data);
+    }
     public function autoexam(Request $request){
         $this->validate($request, [
             'name'    => 'required',
@@ -341,9 +352,8 @@ class TestController extends CommonController
     }
     //上传图片
     public function toUpload(Request $request){
-        //dd($request->hasFile('exam_images'));
         if($request->hasFile('exam_images')){
-            return  $this->uploadFile('exam_images',10,'uploads/theory/');
+            return  $this->uploadFile('exam_images',1000,'uploads/theory/');
         }else{
             return $this->success_data([],0,'参数有误！');
         }

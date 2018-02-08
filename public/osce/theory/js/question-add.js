@@ -99,7 +99,7 @@ $(function() {
 		}
 
 		var _tp =  '';
-		$('.tp-list img').each(function () {
+		$('.tp-list img,.tp-list video,.tp-list audio').each(function () {
 			_tp+=$(this).prop("outerHTML");
 		});
 		
@@ -148,9 +148,16 @@ function inituploadimg(obj) {
 					uselayer(1,res.message);
 					return false;
 				}
-				$(_this).parent().parent().append(uploadStr);
-				$(_this).parent().html('<img src="'+res.filepath+'" /><em class="fa fa-times-circle remove-image"></em>');
-				inituploadimg(obj);
+                var ext = res.filepath.substring(res.filepath.lastIndexOf('.') + 1);
+				if ($.inArray(ext, ['mp4', 'ogg']) !== -1) {
+                    $(_this).parent().html('<video controls="controls" src="'+res.filepath+'" /><em class="fa fa-times-circle remove-image"></em>');
+                } else if ($.inArray(ext, ['wav', 'mp3']) !== -1) {
+                    $(_this).parent().html('<audio controls="controls" src="'+res.filepath+'" /><em class="fa fa-times-circle remove-image"></em>');
+                } {
+                    $(_this).parent().html('<img src="'+res.filepath+'" /><em class="fa fa-times-circle remove-image"></em>');
+                }
+                $(_this).parent().parent().append(uploadStr);
+                inituploadimg(obj);
 			}
 		});
 	});				

@@ -33,6 +33,7 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::get('examquestion', ['uses'=>'TestController@examquestion', 'as' => 'osce.theory.examquestion']);//题库管理
 		Route::get('autoquestion', ['uses'=>'TestController@autoquestion', 'as' => 'osce.theory.autoquestion']);//自动组卷
 		Route::get('autoexampreview', ['uses'=>'TestController@autoexampreview', 'as' => 'osce.theory.autoexampreview']);//考卷预览
+		Route::get('autoexamdownload', ['uses'=>'TestController@autoexamdownload', 'as' => 'osce.theory.autoexamdownload']);//考卷预览
 		Route::get('autoexamedit', ['uses'=>'TestController@autoexamedit', 'as' => 'osce.theory.autoexamedit']);//考卷修改
 		Route::get('autoexamadd', ['uses'=>'TestController@autoexamadd', 'as' => 'osce.theory.autoexamadd']);//考卷新增
 		Route::post('autoexam', ['uses'=>'TestController@autoexam', 'as' => 'osce.theory.autoexam']);//自动组卷提交
@@ -161,6 +162,15 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::get('case/edit-case', ['uses'=>'CaseController@getEditCase','as'=>'osce.admin.case.getEditCase']);  //病例的修改页
 		Route::get('case/create-case', ['uses'=>'CaseController@getCreateCase','as'=>'osce.admin.case.getCreateCase']);  //病例的添加页
 		Route::post('case/name-unique',['uses'=>'CaseController@postNameUnique','as'=>'osce.admin.case.postNameUnique']);	//判断名称是否存在
+		Route::post('case/delete', 	['uses'=>'CaseController@postDelete','as'=>'osce.admin.case.postDelete']);//删除病例
+
+		//病种
+		Route::controller('kind','KindController');
+		Route::get('kind/kind-list', ['uses'=>'KindController@getKindList','as'=>'osce.admin.kind.getKindList']);  //病种的着陆页
+		Route::get('kind/edit-kind', ['uses'=>'KindController@getEditKind','as'=>'osce.admin.kind.getEditKind']);  //病种的修改页
+		Route::get('kind/create-kind', ['uses'=>'KindController@getCreateKind','as'=>'osce.admin.kind.getCreateKind']);  //病种的添加页
+		Route::post('kind/name-unique',['uses'=>'KindController@postNameUnique','as'=>'osce.admin.kind.postNameUnique']);	//判断名称是否存在
+		Route::post('kind/delete', 	['uses'=>'KindController@postDelete','as'=>'osce.admin.kind.postDelete']);//删除病例
 
 		//智能排考
 		Route::post('arrangement/begin',['uses'=>'AutomaticPlanArrangementController@postBegin','as'=>'osce.admin.arrangement.postBegin']);
@@ -249,10 +259,6 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::post('topic/name-unique',['uses'=>'TopicController@postNameUnique','as'=>'osce.admin.topic.postNameUnique']);	//判断名称是否存在
 		Route::get('topic/subject-cases',['uses'=>'TopicController@getSubjectCases','as'=>'osce.admin.topic.getSubjectCases']);	//获取病例
 		Route::get('topic/subject-supply',['uses'=>'TopicController@getSubjectSupply','as'=>'osce.admin.topic.getSubjectSupply']);	//获取用物
-
-		//病例
-		Route::post('case/delete', 	['uses'=>'CaseController@postDelete','as'=>'osce.admin.case.postDelete']);
-
 
 
 		//考站

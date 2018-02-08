@@ -31,9 +31,9 @@
 		.tp-list div em { position: absolute; right: -10px; top: -10px; cursor: pointer; z-index: 2; font-size: 26px; color: #ed5565; background: #fff;}
 		
 		.addtm-xz,.addtm-pd ,.addtm-wd  { display: none;}
-		
-		
-		
+
+		.tp-list div video { height: 100%!important;}
+		.tp-list div audio { width: 98%!important;}
 	</style>
 
 @stop	
@@ -51,7 +51,7 @@
 			$('#require').val('{{$question->require}}');
 			$('#degree').val('{{$question->degree}}');
 			
-			var aTp = $('#images').val().match(/<img[^>]*>/gi);
+			var aTp = $('#images').val().match(/(<img[^>]*>|<video[^>]*><\/video>|<audio[^>]*><\/audio>)/gi);
 			if (aTp) {
 				for (var i = 0 ; i < aTp.length; i++ ) {
 					$('<div>'+aTp[i]+'<em class="fa fa-times-circle remove-image"></em></div>').insertBefore($('.tp-list div').last());
@@ -145,7 +145,7 @@
 	    </div>
 	    <div class="hr-line-dashed"></div>   
 	    <div class="form-group">
-	        <label class="col-sm-3 control-label">图片：</label>
+	        <label class="col-sm-3 control-label">资源：</label>
 			<div class="col-sm-7 tp-list" uploadurl="{{route('osce.theory.toUpload')}}" deleteurl="{{route('osce.theory.toDeleteUpload')}}">
 				<div>
 					<i class="fa fa-plus"></i>

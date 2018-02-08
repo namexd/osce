@@ -8,7 +8,7 @@
 		.mar0 { margin: 0;}
 		.form-horizontal {float: right; position: relative; margin-right: 20px; overflow: hidden; }
 		.import { opacity: 0; filter: alpha(opacity=0); position: absolute; left: -100%; top: 0; width: 200%; height: 100%; outline: none; cursor: pointer; }
-		table tbody tr td:last-child { width: 220px;}
+		table tbody tr td:last-child { width: 300px;}
 	</style>
 	
 		
@@ -77,8 +77,11 @@
                                 <span class="read  state1 detail"><i class="fa fa-search fa-2x"></i> 预览</span>
                             </a>
                             <a class="state1 modal-control" href="{{route('osce.theory.autoexamedit',['id'=>$val->id])}}">
-                                <span class="read  state1 detail"><i class="fa fa-search fa-2x"></i> 编辑</span>
+                                <span class="read  state1 detail"><i class="fa fa-edit fa-2x"></i> 编辑</span>
                             </a>
+							<a class="state1 modal-control" href="{{route('osce.theory.autoexamdownload',['id'=>$val->id])}}">
+								<span class="read  state1 detail"><i class="fa fa-download fa-2x"></i> 下载</span>
+							</a>
                             <a class="state1 modal-control" href="javascript:;" onclick="deletelist({{$val->id}})">
                                 <span class="read  state2 detail"><i class="fa fa-trash-o fa-2x"></i> 删除</span>
                             </a>
