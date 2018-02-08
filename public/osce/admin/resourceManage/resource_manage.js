@@ -18,6 +18,8 @@ $(function(){
         case "clinical_case_manage":clinical_case_manage();break;
         case "clinical_case_manage_add":clinical_case_manage_add();break;
         case "clinical_case_manage_edit":clinical_case_manage_edit();break;
+        //病种管理
+        case "clinical_kind_manage":clinical_kind_manage();break;
         //科目
         case "course_module":course_module();break;    //考点操作 新增&编辑
         case "course_manage":course_manage();break;
@@ -1308,7 +1310,17 @@ function clinical_case_manage_edit() {
         }
     });
 }
-
+/**
+ * 病种
+ * @author mao
+ * @version 1.0
+ * @date    2016-01-06
+ */
+function clinical_kind_manage(){
+    $(".delete").click(function(){
+        deleteItems("post",pars.deletes,$(this).attr("value"),pars.firstpage)
+    })
+}
 /**
  * 考场
  * @author mao
