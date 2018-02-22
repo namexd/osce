@@ -140,6 +140,18 @@
                                 <label class="col-sm-2 control-label text-left">{{$data['hard_level']}}</label>
                             </div>
                             <div class="hr-line-dashed"></div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label">区分度：</label>
+								<label class="col-sm-2 control-label text-left">{{$data['separate']}}</label>
+								<label class="col-sm-2 control-label">信度：</label>
+								<label class="col-sm-2 control-label text-left">{{$data['variance']}}</label>
+							</div>
+							<div class="hr-line-dashed"></div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label">效度：</label>
+								<label class="col-sm-2 control-label text-left">{{$data['validity']}}</label>
+							</div>
+							<div class="hr-line-dashed"></div>
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">未参考学生：</label>
                                 <label class="col-sm-6 control-label text-left">{{implode(',',$data['students_absence'])}}</label>
