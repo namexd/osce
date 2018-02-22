@@ -49,7 +49,8 @@ class DownloadNvrVideo implements SelfHandling, ShouldQueue
                     if ($vcr) {
                         $begin_dt = date('Y m d H i s', strtotime($model->begin_dt));
                         $end_dt = date('Y m d H i s', strtotime($model->end_dt));
-                        $cmd = "{$nvr['dir']}{$nvr['exec_command']} {$nvr['host']} {$nvr['port']} {$nvr['username']} {$nvr['password']} {$begin_dt} {$end_dt}";
+                        $channel = $vcr['channel'] ? $vcr['channel'] : 0;
+                        $cmd = "{$nvr['dir']}{$nvr['exec_command']} {$nvr['host']} {$nvr['port']} {$channel} {$nvr['username']} {$nvr['password']} {$begin_dt} {$end_dt}";
                         // 正在转换
                         $model->update(['video_status' => 1]);
                         // 执行下载解码视频命令
