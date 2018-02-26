@@ -336,7 +336,7 @@ function inituploadimg(obj) {
                     $(_this).parent().html('<video controls="controls" src="'+res.filepath+'" /><em class="fa fa-times-circle remove-image"></em>');
                 } else if ($.inArray(ext, ['wav', 'mp3']) !== -1) {
                     $(_this).parent().html('<audio controls="controls" src="'+res.filepath+'" /><em class="fa fa-times-circle remove-image"></em>');
-                } {
+                } else {
                     $(_this).parent().html('<img src="'+res.filepath+'" /><em class="fa fa-times-circle remove-image"></em>');
                 }
 				inituploadimg(obj);
