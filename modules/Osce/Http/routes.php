@@ -122,21 +122,39 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::get('checkdatabase',['uses'=>'ShowLogController@CheckDatabase','as'=>'osce.admin.checkdatabase']);
 
 	});
-	Route::group(['prefix' => 'wechat', 'namespace' => 'Wechat'], function () {
-		//登录注册
-		Route::get('user/register',['uses'=>'UserController@getRegister','as'=>'osce.wechat.user.getRegister']);
-		Route::post('user/register',['uses'=>'UserController@postRegister','as'=>'osce.wechat.user.postRegister']);
-
-		Route::get('user/login',['uses'=>'UserController@getLogin','as'=>'osce.wechat.user.getLogin']);
-		Route::get('user/reset-password-verify',['uses'=>'UserController@getResetPasswordVerify','as'=>'osce.wechat.user.getResetPasswordVerify']);
-		Route::post('user/login',['uses'=>'UserController@postLogin','as'=>'osce.wechat.user.postLogin']);
-		Route::post('user/reset-password',['uses'=>'UserController@postResetPassword','as'=>'osce.wechat.user.postResetPassword']);
-		//忘记密码
-		Route::get('user/forget-password',['uses'=>'UserController@getForgetPassword','as'=>'osce.wechat.user.getForgetPassword']);
-	});
 
 });
 Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers', 'middleware' => []], function () {
+	Route::get('admin/index', ['uses'=>'OsceController@index','as'=>'osce.admin.index']);
+	Route::get('admin/index/dashboard', ['uses'=>'Admin\IndexController@dashboard','as'=>'osce.admin.index.dashboard']);
+
+		Route::group(['namespace' => 'Admin', 'middleware' => []], function () {
+		//用户管理
+		Route::get('user/staff-list', 	['uses'=>'UserController@getStaffList','as'=>'osce.admin.user.getStaffList']);
+		Route::get('user/edit-staff', 	['uses'=>'UserController@getEditStaff','as'=>'osce.admin.user.getEditStaff']);
+		Route::get('user/add-user', 	['uses'=>'UserController@getAddUser','as'=>'osce.admin.user.getAddUser']);
+		Route::post('user/del-user', 	['uses'=>'UserController@postDelUser','as'=>'osce.admin.user.postDelUser']);	//删除用户
+		Route::post('user/add-user', 	['uses'=>'UserController@postAddUser','as'=>'osce.admin.user.postAddUser']);
+		Route::post('user/edit-user', 	['uses'=>'UserController@postEditUser','as'=>'osce.admin.user.postEditUser']);
+		Route::get('user/change-users-role', 	['uses'=>'UserController@getChangeUsersRole','as'=>'osce.admin.user.getChangeUsersRole']);
+		Route::post('user/edit-user-role', 	['uses'=>'UserController@postEditUserRole','as'=>'osce.admin.user.postEditUserRole']);
+		Route::get('user/judge-user-role',['uses'=>'UserController@getJudgeUserRole','as'=>'osce.admin.user.getJudgeUserRole']);
+
+		//考生管理
+		Route::get('exam/examinee-manage', 	['uses'=>'ExamController@getExamineeManage','as'=>'osce.admin.exam.getExamineeManage']);  //考生管理
+		Route::post('exam/del-student', 	['uses'=>'ExamController@postDelStudent','as'=>'osce.admin.exam.postDelStudent']);		//删除考生
+		Route::get('exam/add-examinee', 	['uses'=>'ExamController@getAddExaminee','as'=>'osce.admin.exam.getAddExaminee']);		//添加考生
+		Route::get('exam/edit-examinee', 	['uses'=>'ExamController@getEidtExaminee','as'=>'osce.admin.exam.getEidtExaminee']);		//添加考生
+		Route::post('exam/add-examinee', 	['uses'=>'ExamController@postAddExaminee','as'=>'osce.admin.exam.postAddExaminee']);
+		Route::post('exam/edit-examinee', 	['uses'=>'ExamController@postEditExaminee','as'=>'osce.admin.exam.postEditExaminee']);
+		Route::get('exam/student-query',	['uses'=>'ExamController@getStudentQuery','as'=>'osce.admin.exam.getStudentQuery']);	//考生查询
+		Route::get('exam/check-student', 	['uses'=>'ExamController@getCheckStudent','as'=>'osce.admin.machine.getCheckStudent']);
+		Route::get('exam/edit-student', 	['uses'=>'ExamController@getEditStudent','as'=>'osce.admin.machine.getEditStudent']);
+		Route::post('exam/exam-sequence-unique', 	['uses'=>'ExamController@postExamSequenceUnique','as'=>'osce.admin.exam.postExamSequenceUnique']);
+	});
+});
+
+/*Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers', 'middleware' => []], function () {
 	Route::get('admin/index', ['uses'=>'OsceController@index','as'=>'osce.admin.index']);
 	Route::get('admin/index/dashboard', ['uses'=>'Admin\IndexController@dashboard','as'=>'osce.admin.index.dashboard']);
 	Route::get('admin/index/set-exam', ['uses'=>'Admin\IndexController@getSetExam','as'=>'osce.admin.index.getSetExam']);	//设置开考
@@ -614,9 +632,9 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 	});
 });
 
-/**
- * WindowsAPP接口
- */
+//**
+//* WindowsAPP接口
+//**
 Route::group(['prefix' => "api/1.0/private/osce", 'namespace' => 'Modules\Osce\Http\Controllers','middleware' => [],], function()
 {
 	Route::group(['prefix'=>'watch','namespace'=>'Api'],function(){
@@ -741,9 +759,9 @@ Route::group(['prefix' => "osce", 'namespace' => 'Modules\Osce\Http\Controllers'
 		Route::post('destroy', ['uses' => 'OverExamController@destroy', 'as' => 'osce.over-exam.destroy']);
 	});
 });
-/*
- * 电子门牌
- * */
+//*
+//* 电子门牌
+//*
 
 Route::group(['prefix'=>'d','namespace'=>'Modules\Osce\Http\Controllers\Doorplate'],function(){
 	Route::get('d',	['uses'=>'IndexController@doorStart','as'=>'osce.doorplate.doorplatestart']); //启动入口
@@ -766,5 +784,5 @@ Route::group(['prefix' => 's', 'namespace' => 'Modules\Osce\Http\Controllers\Bil
 	Route::get('i', ['uses' => 'BillboardController@getIndex', 'as' => 'osce.billboard.getIndex']);
 	//学生接口
 	Route::get('student', ['uses' => 'BillboardController@getStudent', 'as' => 'osce.billboard.getStudent']);
-});
+});*/
 

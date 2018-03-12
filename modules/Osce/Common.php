@@ -102,6 +102,7 @@ class Common
             config('config.teacherRoleId'),
             config('config.examineeRoleId'),
             config('config.spRoleId'),
+            config('config.superRoleId'),
             config('config.patrolRoleId')
         ];
 
@@ -110,7 +111,7 @@ class Common
                 $join->on('users.id', '=', 'sys_user_role.user_id');
             })
 //                -> where('sys_user_role.role_id','=',config('osce.adminRoleId',3))
-            ->whereIn('sys_user_role.role_id', $noAdminRole)
+            ->whereNotIn('sys_user_role.role_id', $noAdminRole)
             ->paginate(config('osce.page_size'));
     }
 
@@ -602,7 +603,7 @@ class Common
      * @date   2016-5-11 10:10
      * @copyright  2013-2017 sulida.com  Inc. All Rights Reserved
      */
-    public static function checkIdCard($examId, $data,$isTheoty=true)
+    public static function checkIdCard($examId, $data)
     {
         $idCard = trim($data['idcard']);
         $mobile = trim($data['mobile']);
@@ -613,18 +614,11 @@ class Common
         if (!preg_match('/^[a-zA-Z0-9]+$/', $idCard)) {
             throw new \Exception('身份证号不符规格，请修改后重试！');
         }
-        if($isTheoty){
-            //2、查询同一场考试中，身份证号是否已经存在
-            $result = Student::where('exam_id', '=', $examId)->where('idcard','=', $idCard)->first();
-            if(!is_null($result)){
-                throw new \Exception('身份证号已经存在，请修改后重试！');
-            }
-        }else{
-            //2、查询同一场考试中，身份证号是否已经存在
-            $result = Student::where('test_id', '=', $examId)->where('idcard','=', $idCard)->first();
-            if(!is_null($result)){
-                throw new \Exception('身份证号已经存在，请修改后重试！');
-            }
+
+        //2、查询同一场考试中，身份证号是否已经存在
+        $result = Student::where('exam_id', '=', $examId)->where('idcard','=', $idCard)->first();
+        if(!is_null($result)){
+            throw new \Exception('身份证号已经存在，请修改后重试！');
         }
         //3、查询用户表中身份证号是否重复
           //(1)、查询同组数据中，是否已存在对应用户

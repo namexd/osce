@@ -21,7 +21,8 @@ use Auth;
 class IndexController extends CommonController
 {
     public function dashboard(){
-        //获取用户所有权限ID
+        return view('osce::admin.index.dashboard');
+        /*//获取用户所有权限ID
         $userRoles =Auth::user()->roles->pluck('id')->all();
         //监考老师
         if(in_array(config('config.teacherRoleId'),$userRoles) || in_array(config('config.superRoleId'),$userRoles)){
@@ -33,7 +34,7 @@ class IndexController extends CommonController
             return redirect()->route('osce.admin.geExamResultList');
         }else{
             return view('osce::admin.index.dashboard');
-        }
+        }*/
     }
 
     /**
