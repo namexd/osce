@@ -42,7 +42,7 @@
             		@foreach($data->items() as $k=>$val)
                     <tr>
                         <td >{{$k+1}}</td>
-                        <td >{{$val->exam_id==0?$val->name:$val->exam->name}}的理论考试</td>
+                        <td >{{$val->name}}的理论考试</td>
                         <td >{{$val->test->name}}</td>
                         <td >{{$val->teacherdata->name}}</td>
                         <td >{{$val->start}}</td>  

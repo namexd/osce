@@ -14,7 +14,8 @@ Route::get('/A',['uses'=>'Modules\Osce\Http\Controllers\Admin\AddModuleControlle
 
 //理论考试排考查看
 Route::get('theory', ['uses'=>'Modules\Osce\Http\Controllers\Admin\TestController@examList',  'as' => 'osce.theory.examList']);
-
+//考生理论考试登陆
+Route::get('/login',['uses'=>'Modules\Osce\Http\Controllers\Theory\TheoryLoginController@getIndex']);
 //考生理论考试登陆
 Route::group(['prefix' => 'theory-login', 'namespace' => 'Modules\Osce\Http\Controllers\Theory'], function () {
 	Route::get('index', ['uses' => 'TheoryLoginController@getIndex', 'as' => 'osce.theory.login.getIndex']);

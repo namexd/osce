@@ -58,7 +58,7 @@
 
 				@foreach(@$list as $val)
 					<option value="{{ $val->id }}" >
-						{{ $val->exam_id==0?$val->name:$val->exam->name }}的理论排考
+						{{ $val->name }}的理论排考
 					</option>
 				@endforeach
 			@else

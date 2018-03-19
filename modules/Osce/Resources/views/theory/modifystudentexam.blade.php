@@ -198,7 +198,7 @@
 			<div class="col-lg-12">
                 <div class="ibox float-e-margins" style="margin-bottom: 0;">
                     <div class="ibox-content text-center p-md">
-                        <h2>{{$test->exam_id==0?$test->name:$test->exam->name }} 的理论考试</h2>
+                        <h2>{{$test->name }} 的理论考试</h2>
                         <span>考生姓名：</span>
                         <span class="checkTime">{{$data[0]->stuname}}</span>
                         <span style="margin-left: 1em;">考试时长：</span>

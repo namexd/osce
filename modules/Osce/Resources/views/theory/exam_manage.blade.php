@@ -59,11 +59,11 @@
 		    });				
 			
 			$('.btn-primary').click(function () {
-				if ($('#exam_id').val()=='0') {
+				/*if ($('#exam_id').val()=='0') {
 					$('.exam_name .control-label').html('考试名称：<i></i>');
 				} else {
 					$('.exam_name .control-label').html('考试名称：');
-				}
+				}*/
 				if(noempty('.form-horizontal')){
 					return false;
 				}
@@ -85,13 +85,13 @@
 				return false;
 			});
 			
-			$('#exam_id').change(function () {
+			/*$('#exam_id').change(function () {
 				if ($(this).val()=='0') {
 					$('.exam_name').removeClass('hide');
 				} else {
 					$('.exam_name').addClass('hide');
 				}
-			});
+			});*/
 			
 			
 		});
@@ -112,38 +112,39 @@
         <div class="ibox-content">
         	<div class="row">
 		        <form method="post" class="form-horizontal" action="{{route('osce.cexam.postAddExam')}}">
-	                <div class="form-group">
-	                    <label for="tid" class="col-sm-2 control-label">考题选择：<i></i></label>
-	                    <div class="col-sm-5">
-							<select name="tid" id="tid" class="form-control" placeholder="请选择考题">
-								<option value="">请选择考题</option>
-								@foreach($data['choose'] as $val)
-									<option value="{{$val->id}}">{{$val->name}}</option>
-								@endforeach
-							</select>                   	
-	                    </div>
-	                </div>
-	                <div class="hr-line-dashed"></div>	
-	                <div class="form-group">
+	                <!--div class="form-group">
 	                    <label for="exam_id" class="col-sm-2 control-label">所属考试：<i></i></label>
 	                    <div class="col-sm-5">
 							<select name="exam_id" id="exam_id" class="form-control" placeholder="请选择所属考试">
 								<option value="">请选择所属考试</option>
 								<option value="0">无所属考试</option>
-								@foreach($data['chooseexam'] as $val)
+								{{--@foreach($data['chooseexam'] as $val)
 									<option value="{{$val->id}}">{{$val->name}}</option>
-								@endforeach
+								@endforeach--}}
 							</select>
 	                    </div>
-	                </div>
-	                <div class="form-group exam_name hide">
+	                </div-->
+	                <div class="form-group exam_name">
+						<input type="hidden" name="exam_id" value="0"/>
 	                    <label for="name" class="col-sm-2 control-label">考试名称：</label>
 	                    <div class="col-sm-5">
 							<input type="text" name="name" id="name"  placeholder="请填写考试名称" class="form-control" />
 	                    </div>
 	                </div>
 	                <div class="hr-line-dashed"></div>
-	                <div class="form-group">
+					<div class="form-group">
+						<label for="tid" class="col-sm-2 control-label">考题选择：<i></i></label>
+						<div class="col-sm-5">
+							<select name="tid" id="tid" class="form-control" placeholder="请选择考题">
+								<option value="">请选择考题</option>
+								@foreach($data['choose'] as $val)
+									<option value="{{$val->id}}">{{$val->name}}</option>
+								@endforeach
+							</select>
+						</div>
+					</div>
+					<div class="hr-line-dashed"></div>
+					<div class="form-group">
 	                    <label for="rate_choose" class="col-sm-2 control-label">折算方式：</label>
 						<div class="col-sm-5">
 							<select id="rate_choose" class="form-control">

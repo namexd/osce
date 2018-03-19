@@ -67,7 +67,7 @@
 @section('body')
  <div class="box">
 
-    <h3 class="top white center">{{$data['test']->exam->name}}——理论考试</h3>
+    <h3 class="top white center">{{$data['test']->name}}——理论考试</h3>
     	<div class="clearfix list-title">
 	    	<div class="list-left">
 	    		<p>考试时间</p>

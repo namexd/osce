@@ -142,7 +142,7 @@
             		@foreach($data->items() as $k=>$val)
                     <tr>
                         <td >{{$k+1}}</td>
-                        <td >{{$val->exam_id==0?$val->name:$val->exam->name}}的理论考试</td>
+                        <td >{{$val->name}}的理论考试</td>
                         <td >{{$val->test->name}}</td>
                         <td >{{$val->convert*100}}%</td>
                         <td >{{$val->teacherdata->name}}</td>
@@ -153,7 +153,7 @@
                         	<a class="state1 modal-control" href="{{$val->exam_id==0?route('osce.theory.studentList',['test_id'=>$val->id]):route('osce.admin.exam.getExamineeManage',['id'=>$val->exam_id])}}">
                                 <span class="read  state1 detail"><i class="fa fa-search fa-2x"></i>考生管理</span>
                             </a>
-                        	<a class="state1 modi-time" href="javascript:;" _start="{{$val->start}}" _name="{{$val->exam_id==0?$val->name:$val->exam->name}}" _id="{{$val->id}}" _end="{{$val->end}}">
+                        	<a class="state1 modi-time" href="javascript:;" _start="{{$val->start}}" _name="{{$val->name}}" _id="{{$val->id}}" _end="{{$val->end}}">
                                 <span class="read  state1 detail"><i class="fa fa-pencil-square-o fa-2x"></i> 编辑</span>
                             </a>
                             <a class="state1 modal-control" href="javascript:;" onclick="deletelist({{$val->id}})">

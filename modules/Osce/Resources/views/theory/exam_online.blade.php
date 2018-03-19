@@ -260,7 +260,7 @@
 			<div class="col-lg-12">
                 <div class="ibox float-e-margins" style="margin-bottom: 0;">
                     <div class="ibox-content text-center p-md" style="position: relative;">
-                        <h2>{{$data->exam_id?$data->exam->name:$data->name}}</h2>
+                        <h2>{{$data->name}}</h2>
                         <span>考试时间：</span>
                         <span class="checkTime">{{$data->times}}分钟</span>
                         <span style="margin-left: 1em;">总分：</span>

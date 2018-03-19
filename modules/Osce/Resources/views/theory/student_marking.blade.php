@@ -16,7 +16,7 @@
 	<div class="wrapper wrapper-content animated fadeInRight">
 	    <div class="row table-head-style1 ">
 	        <div class="col-xs-6">
-	            <h5 class="title-label">{{$test->exam_id==0?$test->name:$test->exam->name }} 的理论考试</h5>
+	            <h5 class="title-label">{{$test->name }} 的理论考试</h5>
 	        </div>
 	    </div>
    		<div class="container-fluid ibox-content" id="list_form">

@@ -10,7 +10,7 @@ namespace Modules\Osce\Http\Controllers\Admin;
 
 use DB;
 use Illuminate\Http\Request;
-use Modules\Msc\Entities\Student;
+use Modules\Osce\Entities\Student;
 use Modules\Osce\Entities\IpLimit;
 use Modules\Osce\Entities\IpLimitItem;
 use Modules\Osce\Entities\TestContent;
@@ -38,9 +38,9 @@ class TestController extends CommonController
 
     public function add(){
         $choose = $this->choose();
-        $chooseexam = $this->chooseexam();
+        //$chooseexam = $this->chooseexam();
         $chooseteacher = $this->chooseteacher();
-        return view('osce::theory.exam_manage')->with('data',['choose'=>$choose,'chooseexam'=>$chooseexam,'chooseteacher'=>$chooseteacher]);
+        return view('osce::theory.exam_manage')->with('data',['choose'=>$choose,'chooseteacher'=>$chooseteacher]);
     }
 
     public function index(){
