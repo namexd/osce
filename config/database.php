@@ -55,7 +55,7 @@ return [
         'msc_mis' => [
             'driver'    => 'mysql',
 			'host'      => env('DB_HOST_MSC', 'mysql_5.6.34'),
-            'database'  => env('DB_DATABASE_MSC', 'v3.10.1_child_mis'),
+            'database'  => env('DB_DATABASE_MSC', 'v3101_osce_theory_mis'),
             'username'  => env('DB_USERNAME_MSC', 'dev_user'),
             'password'  => env('DB_PASSWORD_MSC', 'cd67a0768e89'),
             'port'      => env('DB_PORT', '3306'),
@@ -67,7 +67,7 @@ return [
         'sys_mis' => [
             'driver'    => 'mysql',
             'host'      => env('DB_HOST_SYS', 'mysql_5.6.34'),
-            'database'  => env('DB_DATABASE_SYS', 'v3.10.1_child_sys'),
+            'database'  => env('DB_DATABASE_SYS', 'v3101_osce_theory_sys'),
             'username'  => env('DB_USERNAME_MSC', 'dev_user'),
             'password'  => env('DB_PASSWORD_MSC', 'cd67a0768e89'),
             'port'      => env('DB_PORT', '3306'),
@@ -80,7 +80,7 @@ return [
             'driver'    => 'mysql',
 
             'host'      => env('DB_HOST_OSCE', 'mysql_5.6.34'),
-            'database'  => env('DB_DATABASE_OSCE', 'v3.10.1_child_mis'),
+            'database'  => env('DB_DATABASE_OSCE', 'v3101_osce_theory_mis'),
             'username'  => env('DB_USERNAME_OSCE', 'dev_user'),
             'password'  => env('DB_PASSWORD_OSCE', 'cd67a0768e89'),
             'port'      => env('DB_PORT', '3306'),
